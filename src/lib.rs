@@ -23,19 +23,24 @@ impl<'a> From<nom::Err<nom::error::Error<&'a str>>> for PmtkError {
 
 #[derive(Debug, PartialEq)]
 struct PmtkPacket<'a> {
+    checksum: u8,
     data_field: &'a str, // TODO could be easier to use String here...
     pkt_type: u16
 }
 
 impl<'a> PmtkPacket<'a> {
+
+    pub fn new(data_field: &'a str, pkt_type: u16) -> Self {
+        let payload = format!(PAYLOAD_LEN; "PMTK{}{}", pkt_type, data_field).unwrap();
+        let checksum = generate_checksum(payload.as_bytes());
+        Self { checksum, data_field, pkt_type }
+    }
     pub fn decode(raw: &'a str) -> Result<Self, PmtkError> {
         parse_packet(raw)
     }
 
     pub fn encode(&self) -> String<255> {
-        let payload = format!(PAYLOAD_LEN; "PMTK{}{}", self.pkt_type, self.data_field).unwrap();
-        let checksum = generate_checksum(payload.as_bytes());
-        format!(PACKET_LEN; "${}*{:X?}\r\n", payload, checksum).unwrap()
+        format!(PACKET_LEN; "$PMTK{}{}*{:X?}\r\n", self.pkt_type, self.data_field, self.checksum).unwrap()
     }
 }
 
@@ -58,7 +63,7 @@ fn parse_packet(i: &str) -> Result<PmtkPacket<'_>, PmtkError> {
         PmtkPacket {
             pkt_type,
             data_field,
-            //checksum,
+            checksum,
         }
     )
 }
@@ -88,11 +93,16 @@ mod tests {
 
     #[test]
     fn decode_ok() {
-        assert_eq!(PmtkPacket { data_field: ",1000", pkt_type: 220 }, PmtkPacket::decode("$PMTK220,1000*1F\r\n").unwrap());
+        assert_eq!(PmtkPacket { checksum: 31, data_field: ",1000", pkt_type: 220 }, PmtkPacket::decode("$PMTK220,1000*1F\r\n").unwrap());
     }
 
     #[test]
     fn encode_ok() {
-        assert_eq!("$PMTK220,1000*1F\r\n", PmtkPacket { data_field: ",1000", pkt_type: 220 }.encode());
+        assert_eq!("$PMTK220,1000*1F\r\n", PmtkPacket::new(",1000", 220).encode());
+    }
+
+    #[test]
+    fn generate_checksum_ok() {
+        assert_eq!(generate_checksum(b"PMTK011,MTKGPS"), 08);
     }
 }
