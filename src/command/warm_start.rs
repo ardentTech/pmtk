@@ -6,7 +6,7 @@ const PKT_TYPE: u16 = 102;
 // $PMTK102*31
 pub struct WarmStart {}
 
-impl<'a> Into<PmtkPacket> for WarmStart {
+impl Into<PmtkPacket> for WarmStart {
     fn into(self) -> PmtkPacket {
         PmtkPacket::new(String::default(), PKT_TYPE)
     }

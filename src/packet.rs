@@ -1,7 +1,7 @@
 use core::str::FromStr;
 use heapless::{format, String};
 use nom::bytes::complete::{take, take_until};
-use nom::character::complete::char;
+use nom::character::complete::{char, digit1};
 use nom::{IResult, Parser};
 use nom::combinator::map_res;
 use nom::sequence::preceded;
@@ -15,9 +15,9 @@ pub(crate) type DataField = String<DATA_FIELD_LEN>;
 
 #[derive(Debug, PartialEq)]
 pub struct PmtkPacket {
-    checksum: u8,
-    data_field: DataField,
-    pkt_type: u16
+    pub(crate) checksum: u8,
+    pub(crate) data_field: DataField,
+    pub(crate) pkt_type: u16
 }
 
 impl PmtkPacket {
@@ -42,6 +42,10 @@ fn generate_checksum(data: &[u8]) -> u8 {
 
 // parsing.rs
 
+pub(crate) fn number<T: FromStr>(i: &str) -> IResult<&str, T> {
+    map_res(digit1, parse_num).parse(i)
+}
+
 fn parse_packet(i: &str) -> Result<PmtkPacket, PmtkError> {
     let (i, _) = parse_talker_id(i)?;
     let (i, pkt_type) = parse_packet_type(i)?;
@@ -54,7 +58,7 @@ fn parse_packet(i: &str) -> Result<PmtkPacket, PmtkError> {
     Ok(
         PmtkPacket {
             pkt_type,
-            data_field: String::from_str(data_field).unwrap(),
+            data_field: String::from_str(data_field).unwrap(), // TODO remove unwrap()
             checksum,
         }
     )
@@ -65,6 +69,27 @@ fn parse_checksum(i: &str) -> IResult<&str, u8> {
 
 fn parse_hex(data: &str) -> Result<u8, &'static str> {
     u8::from_str_radix(data, 16).map_err(|_| "Failed to parse checksum as hex number")
+}
+
+fn parse_num<I: FromStr>(data: &str) -> Result<I, &'static str> {
+    data.parse::<I>().map_err(|_| "parse of number failed")
+}
+
+pub(crate) fn parse_number_in_range<T>(
+    i: &str,
+    lower_bound: T,
+    upper_bound_inclusive: T,
+) -> IResult<&str, T>
+where
+    T: PartialOrd + FromStr,
+{
+    map_res(number::<T>, |parsed_num| {
+        if parsed_num < lower_bound || parsed_num > upper_bound_inclusive {
+            return Err("Parsed number is outside of the expected range");
+        }
+        Ok(parsed_num)
+    })
+        .parse(i)
 }
 
 fn parse_packet_type(i: &str) -> IResult<&str, u16> {
