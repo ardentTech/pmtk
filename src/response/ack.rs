@@ -39,7 +39,7 @@ impl TryFrom<DataField> for AckData {
         let (i, _) = comma(i)?;
         let (i, cmd) = opt(|i| parse_number_in_range::<u16>(i, 0, 1000)).parse(i)?;
         let (i, _) = comma(i)?;
-        let (i, flag) = opt(|i| parse_number_in_range::<u8>(i, 0, 3)).parse(i)?;
+        let (_, flag) = opt(|i| parse_number_in_range::<u8>(i, 0, 3)).parse(i)?;
         let flag = AckFlag::try_from(flag.unwrap())?;
 
         if let Some(cmd) = cmd {
@@ -58,7 +58,7 @@ mod tests {
     #[test]
     fn ack_data_try_from_data_field_ok() {
         let data_field = DataField::from_str(",604,3").unwrap();
-        let ack_data: AckData = AckData::try_from(data_field).unwrap();
+        let ack_data = AckData::try_from(data_field).unwrap();
         assert_eq!(ack_data.cmd, 604);
         assert_eq!(ack_data.flag, AckFlag::ActionSucceeded);
     }
