@@ -6,11 +6,11 @@ use crate::packet::PmtkPacket;
 const PKT_TYPE: u16 = 251;
 
 pub struct SetNmeaBaudrate {
-    rate: u32, // TODO can reset default with 0
+    rate: u32,
 }
 impl SetNmeaBaudrate {
     pub fn new(rate: u32) -> Result<Self, PmtkError> {
-        if ![4800, 9600, 14400, 19200, 38400, 57600, 115200].contains(&rate) {
+        if ![0, 4800, 9600, 14400, 19200, 38400, 57600, 115200].contains(&rate) {
             return Err(PmtkError::InvalidBaudRate(rate));
         }
         Ok(Self { rate })

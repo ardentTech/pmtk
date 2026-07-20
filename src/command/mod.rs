@@ -5,3 +5,4 @@ mod cold_start;
 mod full_cold_start;
 mod set_nmea_baudrate;
 mod util;
+mod set_dgps_mode;

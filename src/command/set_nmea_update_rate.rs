@@ -22,7 +22,6 @@ mod tests {
 
     #[test]
     fn into_pmtk_packet_ok() {
-        // TODO should check into and not encoding
         let packet: PmtkPacket = SetNmeaUpdateRate { ms: 1000u32 }.into();
         assert_eq!("$PMTK220,1000*1F\r\n", packet.encode());
     }
