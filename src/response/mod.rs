@@ -8,6 +8,7 @@ use crate::response::ack::AckData;
 
 const ACK: u16 = 1;
 
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum PmtkResponse {
     Ack(AckData)
 }

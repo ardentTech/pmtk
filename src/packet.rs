@@ -13,6 +13,7 @@ pub(crate) const DATA_FIELD_LEN: usize = 242;
 
 pub(crate) type DataField = String<DATA_FIELD_LEN>;
 
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct PmtkPacket {
     pub(crate) checksum: u8,

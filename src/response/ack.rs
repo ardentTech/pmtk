@@ -25,6 +25,7 @@ impl TryFrom<u8> for AckFlag {
     }
 }
 
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct AckData {
     cmd: u16,
     flag: AckFlag,
