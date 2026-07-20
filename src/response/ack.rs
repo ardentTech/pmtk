@@ -5,6 +5,7 @@ use nom::Parser;
 use crate::error::PmtkError;
 use crate::packet::{parse_number_in_range, DataField, PmtkPacket};
 
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub enum AckFlag {
     Invalid = 0x0,

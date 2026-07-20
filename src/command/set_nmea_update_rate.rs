@@ -8,6 +8,7 @@ const PKT_TYPE: u16 = 220;
 const MS_MIN: u32 = 100;
 const MS_MAX: u32 = 10_000;
 
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct SetNmeaUpdateRate {
     ms: u32
 }

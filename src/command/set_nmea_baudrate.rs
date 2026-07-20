@@ -5,6 +5,7 @@ use crate::packet::PmtkPacket;
 // $PMTK251,38400*27\r\n
 const PKT_TYPE: u16 = 251;
 
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct SetNmeaBaudrate {
     rate: u32,
 }

@@ -5,6 +5,7 @@ use crate::error::PmtkError;
 use crate::packet::{parse_number_in_range, DataField};
 
 // $PMTK010,001*2E\r\n
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub enum SysMsg {
     Unknown = 0x0,
