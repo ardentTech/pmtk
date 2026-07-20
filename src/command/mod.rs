@@ -1,8 +1,8 @@
 pub mod warm_start;
-mod hot_start;
-mod set_nmea_update_rate;
-mod cold_start;
-mod full_cold_start;
-mod set_nmea_baudrate;
+pub mod hot_start;
+pub mod set_nmea_update_rate;
+pub mod cold_start;
+pub mod full_cold_start;
+pub mod set_nmea_baudrate;
 mod util;
-mod set_dgps_mode;
+pub mod set_dgps_mode;

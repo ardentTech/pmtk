@@ -1,6 +1,6 @@
-mod ack;
-mod sys_msg;
-mod txt_msg;
+pub mod ack;
+pub mod sys_msg;
+pub mod txt_msg;
 
 use crate::error::PmtkError;
 use crate::packet::PmtkPacket;
