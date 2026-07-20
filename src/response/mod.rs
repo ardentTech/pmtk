@@ -8,7 +8,7 @@ use crate::response::ack::AckData;
 
 const ACK: u16 = 1;
 
-enum PmtkResponse {
+pub enum PmtkResponse {
     Ack(AckData)
 }
 
