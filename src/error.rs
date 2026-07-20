@@ -2,6 +2,7 @@ use core::convert::Infallible;
 
 #[derive(Debug)]
 pub enum PmtkError {
+    InvalidBaudRate(u32),
     Parsing
 }
 impl<'a> From<nom::Err<nom::error::Error<&'a str>>> for PmtkError {

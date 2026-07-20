@@ -1,0 +1,1 @@
+// $PMTK011,MTKGPS*08\r\n

@@ -1,9 +1,9 @@
 use heapless::String;
 use crate::packet::PmtkPacket;
 
+// $PMTK101*32\r\n
 const PKT_TYPE: u16 = 101;
 
-// $PMTK101*32\r\n
 pub struct HotStart {}
 
 impl Into<PmtkPacket> for HotStart {
