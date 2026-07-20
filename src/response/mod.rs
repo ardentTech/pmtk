@@ -1,6 +1,7 @@
 pub mod ack;
 pub mod sys_msg;
 pub mod txt_msg;
+pub mod dgps_mode;
 
 use crate::error::PmtkError;
 use crate::packet::PmtkPacket;

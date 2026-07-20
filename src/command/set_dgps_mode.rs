@@ -1,15 +1,10 @@
 use crate::command::util::encode_data_field;
 use crate::packet::PmtkPacket;
+use crate::types::DgpsMode;
 
 // $PMTK301,1*2D\r\n
 const PKT_TYPE: u16 = 301;
 
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-enum DgpsMode {
-    None = 0x0,
-    RTCM = 0x1,
-    WAAS = 0x2,
-}
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct SetDgpsMode {
