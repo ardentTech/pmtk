@@ -1,9 +1,8 @@
-use nom::bytes::complete::take_until;
 use nom::character::complete::char;
 use nom::combinator::opt;
 use nom::Parser;
 use crate::error::PmtkError;
-use crate::packet::{parse_number_in_range, DataField, PmtkPacket};
+use crate::packet::{parse_number_in_range, DataField};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]

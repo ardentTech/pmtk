@@ -1,5 +1,6 @@
 use core::convert::Infallible;
 
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug)]
 pub enum PmtkError {
     InvalidBaudRate(u32),
