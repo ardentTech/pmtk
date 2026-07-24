@@ -1,0 +1,63 @@
+use nom::character::complete::char;
+use nom::combinator::opt;
+use nom::Parser;
+use crate::error::PmtkError;
+use crate::parser::parse_number_in_range;
+use crate::traits::{Message, Response};
+use crate::types::DataField;
+
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[derive(Copy, Clone, Debug, Default, PartialEq)]
+pub(crate) enum DgpsMode {
+    #[default]
+    None = 0x0,
+    RTCM = 0x1,
+    WAAS = 0x2,
+}
+
+impl Message for DgpsMode {
+    const PKT_TYPE: u16 = 501;
+}
+
+impl TryFrom<u8> for DgpsMode {
+    type Error = PmtkError;
+    fn try_from(mode: u8) -> Result<Self, Self::Error> {
+        match mode {
+            0 => Ok(DgpsMode::None),
+            1 => Ok(DgpsMode::RTCM),
+            2 => Ok(DgpsMode::WAAS),
+            _ => Err(PmtkError::InvalidDgpsMode(mode)),
+        }
+    }
+}
+
+impl TryFrom<DataField> for DgpsMode {
+    type Error = PmtkError;
+
+    fn try_from(value: DataField) -> Result<Self, Self::Error> {
+        let i = value.as_str();
+        let (i, _) = char(',').parse(i)?;
+        let (_, mode) = opt(|i| parse_number_in_range::<u8>(i, 0, 3)).parse(i)?;
+
+        if let Some(mode) = mode {
+            DgpsMode::try_from(mode).map_err(|_| PmtkError::Parsing)
+        } else {
+            Err(PmtkError::Parsing)
+        }
+    }
+}
+
+impl Response for DgpsMode {}
+
+#[cfg(test)]
+mod tests {
+    use core::str::FromStr;
+    use super::*;
+
+    #[test]
+    fn try_from_data_field_ok() {
+        let data_field = DataField::from_str(",1").unwrap();
+        let dgps_mode = DgpsMode::try_from(data_field).unwrap();
+        assert_eq!(dgps_mode, DgpsMode::RTCM);
+    }
+}
