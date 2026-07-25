@@ -14,8 +14,8 @@ pub struct SetDgpsMode {
 impl Message for SetDgpsMode {
     const PKT_TYPE: u16 = 301;
 }
-impl Command<Ack> for SetDgpsMode {
-    const RESPONSE: Option<Ack> = None;
+impl Command for SetDgpsMode {
+    type Response = Ack;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([self.mode as u32]);

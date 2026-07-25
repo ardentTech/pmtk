@@ -5,14 +5,14 @@ pub(crate) trait Message {
     const PKT_TYPE: u16;
 }
 
-pub(crate) trait Command<T: Response>: Message {
-    const RESPONSE: Option<T>;
+pub(crate) trait Command: Message {
+    type Response: Response;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError>;
 }
 
-pub(crate) trait Query<T: Response>: Message {
-    const RESPONSE: T;
+pub(crate) trait Query: Message {
+    type Response: Response;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         PmtkPacket::new_query(Self::PKT_TYPE)

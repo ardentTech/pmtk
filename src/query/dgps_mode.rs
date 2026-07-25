@@ -7,8 +7,8 @@ pub struct DgpsModeQuery {}
 impl Message for DgpsModeQuery {
     const PKT_TYPE: u16 = 401;
 }
-impl Query<DgpsMode> for DgpsModeQuery {
-    const RESPONSE: DgpsMode = DgpsMode::None;
+impl Query for DgpsModeQuery {
+    type Response = DgpsMode;
 }
 
 
