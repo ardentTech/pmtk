@@ -1,5 +1,7 @@
 use heapless::{format, String};
+use nom::bytes::complete::take_until;
 use crate::error::PmtkError;
+use crate::parser::parse_packet;
 
 const PACKET_LEN: usize = 255;
 const DATA_FIELD_LEN: usize = 242;
@@ -16,12 +18,20 @@ pub(crate) struct PmtkPacket {
 }
 
 impl PmtkPacket {
+    pub fn decode(raw: &str) -> Result<Self, PmtkError> {
+        parse_packet(raw)
+    }
+
     pub fn encode(&self) -> Result<String<PACKET_LEN>, PmtkError> {
         Ok(if let Some(data_field) = &self.data_field {
             format!(PACKET_LEN; "$PMTK{}{}*{:X?}\r\n", self.pkt_type, data_field, self.checksum).map_err(|e| PmtkError::CoreFmt(e))?
         } else {
             format!(PACKET_LEN; "$PMTK{}*{:X?}\r\n", self.pkt_type, self.checksum).map_err(|e| PmtkError::CoreFmt(e))?
         })
+    }
+
+    fn generate_checksum(data: &[u8]) -> u8 {
+        data.iter().fold(0, |acc, &x| acc ^ x)
     }
 
     pub(crate) fn new_command(pkt_type: u16, data_field: DataField) -> Result<Self, PmtkError> {
@@ -43,10 +53,6 @@ impl PmtkPacket {
             pkt_type
         })
     }
-
-    fn generate_checksum(data: &[u8]) -> u8 {
-        data.iter().fold(0, |acc, &x| acc ^ x)
-    }
 }
 
 
@@ -55,13 +61,22 @@ mod tests {
     use core::str::FromStr;
     use super::*;
 
-    // #[test]
-    // fn decode_ok() {
-    //     assert_eq!(
-    //         PmtkPacket { checksum: 31, data_field: Some(String::from_str(",1000").unwrap()), pkt_type: 220 },
-    //         PmtkPacket::decode("$PMTK220,1000*1F\r\n").unwrap()
-    //     );
-    // }
+    #[test]
+    fn decode_command_ok() {
+        assert_eq!(
+            PmtkPacket { checksum: 0x2d, data_field: Some(String::from_str(",1").unwrap()), pkt_type: 301 },
+            PmtkPacket::decode("$PMTK301,1*2D\r\n").unwrap()
+        );
+    }
+
+    #[test]
+    fn decode_query_ok() {
+        assert_eq!(
+            PmtkPacket { checksum: 0x37, data_field: None, pkt_type: 401 },
+            PmtkPacket::decode("$PMTK401*37\r\n").unwrap()
+        );
+    }
+
 
     #[test]
     fn encode_query_ok() {
