@@ -1,6 +1,7 @@
 use heapless::{format, String};
 use crate::error::PmtkError;
 
+const PACKET_LEN: usize = 255;
 const DATA_FIELD_LEN: usize = 242;
 const PAYLOAD_LEN: usize = 246;
 
@@ -15,6 +16,14 @@ pub(crate) struct PmtkPacket {
 }
 
 impl PmtkPacket {
+    pub fn encode(&self) -> Result<String<PACKET_LEN>, PmtkError> {
+        Ok(if let Some(data_field) = &self.data_field {
+            format!(PACKET_LEN; "$PMTK{}{}*{:X?}\r\n", self.pkt_type, data_field, self.checksum).map_err(|e| PmtkError::CoreFmt(e))?
+        } else {
+            format!(PACKET_LEN; "$PMTK{}*{:X?}\r\n", self.pkt_type, self.checksum).map_err(|e| PmtkError::CoreFmt(e))?
+        })
+    }
+
     pub(crate) fn new_command(pkt_type: u16, data_field: DataField) -> Result<Self, PmtkError> {
         let payload = format!(PAYLOAD_LEN; "PMTK{}{}", pkt_type, data_field).map_err(|e| PmtkError::CoreFmt(e))?;
         let checksum = Self::generate_checksum(payload.as_bytes());
@@ -43,6 +52,7 @@ impl PmtkPacket {
 
 #[cfg(test)]
 mod tests {
+    use core::str::FromStr;
     use super::*;
 
     // #[test]
@@ -52,14 +62,22 @@ mod tests {
     //         PmtkPacket::decode("$PMTK220,1000*1F\r\n").unwrap()
     //     );
     // }
-    //
-    // #[test]
-    // fn encode_ok() {
-    //     assert_eq!(
-    //         "$PMTK220,1000*1F\r\n",
-    //         PmtkPacket::new(String::from_str(",1000").unwrap(), 220).encode()
-    //     );
-    // }
+
+    #[test]
+    fn encode_query_ok() {
+        assert_eq!(
+            "$PMTK401*37\r\n",
+            PmtkPacket::new_query(401).unwrap().encode().unwrap()
+        );
+    }
+
+    #[test]
+    fn encode_command_ok() {
+        assert_eq!(
+            "$PMTK220,1000*1F\r\n",
+            PmtkPacket::new_command(220, String::from_str(",1000").unwrap()).unwrap().encode().unwrap()
+        );
+    }
 
     #[test]
     fn generate_checksum_ok() {

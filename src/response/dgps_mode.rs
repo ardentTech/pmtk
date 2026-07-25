@@ -8,7 +8,7 @@ use crate::types::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Copy, Clone, Debug, Default, PartialEq)]
-pub(crate) enum DgpsMode {
+pub enum DgpsMode {
     #[default]
     None = 0x0,
     RTCM = 0x1,
