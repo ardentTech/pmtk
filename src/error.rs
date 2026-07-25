@@ -8,6 +8,7 @@ pub enum PmtkError {
     InvalidBaudRate(u32),
     InvalidDgpsMode(u8),
     InvalidNmeaUpdateRate(u32),
+    InvalidSysMsg(u8),
     Parsing
 }
 impl<'a> From<nom::Err<nom::error::Error<&'a str>>> for PmtkError {

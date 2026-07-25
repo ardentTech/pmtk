@@ -14,6 +14,7 @@ pub enum AckFlag {
     ActionFailed = 0x2,
     ActionSucceeded = 0x3,
 }
+
 impl TryFrom<u8> for AckFlag {
     type Error = PmtkError;
     fn try_from(value: u8) -> Result<Self, Self::Error> {
@@ -64,11 +65,8 @@ impl Response for Ack {}
 #[cfg(test)]
 mod tests {
     use core::str::FromStr;
-    use heapless::String;
     use super::*;
     use crate::types::DataField;
-
-    struct AckData(String<242>);
 
     #[test]
     fn try_from_data_field_ok() {
