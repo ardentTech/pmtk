@@ -1,10 +1,9 @@
 use heapless::{format, String};
-use nom::bytes::complete::take_until;
 use crate::error::PmtkError;
-use crate::parser::parse_packet;
+use crate::parse::packet;
 
 const PACKET_LEN: usize = 255;
-const DATA_FIELD_LEN: usize = 242;
+pub(crate) const DATA_FIELD_LEN: usize = 242;
 const PAYLOAD_LEN: usize = 246;
 
 pub(crate) type DataField = String<DATA_FIELD_LEN>;
@@ -19,14 +18,14 @@ pub(crate) struct PmtkPacket {
 
 impl PmtkPacket {
     pub fn decode(raw: &str) -> Result<Self, PmtkError> {
-        parse_packet(raw)
+        packet(raw)
     }
 
     pub fn encode(&self) -> Result<String<PACKET_LEN>, PmtkError> {
         Ok(if let Some(data_field) = &self.data_field {
-            format!(PACKET_LEN; "$PMTK{}{}*{:X?}\r\n", self.pkt_type, data_field, self.checksum).map_err(|e| PmtkError::CoreFmt(e))?
+            format!(PACKET_LEN; "$PMTK{}{}*{:X?}\r\n", self.pkt_type, data_field, self.checksum)?
         } else {
-            format!(PACKET_LEN; "$PMTK{}*{:X?}\r\n", self.pkt_type, self.checksum).map_err(|e| PmtkError::CoreFmt(e))?
+            format!(PACKET_LEN; "$PMTK{}*{:X?}\r\n", self.pkt_type, self.checksum)?
         })
     }
 
@@ -36,9 +35,9 @@ impl PmtkPacket {
 
     pub(crate) fn new_command(pkt_type: u16, data_field: Option<DataField>) -> Result<Self, PmtkError> {
         let payload: String<PAYLOAD_LEN> = if let Some(data_field) = &data_field {
-            format!(PAYLOAD_LEN; "PMTK{}{}", pkt_type, data_field).map_err(|e| PmtkError::CoreFmt(e))?
+            format!(PAYLOAD_LEN; "PMTK{}{}", pkt_type, data_field)?
         } else {
-            format!(PAYLOAD_LEN; "PMTK{}", pkt_type).map_err(|e| PmtkError::CoreFmt(e))?
+            format!(PAYLOAD_LEN; "PMTK{}", pkt_type)?
         };
         let checksum = Self::generate_checksum(payload.as_bytes());
         Ok(Self {
@@ -49,7 +48,7 @@ impl PmtkPacket {
     }
 
     pub(crate) fn new_query(pkt_type: u16) -> Result<Self, PmtkError> {
-        let payload = format!(PAYLOAD_LEN; "PMTK{}", pkt_type).map_err(|e| PmtkError::CoreFmt(e))?;
+        let payload = format!(PAYLOAD_LEN; "PMTK{}", pkt_type)?;
         let checksum = Self::generate_checksum(payload.as_bytes());
         Ok(Self {
             checksum,

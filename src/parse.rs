@@ -9,23 +9,23 @@ use nom::sequence::preceded;
 use crate::error::PmtkError;
 use crate::types::PmtkPacket;
 
-fn parse_checksum(i: &str) -> IResult<&str, u8> {
-    map_res(preceded(char('*'), take(2usize)), parse_hex).parse(i)
+fn checksum(i: &str) -> IResult<&str, u8> {
+    map_res(preceded(char('*'), take(2usize)), hex).parse(i)
 }
 
-fn parse_hex(data: &str) -> Result<u8, &'static str> {
+fn hex(data: &str) -> Result<u8, &'static str> {
     u8::from_str_radix(data, 16).map_err(|_| "Failed to parse checksum as hex number")
 }
 
-fn parse_num<I: FromStr>(data: &str) -> Result<I, &'static str> {
+fn num<I: FromStr>(data: &str) -> Result<I, &'static str> {
     data.parse::<I>().map_err(|_| "parse of number failed")
 }
 
 pub(crate) fn number<T: FromStr>(i: &str) -> IResult<&str, T> {
-    map_res(digit1, parse_num).parse(i)
+    map_res(digit1, num).parse(i)
 }
 
-pub(crate) fn parse_number_in_range<T>(
+pub(crate) fn number_in_range<T>(
     i: &str,
     lower_bound: T,
     upper_bound_inclusive: T,
@@ -42,12 +42,12 @@ where
         .parse(i)
 }
 
-pub(crate) fn parse_packet(i: &str) -> Result<PmtkPacket, PmtkError> {
-    let (i, _) = parse_talker_id(i)?;
-    let (i, pkt_type) = parse_packet_type(i)?;
+pub(crate) fn packet(i: &str) -> Result<PmtkPacket, PmtkError> {
+    let (i, _) = talker_id(i)?;
+    let (i, pkt_type) = packet_type(i)?;
     //let (i, _) = char(',').parse(i)?;
     let (i, data_field) = take_until("*").parse(i)?;
-    let (_, checksum) = parse_checksum(i)?;
+    let (_, checksum) = checksum(i)?;
 
     // TODO validate checksum?
 
@@ -64,13 +64,13 @@ pub(crate) fn parse_packet(i: &str) -> Result<PmtkPacket, PmtkError> {
     )
 }
 
-fn parse_packet_type(i: &str) -> IResult<&str, u16> {
+fn packet_type(i: &str) -> IResult<&str, u16> {
     map_res(take(3usize), |packet_type: &str| {
         u16::from_str_radix(packet_type, 10).map_err(|_| PmtkError::Parsing)
     }).parse(i)
 }
 
-fn parse_talker_id(i: &str) -> IResult<&str, &str> {
+fn talker_id(i: &str) -> IResult<&str, &str> {
     map_res(preceded(char('$'), take(4usize)), |talker_id| {
         if talker_id != "PMTK" { return Err("Invalid talker id") } else { Ok(talker_id) }
     }).parse(i)

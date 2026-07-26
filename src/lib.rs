@@ -1,6 +1,6 @@
 #![no_std]
 
-mod parser;
+mod parse;
 mod error;
 mod traits;
 mod types;

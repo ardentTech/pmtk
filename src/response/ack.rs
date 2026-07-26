@@ -2,7 +2,7 @@ use nom::Parser;
 use nom::character::complete::char;
 use nom::combinator::opt;
 use crate::error::PmtkError;
-use crate::parser::parse_number_in_range;
+use crate::parse::number_in_range;
 use crate::traits::{Message, Response};
 use crate::types::DataField;
 
@@ -47,9 +47,9 @@ impl TryFrom<DataField> for Ack {
         let mut comma = char(',');
 
         let (i, _) = comma(i)?;
-        let (i, cmd) = opt(|i| parse_number_in_range::<u16>(i, 0, 1000)).parse(i)?;
+        let (i, cmd) = opt(|i| number_in_range::<u16>(i, 0, 1000)).parse(i)?;
         let (i, _) = comma(i)?;
-        let (_, flag) = opt(|i| parse_number_in_range::<u8>(i, 0, 3)).parse(i)?;
+        let (_, flag) = opt(|i| number_in_range::<u8>(i, 0, 3)).parse(i)?;
         let flag = AckFlag::try_from(flag.unwrap())?;
 
         if let Some(cmd) = cmd {

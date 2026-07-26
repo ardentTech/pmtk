@@ -2,7 +2,7 @@ use nom::character::complete::char;
 use nom::combinator::opt;
 use nom::Parser;
 use crate::error::PmtkError;
-use crate::parser::parse_number_in_range;
+use crate::parse::number_in_range;
 use crate::traits::{Message, Response};
 use crate::types::DataField;
 
@@ -37,7 +37,7 @@ impl TryFrom<DataField> for DgpsMode {
     fn try_from(value: DataField) -> Result<Self, Self::Error> {
         let i = value.as_str();
         let (i, _) = char(',').parse(i)?;
-        let (_, mode) = opt(|i| parse_number_in_range::<u8>(i, 0, 3)).parse(i)?;
+        let (_, mode) = opt(|i| number_in_range::<u8>(i, 0, 3)).parse(i)?;
 
         if let Some(mode) = mode {
             DgpsMode::try_from(mode).map_err(|_| PmtkError::Parsing)
