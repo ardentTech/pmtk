@@ -10,7 +10,7 @@ pub enum PmtkError {
     InvalidAckFlag(u8),
     InvalidBaudRate(u32),
     InvalidDgpsMode(u8),
-    InvalidNmeaUpdateRate(u32),
+    InvalidNmeaUpdateRate(u16),
     InvalidSysMsg(u8),
     Parsing
 }

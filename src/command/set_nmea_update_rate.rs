@@ -4,10 +4,22 @@ use crate::response::ack::Ack;
 use crate::traits::{Command, Message};
 use crate::types::PmtkPacket;
 
+const MIN_MS: u16 = 100;
+const MAX_MS: u16 = 10_000;
+
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
 pub struct SetNmeaUpdateRate {
-    ms: u16 // TODO constrain 100..=10_000
+    ms: u16
+}
+impl SetNmeaUpdateRate {
+    pub fn new(ms: u16) -> Result<SetNmeaUpdateRate, PmtkError> {
+        if ms < MIN_MS || ms > MAX_MS {
+            Err(PmtkError::InvalidNmeaUpdateRate(ms))
+        } else {
+            Ok(SetNmeaUpdateRate { ms })
+        }
+    }
 }
 
 impl Message for SetNmeaUpdateRate {
@@ -38,5 +50,21 @@ mod tests {
             pkt_type: SetNmeaUpdateRate::PKT_TYPE,
         };
         assert_eq!(packet, cmd.encode().unwrap());
+    }
+
+    #[test]
+    fn new_err() {
+        match SetNmeaUpdateRate::new(MAX_MS + 1) {
+            Ok(_) => panic!(),
+            Err(_) => {}
+        }
+    }
+
+    #[test]
+    fn new_ok() {
+        match SetNmeaUpdateRate::new(MIN_MS) {
+            Ok(_) => {}
+            Err(_) => panic!(),
+        }
     }
 }
