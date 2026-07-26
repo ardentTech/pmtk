@@ -54,17 +54,11 @@ mod tests {
 
     #[test]
     fn new_err() {
-        match SetNmeaUpdateRate::new(MAX_MS + 1) {
-            Ok(_) => panic!(),
-            Err(_) => {}
-        }
+        assert!(SetNmeaUpdateRate::new(MAX_MS + 1).is_err());
     }
 
     #[test]
     fn new_ok() {
-        match SetNmeaUpdateRate::new(MIN_MS) {
-            Ok(_) => {}
-            Err(_) => panic!(),
-        }
+        assert!(SetNmeaUpdateRate::new(MIN_MS).is_ok());
     }
 }
