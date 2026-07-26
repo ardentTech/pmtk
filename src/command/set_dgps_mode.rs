@@ -19,7 +19,7 @@ impl Command for SetDgpsMode {
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([self.mode as u32]);
-        PmtkPacket::new_command(Self::PKT_TYPE, data_field)
+        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
     }
 }
 

@@ -34,12 +34,16 @@ impl PmtkPacket {
         data.iter().fold(0, |acc, &x| acc ^ x)
     }
 
-    pub(crate) fn new_command(pkt_type: u16, data_field: DataField) -> Result<Self, PmtkError> {
-        let payload = format!(PAYLOAD_LEN; "PMTK{}{}", pkt_type, data_field).map_err(|e| PmtkError::CoreFmt(e))?;
+    pub(crate) fn new_command(pkt_type: u16, data_field: Option<DataField>) -> Result<Self, PmtkError> {
+        let payload: String<PAYLOAD_LEN> = if let Some(data_field) = &data_field {
+            format!(PAYLOAD_LEN; "PMTK{}{}", pkt_type, data_field).map_err(|e| PmtkError::CoreFmt(e))?
+        } else {
+            format!(PAYLOAD_LEN; "PMTK{}", pkt_type).map_err(|e| PmtkError::CoreFmt(e))?
+        };
         let checksum = Self::generate_checksum(payload.as_bytes());
         Ok(Self {
             checksum,
-            data_field: Some(data_field),
+            data_field,
             pkt_type
         })
     }
@@ -87,10 +91,18 @@ mod tests {
     }
 
     #[test]
-    fn encode_command_ok() {
+    fn encode_command_data_field_some_ok() {
         assert_eq!(
             "$PMTK220,1000*1F\r\n",
-            PmtkPacket::new_command(220, String::from_str(",1000").unwrap()).unwrap().encode().unwrap()
+            PmtkPacket::new_command(220, Some(String::from_str(",1000").unwrap())).unwrap().encode().unwrap()
+        );
+    }
+
+    #[test]
+    fn encode_command_data_field_none_ok() {
+        assert_eq!(
+            "$PMTK102*31\r\n",
+            PmtkPacket::new_command(102, None).unwrap().encode().unwrap()
         );
     }
 

@@ -29,7 +29,7 @@ impl TryFrom<u8> for SysMsg {
 }
 
 impl Message for SysMsg {
-    const PKT_TYPE: u16 = 0xa;
+    const PKT_TYPE: u16 = 10;
 }
 
 impl TryFrom<DataField> for SysMsg {
