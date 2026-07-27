@@ -1,8 +1,8 @@
 pub mod dgps_mode;
 pub mod ack;
 pub mod sys_msg;
-mod txt_msg;
-mod sbas_enabled;
+pub mod txt_msg;
+pub mod sbas_enabled;
 mod nmea_output;
 mod sbas_mode;
 mod release;
