@@ -11,3 +11,4 @@ defmt = { version = "1.1.1", optional = true }
 [features]
 default = []
 defmt = ["dep:defmt"]
+mt3339 = []

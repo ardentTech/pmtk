@@ -10,13 +10,21 @@ mod set_nmea_output;
 mod set_sbas_mode;
 pub mod clear_epo;
 mod set_nav_speed_threshold;
+#[cfg(feature = "mt3339")]
 pub mod standby_mode;
+#[cfg(feature = "mt3339")]
 mod set_al_dee_cfg;
+#[cfg(feature = "mt3339")]
 mod periodic_mode;
+#[cfg(feature = "mt3339")]
 mod aic_mode;
+#[cfg(feature = "mt3339")]
 mod easy_enable;
+#[cfg(feature = "mt3339")]
 mod locus_config;
 mod set_datum;
+#[cfg(feature = "mt3339")]
 mod set_support_qzss_nmea;
+#[cfg(feature = "mt3339")]
 mod set_stop_qzss;
 mod util;

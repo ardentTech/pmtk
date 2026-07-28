@@ -4,8 +4,6 @@ use crate::response::ack::Ack;
 use crate::traits::{Command, Message};
 use crate::types::PmtkPacket;
 
-// TODO MT3339 only
-
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
 pub struct StandbyMode;

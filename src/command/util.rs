@@ -1,8 +1,8 @@
-use core::fmt::Write;
+use core::fmt::{Display, Write};
 use heapless::String;
 use crate::types::DataField;
 
-pub(crate) fn encode_data_field<const N: usize>(data: [u32; N]) -> DataField {
+pub(crate) fn encode_data_field<T: Display, const N: usize>(data: [T; N]) -> DataField {
     let mut data_field = String::new();
     for c in data {
         write!(data_field, ",{}", c).unwrap();

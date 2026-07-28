@@ -1,6 +1,6 @@
 use core::convert::Infallible;
 use core::fmt;
-use heapless::{CapacityError, String};
+use heapless::CapacityError;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug)]
@@ -10,6 +10,7 @@ pub enum PmtkError {
     InvalidAckFlag(u8),
     InvalidBaudRate(u32),
     InvalidDgpsMode(u8),
+    InvalidNavSpeedThreshold(f32),
     InvalidNmeaUpdateRate(u16),
     InvalidSysMsg(u8),
     Parsing
