@@ -9,16 +9,16 @@ use nom::sequence::preceded;
 use crate::error::PmtkError;
 use crate::types::PmtkPacket;
 
-fn checksum(i: &str) -> IResult<&str, u8> {
-    map_res(preceded(char('*'), take(2usize)), hex).parse(i)
-}
-
 fn hex(data: &str) -> Result<u8, &'static str> {
     u8::from_str_radix(data, 16).map_err(|_| "Failed to parse checksum as hex number")
 }
 
 fn num<I: FromStr>(data: &str) -> Result<I, &'static str> {
     data.parse::<I>().map_err(|_| "parse of number failed")
+}
+
+fn checksum(i: &str) -> IResult<&str, u8> {
+    map_res(preceded(char('*'), take(2usize)), hex).parse(i)
 }
 
 pub(crate) fn number<T: FromStr>(i: &str) -> IResult<&str, T> {
