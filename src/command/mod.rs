@@ -17,9 +17,9 @@ mod set_al_dee_cfg;
 #[cfg(feature = "mt3339")]
 mod periodic_mode;
 #[cfg(feature = "mt3339")]
-mod aic_mode;
+pub mod aic_mode;
 #[cfg(feature = "mt3339")]
-mod easy_enable;
+pub mod easy_enable;
 #[cfg(feature = "mt3339")]
 mod locus_config;
 mod set_datum;
