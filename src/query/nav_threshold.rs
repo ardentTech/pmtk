@@ -12,3 +12,20 @@ impl Message for NavThreshold {
 impl Query for NavThreshold {
     type Response = nav_threshold::NavThreshold;
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::types::PmtkPacket;
+    use super::*;
+
+    #[test]
+    fn encode_ok() {
+        let query = NavThreshold {};
+        let packet = PmtkPacket {
+            checksum: 0x35,
+            data_field: None,
+            pkt_type: NavThreshold::PKT_TYPE,
+        };
+        assert_eq!(packet, query.encode().unwrap());
+    }
+}
