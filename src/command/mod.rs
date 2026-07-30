@@ -7,7 +7,7 @@ pub mod set_nmea_update_rate;
 pub mod set_nmea_baud_rate;
 pub mod set_sbas_enabled;
 mod set_nmea_output;
-mod set_sbas_mode;
+pub mod set_sbas_mode;
 pub mod clear_epo;
 mod set_nav_speed_threshold;
 #[cfg(feature = "mt3339")]

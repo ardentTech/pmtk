@@ -4,7 +4,7 @@ pub mod sys_msg;
 pub mod txt_msg;
 pub mod sbas_enabled;
 mod nmea_output;
-mod sbas_mode;
+pub mod sbas_mode;
 pub mod release;
 pub mod epo_info;
 pub mod nav_threshold;

@@ -12,6 +12,7 @@ pub enum PmtkError {
     InvalidDgpsMode(u8),
     InvalidNavSpeedThreshold(f32),
     InvalidNmeaUpdateRate(u16),
+    InvalidSbasMode(u8),
     InvalidSysMsg(u8),
     Parsing
 }
