@@ -6,6 +6,6 @@ pub mod sbas_enabled;
 mod nmea_output;
 mod sbas_mode;
 mod release;
-mod epo_info;
+pub mod epo_info;
 pub mod nav_threshold;
 mod datum;
