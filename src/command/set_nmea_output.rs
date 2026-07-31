@@ -1,5 +1,6 @@
 use crate::command::util::encode_data_field;
 use crate::error::PmtkError;
+use crate::response::ack::Ack;
 use crate::response::nmea_output::{Frequency, NmeaOutput};
 use crate::traits::{Command, Message};
 use crate::types::PmtkPacket;
@@ -21,7 +22,7 @@ impl Message for SetNmeaOutput {
 }
 
 impl Command for SetNmeaOutput {
-    type Response = NmeaOutput;
+    type Response = Ack;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([
