@@ -11,6 +11,7 @@ pub enum PmtkError {
     InvalidBaudRate(u32),
     InvalidDgpsMode(u8),
     InvalidNavSpeedThreshold(f32),
+    InvalidNmeaOutputFrequency(u8),
     InvalidNmeaUpdateRate(u16),
     InvalidSbasMode(u8),
     InvalidSysMsg(u8),

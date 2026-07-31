@@ -6,7 +6,7 @@ use crate::parse::number_in_range;
 use crate::traits::{Message, Response};
 use crate::types::DataField;
 
-pub struct SbasEnabled(bool);
+pub struct SbasEnabled(pub bool);
 
 impl Message for SbasEnabled {
     const PKT_TYPE: u16 = 513;

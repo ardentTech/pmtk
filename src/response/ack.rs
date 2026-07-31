@@ -31,8 +31,8 @@ impl TryFrom<u8> for AckFlag {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug)]
 pub struct Ack {
-    cmd: u16,
-    flag: AckFlag
+    pub cmd: u16,
+    pub flag: AckFlag
 }
 
 impl Message for Ack {

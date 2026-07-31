@@ -3,7 +3,7 @@ pub mod ack;
 pub mod sys_msg;
 pub mod txt_msg;
 pub mod sbas_enabled;
-mod nmea_output;
+pub mod nmea_output;
 pub mod sbas_mode;
 pub mod release;
 pub mod epo_info;

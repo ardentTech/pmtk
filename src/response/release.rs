@@ -8,8 +8,8 @@ use crate::traits::{Message, Response};
 use crate::types::DataField;
 
 pub struct Release {
-    build_id: u16,
-    s: Option<String<16>>,
+    pub build_id: u16,
+    pub s: Option<String<16>>,
 }
 
 impl Message for Release {
@@ -24,7 +24,7 @@ impl TryFrom<DataField> for Release {
         let (i, _) = char(',').parse(i)?;
         let (i, s) = take_until(",").parse(i)?;
         let (i, _) = char(',').parse(i)?;
-        let (i, build_id) = number::<u16>(i)?;
+        let (_, build_id) = number::<u16>(i)?;
 
         let s = if s.is_empty() {
             None

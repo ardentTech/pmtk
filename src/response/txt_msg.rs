@@ -6,7 +6,7 @@ use crate::traits::{Message, Response};
 use crate::types::{DataField, DATA_FIELD_LEN};
 
 pub struct TxtMsg {
-    msg: String<DATA_FIELD_LEN>
+    pub msg: String<DATA_FIELD_LEN>
 }
 
 impl Message for TxtMsg {

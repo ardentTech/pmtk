@@ -8,15 +8,15 @@ use crate::types::DataField;
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Copy, Clone, Debug)]
 pub struct EpoInfo {
-    set: u16,
-    fwn: u16,
-    ftow: u32,
-    lwn: u16,
-    ltow: u32,
-    fcwn: u16,
-    fctow: u32,
-    lcwn: u16,
-    lctow: u32,
+    pub set: u16,
+    pub fwn: u16,
+    pub ftow: u32,
+    pub lwn: u16,
+    pub ltow: u32,
+    pub fcwn: u16,
+    pub fctow: u32,
+    pub lcwn: u16,
+    pub lctow: u32,
 }
 
 impl Message for EpoInfo {
