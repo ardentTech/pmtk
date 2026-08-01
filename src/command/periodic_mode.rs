@@ -1,1 +1,156 @@
-// TODO
+use crate::command::util::encode_data_field;
+use crate::error::PmtkError;
+use crate::response::ack::Ack;
+use crate::traits::{Command, Message};
+use crate::types::PmtkPacket;
+
+const TIME_MIN: u32 = 1_000;
+const TIME_MAX: u32 = 518_400_000;
+
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[derive(Copy, Clone, Debug, Default, PartialEq)]
+pub enum OperationMode {
+    #[default]
+    Normal = 0x0,
+    PeriodicBackup = 0x1,
+    PeriodicStandby = 0x2,
+    PerpetualBackup = 0x4,
+    AlwaysLocateStandby = 0x8,
+    AlwaysLocateBackup = 0x9,
+}
+
+type Ms = u32;
+
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[derive(Debug, Copy, Clone)]
+pub struct PeriodicMode {
+    mode: OperationMode,
+    run_time: Option<Ms>, // TODO constrain 1,000~518400000
+    sleep_time: Option<Ms>, // TODO constrain 1,000~518400000
+    second_run_time: Option<Ms>, // TODO constrain 1,000~518400000
+    second_sleep_time: Option<Ms>, // TODO constrain 1,000~518400000
+}
+impl PeriodicMode {
+    pub fn new(
+        mode: OperationMode,
+        run_time: Option<Ms>,
+        sleep_time: Option<Ms>,
+        second_run_time: Option<Ms>,
+        second_sleep_time: Option<Ms>
+    ) -> Result<Self, PmtkError> {
+        if let Some(run_time) = run_time {
+            if !(TIME_MIN..=TIME_MAX).contains(&run_time) {
+                return Err(PmtkError::InvalidPeriodModeRunTime(run_time))
+            }
+        }
+        if let Some(sleep_time) = sleep_time {
+            if !(TIME_MIN..=TIME_MAX).contains(&sleep_time) {
+                return Err(PmtkError::InvalidPeriodModeSleepTime(sleep_time))
+            }
+        }
+        if let Some(second_run_time) = second_run_time {
+            if !(TIME_MIN..=TIME_MAX).contains(&second_run_time) {
+                return Err(PmtkError::InvalidPeriodModeSecondRunTime(second_run_time))
+            }
+        }
+        if let Some(second_sleep_time) = second_sleep_time {
+            if !(TIME_MIN..=TIME_MAX).contains(&second_sleep_time) {
+                return Err(PmtkError::InvalidPeriodModeSecondSleepTime(second_sleep_time))
+            }
+        }
+        Ok(Self { mode, run_time, sleep_time, second_run_time, second_sleep_time })
+    }
+}
+
+impl Message for PeriodicMode {
+    const PKT_TYPE: u16 = 225;
+}
+
+impl Command for PeriodicMode {
+    type Response = Ack;
+
+    fn encode(&self) -> Result<PmtkPacket, PmtkError> {
+        let mut data_field = encode_data_field([self.mode as u32]);
+        if let Some(run_time) = self.run_time {
+            data_field.push_str(&*encode_data_field([run_time]))?;
+        }
+        if let Some(sleep_time) = self.sleep_time {
+            data_field.push_str(&*encode_data_field([sleep_time]))?;
+        }
+        if let Some(second_run_time) = self.second_run_time {
+            data_field.push_str(&*encode_data_field([second_run_time]))?;
+        }
+        if let Some(second_sleep_time) = self.second_sleep_time {
+            data_field.push_str(&*encode_data_field([second_sleep_time]))?;
+        }
+
+        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use core::str::FromStr;
+    use crate::command::periodic_mode::OperationMode::{AlwaysLocateBackup, Normal, PeriodicBackup};
+    use crate::types::DataField;
+    use super::*;
+
+    #[test]
+    fn encode_always_locate_ok() {
+        let cmd = PeriodicMode {
+            mode: AlwaysLocateBackup,
+            run_time: None,
+            sleep_time: None,
+            second_run_time: None,
+            second_sleep_time: None
+        };
+        let packet = PmtkPacket {
+            checksum: 0x22,
+            data_field: Some(DataField::from_str(",9").unwrap()),
+            pkt_type: PeriodicMode::PKT_TYPE,
+        };
+        assert_eq!(packet, cmd.encode().unwrap());
+    }
+
+    #[test]
+    fn encode_periodic_ok() {
+        let cmd = PeriodicMode {
+            mode: PeriodicBackup,
+            run_time: Some(3000),
+            sleep_time: Some(12000),
+            second_run_time: Some(18000),
+            second_sleep_time: Some(72000)
+        };
+        let packet = PmtkPacket {
+            checksum: 0x16,
+            data_field: Some(DataField::from_str(",1,3000,12000,18000,72000").unwrap()),
+            pkt_type: PeriodicMode::PKT_TYPE,
+        };
+        assert_eq!(packet, cmd.encode().unwrap());
+    }
+
+    #[test]
+    fn new_invalid_run_time_err() {
+        assert!(PeriodicMode::new(Normal, Some(TIME_MIN - 1), None, None, None).is_err());
+    }
+
+    #[test]
+    fn new_invalid_sleep_time_err() {
+        assert!(PeriodicMode::new(Normal, None, Some(TIME_MAX + 1), None, None).is_err());
+    }
+
+    #[test]
+    fn new_invalid_second_run_time_err() {
+        assert!(PeriodicMode::new(Normal, None, None, Some(TIME_MIN - 1), None).is_err());
+    }
+
+    #[test]
+    fn new_invalid_second_sleep_time_err() {
+        assert!(PeriodicMode::new(Normal, None, None, None, Some(TIME_MAX + 1)).is_err());
+    }
+
+    #[test]
+    fn new_ok() {
+        assert!(PeriodicMode::new(PeriodicBackup, None, None, None, None).is_ok());
+    }
+}

@@ -4,7 +4,7 @@ use crate::response::ack::Ack;
 use crate::traits::{Command, Message};
 use crate::types::PmtkPacket;
 
-pub struct AicMode(bool);
+pub struct AicMode(pub bool);
 
 impl Message for AicMode {
     const PKT_TYPE: u16 = 286;

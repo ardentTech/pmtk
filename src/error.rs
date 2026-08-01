@@ -13,6 +13,10 @@ pub enum PmtkError {
     InvalidNavSpeedThreshold(f32),
     InvalidNmeaOutputFrequency(u8),
     InvalidNmeaUpdateRate(u16),
+    InvalidPeriodModeRunTime(u32),
+    InvalidPeriodModeSleepTime(u32),
+    InvalidPeriodModeSecondRunTime(u32),
+    InvalidPeriodModeSecondSleepTime(u32),
     InvalidSbasMode(u8),
     InvalidSysMsg(u8),
     Parsing
