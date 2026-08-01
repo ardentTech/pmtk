@@ -10,18 +10,18 @@ pub(crate) type DataField = String<DATA_FIELD_LEN>;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
-pub(crate) struct PmtkPacket {
+pub struct PmtkPacket {
     pub(crate) checksum: u8,
     pub(crate) data_field: Option<DataField>,
     pub(crate) pkt_type: u16
 }
 
 impl PmtkPacket {
-    pub(crate) fn decode(raw: &str) -> Result<Self, PmtkError> {
+    pub fn decode(raw: &str) -> Result<Self, PmtkError> {
         packet(raw)
     }
 
-    pub(crate) fn encode(&self) -> Result<String<PACKET_LEN>, PmtkError> {
+    pub fn encode(&self) -> Result<String<PACKET_LEN>, PmtkError> {
         Ok(if let Some(data_field) = &self.data_field {
             format!(PACKET_LEN; "$PMTK{}{}*{:X?}\r\n", self.pkt_type, data_field, self.checksum)?
         } else {
