@@ -19,6 +19,7 @@ pub enum PmtkError {
     InvalidPeriodModeSecondSleepTime(u32),
     InvalidSbasMode(u8),
     InvalidSysMsg(u8),
+    InputOutOfRange, // TODO use this and replace above
     Parsing
 }
 impl<'a> From<nom::Err<nom::error::Error<&'a str>>> for PmtkError {

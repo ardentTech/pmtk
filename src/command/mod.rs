@@ -13,7 +13,7 @@ pub mod set_nav_speed_threshold;
 #[cfg(feature = "mt3339")]
 pub mod standby_mode;
 #[cfg(feature = "mt3339")]
-mod set_al_dee_cfg;
+pub mod set_al_dee_cfg;
 #[cfg(feature = "mt3339")]
 pub mod periodic_mode;
 #[cfg(feature = "mt3339")]

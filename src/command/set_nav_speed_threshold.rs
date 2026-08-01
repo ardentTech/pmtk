@@ -4,6 +4,8 @@ use crate::response::ack::Ack;
 use crate::traits::{Command, Message};
 use crate::types::PmtkPacket;
 
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[derive(Debug, Copy, Clone)]
 pub struct SetNavSpeedThreshold {
     threshold: f32
 }

@@ -25,10 +25,10 @@ type Ms = u32;
 #[derive(Debug, Copy, Clone)]
 pub struct PeriodicMode {
     mode: OperationMode,
-    run_time: Option<Ms>, // TODO constrain 1,000~518400000
-    sleep_time: Option<Ms>, // TODO constrain 1,000~518400000
-    second_run_time: Option<Ms>, // TODO constrain 1,000~518400000
-    second_sleep_time: Option<Ms>, // TODO constrain 1,000~518400000
+    run_time: Option<Ms>,
+    sleep_time: Option<Ms>,
+    second_run_time: Option<Ms>,
+    second_sleep_time: Option<Ms>,
 }
 impl PeriodicMode {
     pub fn new(

@@ -4,7 +4,7 @@ use crate::response::ack::Ack;
 use crate::traits::{Command, Message};
 use crate::types::PmtkPacket;
 
-pub struct SetStopQzss(bool);
+pub struct SetStopQzss(pub bool);
 
 impl Message for SetStopQzss {
     const PKT_TYPE: u16 = 352;
