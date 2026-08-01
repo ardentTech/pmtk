@@ -1,17 +1,17 @@
 use crate::error::PmtkError;
 use crate::types::{DataField, PmtkPacket};
 
-pub(crate) trait Message {
+pub trait Message {
     const PKT_TYPE: u16;
 }
 
-pub(crate) trait Command: Message {
+pub trait Command: Message {
     type Response: Response;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError>;
 }
 
-pub(crate) trait Query: Message {
+pub trait Query: Message {
     type Response: Response;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
@@ -19,4 +19,4 @@ pub(crate) trait Query: Message {
     }
 }
 
-pub(crate) trait Response: Message + TryFrom<DataField> {}
+pub trait Response: Message + TryFrom<DataField> {}

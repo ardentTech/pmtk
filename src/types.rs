@@ -17,11 +17,11 @@ pub(crate) struct PmtkPacket {
 }
 
 impl PmtkPacket {
-    pub fn decode(raw: &str) -> Result<Self, PmtkError> {
+    pub(crate) fn decode(raw: &str) -> Result<Self, PmtkError> {
         packet(raw)
     }
 
-    pub fn encode(&self) -> Result<String<PACKET_LEN>, PmtkError> {
+    pub(crate) fn encode(&self) -> Result<String<PACKET_LEN>, PmtkError> {
         Ok(if let Some(data_field) = &self.data_field {
             format!(PACKET_LEN; "$PMTK{}{}*{:X?}\r\n", self.pkt_type, data_field, self.checksum)?
         } else {
