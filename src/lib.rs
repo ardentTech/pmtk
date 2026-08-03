@@ -7,9 +7,9 @@ mod parse;
 pub mod error;
 pub mod traits;
 pub mod types;
-pub mod response;
-pub mod query;
-pub mod command;
+pub mod dt;
+pub mod q;
+pub mod cmd;
 
 struct Pmtk;
 

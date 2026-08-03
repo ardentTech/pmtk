@@ -3,16 +3,16 @@ use heapless::{format, String};
 use crate::error::PmtkError;
 use crate::error::PmtkError::Decoding;
 use crate::parse;
-use crate::response::ack::AckDt;
-use crate::response::dgps_mode::DgpsModeDt;
-use crate::response::epo_info::EpoInfoDt;
-use crate::response::nav_threshold::NavThresholdDt;
-use crate::response::nmea_output::NmeaOutputDt;
-use crate::response::release::ReleaseDt;
-use crate::response::sbas_enabled::SbasEnabledDt;
-use crate::response::sbas_mode::SbasModeDt;
-use crate::response::sys_msg::SysMsgDt;
-use crate::response::txt_msg::TxtMsgDt;
+use crate::dt::ack::AckDt;
+use crate::dt::dgps_mode::DgpsModeDt;
+use crate::dt::epo_info::EpoInfoDt;
+use crate::dt::nav_threshold::NavThresholdDt;
+use crate::dt::nmea_output::NmeaOutputDt;
+use crate::dt::release::ReleaseDt;
+use crate::dt::sbas_enabled::SbasEnabledDt;
+use crate::dt::sbas_mode::SbasModeDt;
+use crate::dt::sys_msg::SysMsgDt;
+use crate::dt::txt_msg::TxtMsgDt;
 use crate::traits::Message;
 
 const PACKET_LEN: usize = 255;
@@ -25,7 +25,7 @@ pub(crate) type DataField = String<DATA_FIELD_LEN>;
 #[derive(Debug, PartialEq)]
 pub struct PmtkPacket {
     pub(crate) checksum: u8,
-    pub(crate) data_field: Option<DataField>, // TODO diff between Req (cmd + query) and Res?
+    pub(crate) data_field: Option<DataField>, // TODO diff between Req (cmd + q) and Res?
     pub(crate) pkt_type: u16
 }
 
@@ -80,6 +80,8 @@ impl PmtkPacket {
     }
 }
 
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[derive(Debug, PartialEq)]
 pub enum PmtkResponse {
     Ack(AckDt),
     SysMsg(SysMsgDt),
