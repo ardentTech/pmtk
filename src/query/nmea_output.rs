@@ -1,4 +1,4 @@
-use crate::response::nmea_output::NmeaOutput;
+use crate::response::nmea_output::NmeaOutputDt;
 use crate::traits::{Message, Query};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -8,7 +8,7 @@ impl Message for NmeaOutputQuery {
     const PKT_TYPE: u16 = 414;
 }
 impl Query for NmeaOutputQuery {
-    type Response = NmeaOutput;
+    type R = NmeaOutputDt;
 }
 
 

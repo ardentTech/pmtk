@@ -45,22 +45,17 @@ where
 pub(crate) fn packet(i: &str) -> Result<PmtkPacket, PmtkError> {
     let (i, _) = talker_id(i)?;
     let (i, pkt_type) = packet_type(i)?;
-    //let (i, _) = char(',').parse(i)?;
     let (i, data_field) = take_until("*").parse(i)?;
     let (_, checksum) = checksum(i)?;
 
-    // TODO validate checksum?
-
-    Ok(
-        PmtkPacket {
-            pkt_type,
-            data_field: if !data_field.is_empty() {
-                Some(String::from_str(data_field).map_err(|_| PmtkError::Parsing)?) // TODO is this the right error?
-            } else {
-                None
-            },
-            checksum,
-        }
+    PmtkPacket::new(
+        pkt_type,
+        if !data_field.is_empty() {
+            Some(String::from_str(data_field).map_err(|_| PmtkError::Parsing)?) // TODO is this the right error?
+        } else {
+            None
+        },
+        Some(checksum),
     )
 }
 

@@ -6,7 +6,9 @@ use heapless::CapacityError;
 #[derive(Debug)]
 pub enum PmtkError {
     StringCapacity,
+    ChecksumMismatch,
     CoreFmt(fmt::Error),
+    Decoding,
     InvalidAckFlag(u8),
     InvalidBaudRate(u32),
     InvalidDgpsMode(u8),

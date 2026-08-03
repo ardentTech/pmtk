@@ -10,7 +10,7 @@ impl Message for NavThreshold {
 }
 
 impl Query for NavThreshold {
-    type Response = nav_threshold::NavThreshold;
+    type R = nav_threshold::NavThresholdDt;
 }
 
 #[cfg(test)]

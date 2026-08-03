@@ -1,4 +1,4 @@
-use crate::response::epo_info::EpoInfo;
+use crate::response::epo_info::EpoInfoDt;
 use crate::traits::{Message, Query};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -8,7 +8,7 @@ impl Message for EpoInfoQuery {
     const PKT_TYPE: u16 = 607;
 }
 impl Query for EpoInfoQuery {
-    type Response = EpoInfo;
+    type R = EpoInfoDt;
 }
 
 

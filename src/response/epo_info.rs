@@ -7,7 +7,7 @@ use crate::types::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Copy, Clone, Debug)]
-pub struct EpoInfo {
+pub struct EpoInfoDt {
     pub set: u16,
     pub fwn: u16,
     pub ftow: u32,
@@ -19,11 +19,11 @@ pub struct EpoInfo {
     pub lctow: u32,
 }
 
-impl Message for EpoInfo {
+impl Message for EpoInfoDt {
     const PKT_TYPE: u16 = 707;
 }
 
-impl TryFrom<DataField> for EpoInfo {
+impl TryFrom<DataField> for EpoInfoDt {
     type Error = PmtkError;
 
     fn try_from(value: DataField) -> Result<Self, Self::Error> {
@@ -47,7 +47,7 @@ impl TryFrom<DataField> for EpoInfo {
         let (i, _) = char(',').parse(i)?;
         let (_, lctow) = number::<u32>(i)?;
 
-        Ok(EpoInfo {
+        Ok(EpoInfoDt {
             set,
             fwn,
             ftow,
@@ -61,7 +61,7 @@ impl TryFrom<DataField> for EpoInfo {
     }
 }
 
-impl Response for EpoInfo {}
+impl Response for EpoInfoDt {}
 
 #[cfg(test)]
 mod tests {
@@ -71,7 +71,7 @@ mod tests {
     #[test]
     fn try_from_data_field_ok() {
         let data_field = DataField::from_str(",28,1680,259200,1681,237600,1680,345600,1680,345600").unwrap();
-        let epo_info = EpoInfo::try_from(data_field).unwrap();
+        let epo_info = EpoInfoDt::try_from(data_field).unwrap();
         assert_eq!(epo_info.set, 28);
         assert_eq!(epo_info.fwn, 1680);
         assert_eq!(epo_info.ftow, 259200);

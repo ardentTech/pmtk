@@ -1,4 +1,4 @@
-use crate::response::dgps_mode::DgpsMode;
+use crate::response::dgps_mode::DgpsModeDt;
 use crate::traits::{Message, Query};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -8,7 +8,7 @@ impl Message for DgpsModeQuery {
     const PKT_TYPE: u16 = 401;
 }
 impl Query for DgpsModeQuery {
-    type Response = DgpsMode;
+    type R = DgpsModeDt;
 }
 
 

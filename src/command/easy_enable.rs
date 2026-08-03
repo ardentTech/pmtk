@@ -1,6 +1,6 @@
 use crate::command::util::encode_data_field;
 use crate::error::PmtkError;
-use crate::response::ack::Ack;
+use crate::response::ack::AckDt;
 use crate::traits::{Command, Message};
 use crate::types::PmtkPacket;
 
@@ -24,7 +24,7 @@ impl Message for EasyEnable {
 }
 
 impl Command for EasyEnable {
-    type Response = Ack;
+    type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([self.cmd_type as u8, self.enable as u8]);

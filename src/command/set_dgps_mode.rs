@@ -1,21 +1,21 @@
 use crate::command::util::encode_data_field;
 use crate::error::PmtkError;
-use crate::response::ack::Ack;
-use crate::response::dgps_mode::DgpsMode;
+use crate::response::ack::AckDt;
+use crate::response::dgps_mode::DgpsModeDt;
 use crate::traits::{Command, Message};
 use crate::types::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
 pub struct SetDgpsMode { // TODO tuple struct
-    mode: DgpsMode,
+    mode: DgpsModeDt,
 }
 
 impl Message for SetDgpsMode {
     const PKT_TYPE: u16 = 301;
 }
 impl Command for SetDgpsMode {
-    type Response = Ack;
+    type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([self.mode as u8]);
@@ -31,7 +31,7 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let cmd = SetDgpsMode { mode: DgpsMode::RTCM };
+        let cmd = SetDgpsMode { mode: DgpsModeDt::RTCM };
         let packet = PmtkPacket {
             checksum: 0x2d,
             data_field: Some(DataField::from_str(",1").unwrap()),

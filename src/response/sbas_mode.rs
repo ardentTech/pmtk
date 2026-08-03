@@ -8,28 +8,28 @@ use crate::types::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Copy, Clone, Debug, Default, PartialEq)]
-pub enum SbasMode {
+pub enum SbasModeDt {
     #[default]
     Testing = 0x0,
     Integrity = 0x1,
 }
 
-impl Message for SbasMode {
+impl Message for SbasModeDt {
     const PKT_TYPE: u16 = 519;
 }
 
-impl TryFrom<u8> for SbasMode {
+impl TryFrom<u8> for SbasModeDt {
     type Error = PmtkError;
     fn try_from(value: u8) -> Result<Self, Self::Error> {
         match value {
-            0x0 => Ok(SbasMode::Testing),
-            0x1 => Ok(SbasMode::Integrity),
+            0x0 => Ok(SbasModeDt::Testing),
+            0x1 => Ok(SbasModeDt::Integrity),
             _ => Err(PmtkError::InvalidSbasMode(value))
         }
     }
 }
 
-impl TryFrom<DataField> for SbasMode {
+impl TryFrom<DataField> for SbasModeDt {
     type Error = PmtkError;
 
     fn try_from(value: DataField) -> Result<Self, Self::Error> {
@@ -38,15 +38,14 @@ impl TryFrom<DataField> for SbasMode {
         let (_, mode) = opt(|i| number_in_range::<u8>(i, 0, 3)).parse(i)?;
 
         if let Some(mode) = mode {
-            SbasMode::try_from(mode).map_err(|_| PmtkError::Parsing)
+            SbasModeDt::try_from(mode).map_err(|_| PmtkError::Parsing)
         } else {
             Err(PmtkError::Parsing)
         }
-
     }
 }
 
-impl Response for SbasMode {}
+impl Response for SbasModeDt {}
 
 #[cfg(test)]
 mod tests {
@@ -56,7 +55,7 @@ mod tests {
     #[test]
     fn try_from_data_field_ok() {
         let data_field = DataField::from_str(",1").unwrap();
-        let dgps_mode = SbasMode::try_from(data_field).unwrap();
-        assert_eq!(dgps_mode, SbasMode::Integrity);
+        let dgps_mode = SbasModeDt::try_from(data_field).unwrap();
+        assert_eq!(dgps_mode, SbasModeDt::Integrity);
     }
 }

@@ -5,13 +5,13 @@ use crate::error::PmtkError;
 use crate::traits::{Message, Response};
 use crate::types::DataField;
 
-pub struct NavThreshold(pub f32);
+pub struct NavThresholdDt(pub f32);
 
-impl Message for NavThreshold {
+impl Message for NavThresholdDt {
     const PKT_TYPE: u16 = 527;
 }
 
-impl TryFrom<DataField> for NavThreshold {
+impl TryFrom<DataField> for NavThresholdDt {
     type Error = PmtkError;
 
     fn try_from(value: DataField) -> Result<Self, Self::Error> {
@@ -22,7 +22,7 @@ impl TryFrom<DataField> for NavThreshold {
     }
 }
 
-impl Response for NavThreshold {}
+impl Response for NavThresholdDt {}
 
 #[cfg(test)]
 mod tests {
@@ -32,7 +32,7 @@ mod tests {
     #[test]
     fn try_from_data_field_ok() {
         let data_field = DataField::from_str(",0.8").unwrap();
-        let nav_threshold = NavThreshold::try_from(data_field).unwrap();
+        let nav_threshold = NavThresholdDt::try_from(data_field).unwrap();
         assert_eq!(nav_threshold.0, 0.8);
     }
 }

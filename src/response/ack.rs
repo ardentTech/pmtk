@@ -30,16 +30,16 @@ impl TryFrom<u8> for AckFlag {
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug)]
-pub struct Ack {
+pub struct AckDt {
     pub cmd: u16,
     pub flag: AckFlag
 }
 
-impl Message for Ack {
+impl Message for AckDt {
     const PKT_TYPE: u16 = 1;
 }
 
-impl TryFrom<DataField> for Ack {
+impl TryFrom<DataField> for AckDt {
     type Error = PmtkError;
 
     fn try_from(value: DataField) -> Result<Self, Self::Error> {
@@ -53,14 +53,14 @@ impl TryFrom<DataField> for Ack {
         let flag = AckFlag::try_from(flag.unwrap())?;
 
         if let Some(cmd) = cmd {
-            Ok(Ack { cmd, flag })
+            Ok(AckDt { cmd, flag })
         } else {
             Err(PmtkError::Parsing)
         }
     }
 }
 
-impl Response for Ack {}
+impl Response for AckDt {}
 
 #[cfg(test)]
 mod tests {
@@ -71,7 +71,7 @@ mod tests {
     #[test]
     fn try_from_data_field_ok() {
         let data_field = DataField::from_str(",604,3").unwrap();
-        let ack_data = Ack::try_from(data_field).unwrap();
+        let ack_data = AckDt::try_from(data_field).unwrap();
         assert_eq!(ack_data.cmd, 604);
         assert_eq!(ack_data.flag, AckFlag::ActionSucceeded);
     }

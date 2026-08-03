@@ -7,16 +7,16 @@ use crate::parse::number;
 use crate::traits::{Message, Response};
 use crate::types::DataField;
 
-pub struct Release {
+pub struct ReleaseDt {
     pub build_id: u16,
     pub s: Option<String<16>>,
 }
 
-impl Message for Release {
+impl Message for ReleaseDt {
     const PKT_TYPE: u16 = 705;
 }
 
-impl TryFrom<DataField> for Release {
+impl TryFrom<DataField> for ReleaseDt {
     type Error = PmtkError;
 
     fn try_from(value: DataField) -> Result<Self, Self::Error> {
@@ -32,14 +32,14 @@ impl TryFrom<DataField> for Release {
             Some(String::try_from(s)?)
         };
 
-        Ok(Release {
+        Ok(ReleaseDt {
             build_id,
             s
         })
     }
 }
 
-impl Response for Release {}
+impl Response for ReleaseDt {}
 
 #[cfg(test)]
 mod tests {
@@ -49,7 +49,7 @@ mod tests {
     #[test]
     fn try_from_data_field_ok() {
         let data_field = DataField::from_str(",AXN_1.3,2102,ABCD").unwrap();
-        let release = Release::try_from(data_field).unwrap();
+        let release = ReleaseDt::try_from(data_field).unwrap();
         assert_eq!(release.build_id, 2102);
         assert_eq!(release.s.unwrap(), "AXN_1.3");
     }

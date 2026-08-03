@@ -10,7 +10,7 @@ impl Message for Release {
 }
 
 impl Query for Release {
-    type Response = release::Release;
+    type R = release::ReleaseDt;
 }
 
 #[cfg(test)]

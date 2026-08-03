@@ -8,31 +8,31 @@ use crate::types::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
-pub enum SysMsg {
+pub enum SysMsgDt {
     Unknown = 0x0,
     Startup = 0x1,
     HostAidingEpoNotification = 0x2,
     NormalModeTransitionNotification = 0x3,
 }
 
-impl TryFrom<u8> for SysMsg {
+impl TryFrom<u8> for SysMsgDt {
     type Error = PmtkError;
     fn try_from(value: u8) -> Result<Self, Self::Error> {
         match value {
-            0x0 => Ok(SysMsg::Unknown),
-            0x1 => Ok(SysMsg::Startup),
-            0x2 => Ok(SysMsg::HostAidingEpoNotification),
-            0x3 => Ok(SysMsg::NormalModeTransitionNotification),
+            0x0 => Ok(SysMsgDt::Unknown),
+            0x1 => Ok(SysMsgDt::Startup),
+            0x2 => Ok(SysMsgDt::HostAidingEpoNotification),
+            0x3 => Ok(SysMsgDt::NormalModeTransitionNotification),
             _ => Err(PmtkError::InvalidSysMsg(value)),
         }
     }
 }
 
-impl Message for SysMsg {
+impl Message for SysMsgDt {
     const PKT_TYPE: u16 = 10;
 }
 
-impl TryFrom<DataField> for SysMsg {
+impl TryFrom<DataField> for SysMsgDt {
     type Error = PmtkError;
     fn try_from(value: DataField) -> Result<Self, Self::Error> {
         let i = value.as_str();
@@ -40,14 +40,14 @@ impl TryFrom<DataField> for SysMsg {
         let (_, msg) = opt(|i| number_in_range::<u8>(i, 0, 3)).parse(i)?;
 
         if let Some(msg) = msg {
-            SysMsg::try_from(msg)
+            SysMsgDt::try_from(msg)
         } else {
             Err(PmtkError::Parsing)
         }
     }
 }
 
-impl Response for SysMsg {}
+impl Response for SysMsgDt {}
 
 #[cfg(test)]
 mod tests {
@@ -58,7 +58,7 @@ mod tests {
     #[test]
     fn try_from_data_field_ok() {
         let data_field = DataField::from_str(",001").unwrap();
-        let sys_msg = SysMsg::try_from(data_field).unwrap();
-        assert_eq!(sys_msg, SysMsg::Startup);
+        let sys_msg = SysMsgDt::try_from(data_field).unwrap();
+        assert_eq!(sys_msg, SysMsgDt::Startup);
     }
 }

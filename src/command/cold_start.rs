@@ -1,5 +1,5 @@
 use crate::error::PmtkError;
-use crate::response::ack::Ack;
+use crate::response::ack::AckDt;
 use crate::traits::{Command, Message};
 use crate::types::PmtkPacket;
 
@@ -12,7 +12,7 @@ impl Message for ColdStart {
 }
 
 impl Command for ColdStart {
-    type Response = Ack;
+    type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         PmtkPacket::new_command(Self::PKT_TYPE, None)

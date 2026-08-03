@@ -1,4 +1,4 @@
-use crate::response::sbas_mode::SbasMode;
+use crate::response::sbas_mode::SbasModeDt;
 use crate::traits::{Message, Query};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -8,7 +8,7 @@ impl Message for SbasModeQuery {
     const PKT_TYPE: u16 = 419;
 }
 impl Query for SbasModeQuery {
-    type Response = SbasMode;
+    type R = SbasModeDt;
 }
 
 

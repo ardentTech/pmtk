@@ -35,7 +35,7 @@ impl TryFrom<u8> for Frequency {
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Copy, Clone, Debug)]
-pub struct NmeaOutput {
+pub struct NmeaOutputDt {
     pub gll: Frequency,
     pub rmc: Frequency,
     pub vtg: Frequency,
@@ -45,11 +45,11 @@ pub struct NmeaOutput {
     pub mchn: Frequency,
 }
 
-impl Message for NmeaOutput {
+impl Message for NmeaOutputDt {
     const PKT_TYPE: u16 = 514;
 }
 
-impl TryFrom<DataField> for NmeaOutput {
+impl TryFrom<DataField> for NmeaOutputDt {
     type Error = PmtkError;
 
     fn try_from(value: DataField) -> Result<Self, Self::Error> {
@@ -107,7 +107,7 @@ impl TryFrom<DataField> for NmeaOutput {
     }
 }
 
-impl Response for NmeaOutput {}
+impl Response for NmeaOutputDt {}
 
 #[cfg(test)]
 mod tests {
@@ -117,7 +117,7 @@ mod tests {
     #[test]
     fn try_from_data_field_ok() {
         let data_field = DataField::from_str(",1,1,1,1,1,5,0,0,0,0,0,0,0,0,0,0,0,0,3").unwrap();
-        let nmea_output = NmeaOutput::try_from(data_field).unwrap();
+        let nmea_output = NmeaOutputDt::try_from(data_field).unwrap();
         assert_eq!(nmea_output.gll, OnceEveryOnePositionFix);
         assert_eq!(nmea_output.rmc, OnceEveryOnePositionFix);
         assert_eq!(nmea_output.vtg, OnceEveryOnePositionFix);

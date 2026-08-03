@@ -8,7 +8,7 @@ impl Message for SbasEnabled {
     const PKT_TYPE: u16 = 413;
 }
 impl Query for SbasEnabled {
-    type Response = sbas_enabled::SbasEnabled;
+    type R = sbas_enabled::SbasEnabledDt;
 }
 
 #[cfg(test)]

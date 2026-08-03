@@ -1,6 +1,6 @@
 use crate::command::util::encode_data_field;
 use crate::error::PmtkError;
-use crate::response::ack::Ack;
+use crate::response::ack::AckDt;
 use crate::traits::{Command, Message};
 use crate::types::PmtkPacket;
 
@@ -67,7 +67,7 @@ impl Message for PeriodicMode {
 }
 
 impl Command for PeriodicMode {
-    type Response = Ack;
+    type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let mut data_field = encode_data_field([self.mode as u32]);
