@@ -15,7 +15,7 @@ pub struct SetNmeaUpdateRate {
 impl SetNmeaUpdateRate {
     pub fn new(ms: u16) -> Result<SetNmeaUpdateRate, PmtkError> {
         if ms < MIN_MS || ms > MAX_MS {
-            Err(PmtkError::InvalidNmeaUpdateRate(ms))
+            Err(PmtkError::OutOfRange(MIN_MS as u32, MAX_MS as u32, ms as u32))
         } else {
             Ok(SetNmeaUpdateRate { ms })
         }

@@ -23,7 +23,7 @@ impl TryFrom<u8> for AckFlag {
             0x1 => Ok(AckFlag::Unsupported),
             0x2 => Ok(AckFlag::ActionFailed),
             0x3 => Ok(AckFlag::ActionSucceeded),
-            _ => Err(PmtkError::InvalidAckFlag(value)),
+            _ => Err(PmtkError::OutOfRange(0x0, 0x3, value as u32)),
         }
     }
 }

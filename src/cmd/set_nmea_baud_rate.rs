@@ -13,7 +13,7 @@ pub struct SetNmeaBaudRate {
 impl SetNmeaBaudRate {
     pub fn new(rate: u32) -> Result<Self, PmtkError> {
         if ![0, 4800, 9600, 14400, 19200, 38400, 57600, 115200].contains(&rate) {
-            return Err(PmtkError::InvalidBaudRate(rate));
+            return Err(PmtkError::InvalidChoice(rate));
         }
         Ok(Self { bps: rate })
     }

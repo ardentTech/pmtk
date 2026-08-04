@@ -23,7 +23,7 @@ impl TryFrom<u8> for SysMsgDt {
             0x1 => Ok(SysMsgDt::Startup),
             0x2 => Ok(SysMsgDt::HostAidingEpoNotification),
             0x3 => Ok(SysMsgDt::NormalModeTransitionNotification),
-            _ => Err(PmtkError::InvalidSysMsg(value)),
+            _ => Err(PmtkError::OutOfRange(0x0, 0x3, value as u32)),
         }
     }
 }

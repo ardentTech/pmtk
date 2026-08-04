@@ -28,7 +28,7 @@ impl TryFrom<u8> for Frequency {
             0x3 => Ok(OnceEveryThreePositionFixes),
             0x4 => Ok(OnceEveryFourPositionFixes),
             0x5 => Ok(OnceEveryFivePositionFixes),
-            _ => Err(PmtkError::InvalidNmeaOutputFrequency(value)),
+            _ => Err(PmtkError::OutOfRange(0x0, 0x5, value as u32)),
         }
     }
 }

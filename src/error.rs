@@ -9,19 +9,9 @@ pub enum PmtkError {
     ChecksumMismatch,
     CoreFmt(fmt::Error),
     Decoding,
-    InvalidAckFlag(u8),
-    InvalidBaudRate(u32),
-    InvalidDgpsMode(u8),
+    InvalidChoice(u32),
     InvalidNavSpeedThreshold(f32),
-    InvalidNmeaOutputFrequency(u8),
-    InvalidNmeaUpdateRate(u16),
-    InvalidPeriodModeRunTime(u32),
-    InvalidPeriodModeSleepTime(u32),
-    InvalidPeriodModeSecondRunTime(u32),
-    InvalidPeriodModeSecondSleepTime(u32),
-    InvalidSbasMode(u8),
-    InvalidSysMsg(u8),
-    InputOutOfRange, // TODO use this and replace above
+    OutOfRange(u32, u32, u32),
     Parsing
 }
 impl<'a> From<nom::Err<nom::error::Error<&'a str>>> for PmtkError {

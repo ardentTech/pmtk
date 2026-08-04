@@ -11,7 +11,7 @@ pub struct SetDatum(u8);
 impl SetDatum {
     fn new(datum: u8) -> Result<Self, PmtkError> {
         if !(0..=222).contains(&datum) {
-            return Err(PmtkError::InputOutOfRange)
+            return Err(PmtkError::OutOfRange(0, 222, datum as u32));
         }
         Ok(Self { 0: datum })
     }

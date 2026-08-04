@@ -25,16 +25,16 @@ pub struct SetAlDeeCfg {
 impl SetAlDeeCfg {
     pub fn new(extension_gap: u32, extension_threshold: u32, snr: u8, sv: u8) -> Result<Self, PmtkError> {
         if !(EXTENSION_GAP_MIN..=EXTENSION_GAP_MAX).contains(&extension_gap) {
-            return Err(PmtkError::InputOutOfRange)
+            return Err(PmtkError::OutOfRange(EXTENSION_GAP_MIN, EXTENSION_GAP_MAX, extension_gap))
         }
         if !(EXTENSION_THRESHOLD_MIN..=EXTENSION_THRESHOLD_MAX).contains(&extension_threshold) {
-            return Err(PmtkError::InputOutOfRange)
+            return Err(PmtkError::OutOfRange(EXTENSION_THRESHOLD_MIN, EXTENSION_THRESHOLD_MAX, extension_threshold))
         }
         if !(SNR_MIN..=SNR_MAX).contains(&snr) {
-            return Err(PmtkError::InputOutOfRange)
+            return Err(PmtkError::OutOfRange(SNR_MIN as u32, SNR_MAX as u32, snr as u32))
         }
         if !(SV_MIN..=SV_MAX).contains(&sv) {
-            return Err(PmtkError::InputOutOfRange)
+            return Err(PmtkError::OutOfRange(SV_MIN as u32, SV_MAX as u32, sv as u32))
         }
         Ok(Self { extension_gap, extension_threshold, snr, sv })
     }

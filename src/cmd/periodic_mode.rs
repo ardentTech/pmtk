@@ -40,22 +40,22 @@ impl PeriodicMode {
     ) -> Result<Self, PmtkError> {
         if let Some(run_time) = run_time {
             if !(TIME_MIN..=TIME_MAX).contains(&run_time) {
-                return Err(PmtkError::InvalidPeriodModeRunTime(run_time))
+                return Err(PmtkError::OutOfRange(TIME_MIN, TIME_MAX, run_time))
             }
         }
         if let Some(sleep_time) = sleep_time {
             if !(TIME_MIN..=TIME_MAX).contains(&sleep_time) {
-                return Err(PmtkError::InvalidPeriodModeSleepTime(sleep_time))
+                return Err(PmtkError::OutOfRange(TIME_MIN, TIME_MAX, sleep_time))
             }
         }
         if let Some(second_run_time) = second_run_time {
             if !(TIME_MIN..=TIME_MAX).contains(&second_run_time) {
-                return Err(PmtkError::InvalidPeriodModeSecondRunTime(second_run_time))
+                return Err(PmtkError::OutOfRange(TIME_MIN, TIME_MAX, second_run_time))
             }
         }
         if let Some(second_sleep_time) = second_sleep_time {
             if !(TIME_MIN..=TIME_MAX).contains(&second_sleep_time) {
-                return Err(PmtkError::InvalidPeriodModeSecondSleepTime(second_sleep_time))
+                return Err(PmtkError::OutOfRange(TIME_MIN, TIME_MAX, second_sleep_time))
             }
         }
         Ok(Self { mode, run_time, sleep_time, second_run_time, second_sleep_time })

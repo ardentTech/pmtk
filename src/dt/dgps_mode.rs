@@ -26,7 +26,7 @@ impl TryFrom<u8> for DgpsModeDt {
             0 => Ok(DgpsModeDt::None),
             1 => Ok(DgpsModeDt::RTCM),
             2 => Ok(DgpsModeDt::WAAS),
-            _ => Err(PmtkError::InvalidDgpsMode(mode)),
+            _ => Err(PmtkError::OutOfRange(0x0, 0x2, mode as u32)),
         }
     }
 }

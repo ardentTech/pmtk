@@ -24,7 +24,7 @@ impl TryFrom<u8> for SbasModeDt {
         match value {
             0x0 => Ok(SbasModeDt::Testing),
             0x1 => Ok(SbasModeDt::Integrity),
-            _ => Err(PmtkError::InvalidSbasMode(value))
+            _ => Err(PmtkError::OutOfRange(0x0, 0x1, value as u32))
         }
     }
 }
