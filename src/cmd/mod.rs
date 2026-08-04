@@ -22,7 +22,7 @@ pub mod aic_mode;
 pub mod easy_enable;
 #[cfg(feature = "mt3339")]
 pub mod locus_config;
-mod set_datum;
+pub mod set_datum;
 #[cfg(feature = "mt3339")]
 pub mod set_support_qzss_nmea;
 #[cfg(feature = "mt3339")]

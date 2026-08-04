@@ -5,4 +5,4 @@ pub mod sbas_mode;
 pub mod release;
 pub mod epo_info;
 pub mod nav_threshold;
-mod datum;
+pub mod datum;
