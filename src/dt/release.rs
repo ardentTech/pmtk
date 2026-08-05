@@ -4,8 +4,8 @@ use nom::character::complete::char;
 use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number;
-use crate::traits::{Message, Response};
-use crate::types::DataField;
+use crate::traits::{PmtkSentence, PmtkDt};
+use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
@@ -14,7 +14,7 @@ pub struct ReleaseDt {
     pub s: Option<String<16>>,
 }
 
-impl Message for ReleaseDt {
+impl PmtkSentence for ReleaseDt {
     const PKT_TYPE: u16 = 705;
 }
 
@@ -41,7 +41,7 @@ impl TryFrom<DataField> for ReleaseDt {
     }
 }
 
-impl Response for ReleaseDt {}
+impl PmtkDt for ReleaseDt {}
 
 #[cfg(test)]
 mod tests {

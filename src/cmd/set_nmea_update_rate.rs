@@ -1,8 +1,8 @@
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{Command, Message};
-use crate::types::PmtkPacket;
+use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::packet::PmtkPacket;
 
 const MIN_MS: u16 = 100;
 const MAX_MS: u16 = 10_000;
@@ -22,12 +22,12 @@ impl SetNmeaUpdateRateCmd {
     }
 }
 
-impl Message for SetNmeaUpdateRateCmd {
+impl PmtkSentence for SetNmeaUpdateRateCmd {
     const PKT_TYPE: u16 = 220;
 }
 
-impl Command for SetNmeaUpdateRateCmd {
-    type R = AckDt;
+impl PmtkCmd for SetNmeaUpdateRateCmd {
+    type DataType = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([self.ms as u32]);
@@ -38,7 +38,7 @@ impl Command for SetNmeaUpdateRateCmd {
 #[cfg(test)]
 mod tests {
     use core::str::FromStr;
-    use crate::types::DataField;
+    use crate::packet::DataField;
     use super::*;
 
     #[test]

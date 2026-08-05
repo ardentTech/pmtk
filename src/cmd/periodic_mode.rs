@@ -1,8 +1,8 @@
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{Command, Message};
-use crate::types::PmtkPacket;
+use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::packet::PmtkPacket;
 
 const TIME_MIN: u32 = 1_000;
 const TIME_MAX: u32 = 518_400_000;
@@ -62,12 +62,12 @@ impl PeriodicModeCmd {
     }
 }
 
-impl Message for PeriodicModeCmd {
+impl PmtkSentence for PeriodicModeCmd {
     const PKT_TYPE: u16 = 225;
 }
 
-impl Command for PeriodicModeCmd {
-    type R = AckDt;
+impl PmtkCmd for PeriodicModeCmd {
+    type DataType = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let mut data_field = encode_data_field([self.mode as u32]);
@@ -92,7 +92,7 @@ impl Command for PeriodicModeCmd {
 mod tests {
     use core::str::FromStr;
     use crate::cmd::periodic_mode::OperationMode::{AlwaysLocateBackup, Normal, PeriodicBackup};
-    use crate::types::DataField;
+    use crate::packet::DataField;
     use super::*;
 
     #[test]

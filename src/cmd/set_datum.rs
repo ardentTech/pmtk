@@ -1,8 +1,8 @@
 use crate::cmd::util::encode_data_field;
 use crate::dt::ack::AckDt;
 use crate::error::PmtkError;
-use crate::traits::{Command, Message};
-use crate::types::PmtkPacket;
+use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
@@ -17,12 +17,12 @@ impl SetDatumCmd {
     }
 }
 
-impl Message for SetDatumCmd {
+impl PmtkSentence for SetDatumCmd {
     const PKT_TYPE: u16 = 330;
 }
 
-impl Command for SetDatumCmd {
-    type R = AckDt;
+impl PmtkCmd for SetDatumCmd {
+    type DataType = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([self.0]);
@@ -33,7 +33,7 @@ impl Command for SetDatumCmd {
 #[cfg(test)]
 mod tests {
     use core::str::FromStr;
-    use crate::types::DataField;
+    use crate::packet::DataField;
     use super::*;
 
     #[test]

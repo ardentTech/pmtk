@@ -1,6 +1,6 @@
 use core::fmt::{Display, Write};
 use heapless::String;
-use crate::types::DataField;
+use crate::packet::DataField;
 
 pub(crate) fn encode_data_field<T: Display, const N: usize>(data: [T; N]) -> DataField {
     let mut data_field = String::new();

@@ -1,20 +1,20 @@
 use crate::dt::epo_info::EpoInfoDt;
-use crate::traits::{Message, Query};
+use crate::traits::{PmtkSentence, PmtkQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct EpoInfoQ {}
-impl Message for EpoInfoQ {
+impl PmtkSentence for EpoInfoQ {
     const PKT_TYPE: u16 = 607;
 }
-impl Query for EpoInfoQ {
-    type R = EpoInfoDt;
+impl PmtkQ for EpoInfoQ {
+    type DataType = EpoInfoDt;
 }
 
 
 #[cfg(test)]
 mod tests {
-    use crate::types::PmtkPacket;
+    use crate::packet::PmtkPacket;
     use super::*;
 
     #[test]

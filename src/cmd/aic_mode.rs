@@ -1,17 +1,17 @@
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{Command, Message};
-use crate::types::PmtkPacket;
+use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::packet::PmtkPacket;
 
 pub struct AicModeCmd(pub bool);
 
-impl Message for AicModeCmd {
+impl PmtkSentence for AicModeCmd {
     const PKT_TYPE: u16 = 286;
 }
 
-impl Command for AicModeCmd {
-    type R = AckDt;
+impl PmtkCmd for AicModeCmd {
+    type DataType = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([self.0 as u8]);
@@ -22,7 +22,7 @@ impl Command for AicModeCmd {
 #[cfg(test)]
 mod tests {
     use core::str::FromStr;
-    use crate::types::{DataField, PmtkPacket};
+    use crate::packet::{DataField, PmtkPacket};
     use super::*;
 
     #[test]

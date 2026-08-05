@@ -1,21 +1,21 @@
 use crate::dt::release;
-use crate::traits::{Message, Query};
+use crate::traits::{PmtkSentence, PmtkQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct ReleaseQ {}
 
-impl Message for ReleaseQ {
+impl PmtkSentence for ReleaseQ {
     const PKT_TYPE: u16 = 605;
 }
 
-impl Query for ReleaseQ {
-    type R = release::ReleaseDt;
+impl PmtkQ for ReleaseQ {
+    type DataType = release::ReleaseDt;
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::types::PmtkPacket;
+    use crate::packet::PmtkPacket;
     use super::*;
 
     #[test]

@@ -1,21 +1,21 @@
 use crate::dt::nav_threshold;
-use crate::traits::{Message, Query};
+use crate::traits::{PmtkSentence, PmtkQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct NavThresholdQ {}
 
-impl Message for NavThresholdQ {
+impl PmtkSentence for NavThresholdQ {
     const PKT_TYPE: u16 = 447;
 }
 
-impl Query for NavThresholdQ {
-    type R = nav_threshold::NavThresholdDt;
+impl PmtkQ for NavThresholdQ {
+    type DataType = nav_threshold::NavThresholdDt;
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::types::PmtkPacket;
+    use crate::packet::PmtkPacket;
     use super::*;
 
     #[test]

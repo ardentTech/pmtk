@@ -1,20 +1,20 @@
 use crate::dt::dgps_mode::DgpsModeDt;
-use crate::traits::{Message, Query};
+use crate::traits::{PmtkSentence, PmtkQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct DgpsModeQ {}
-impl Message for DgpsModeQ {
+impl PmtkSentence for DgpsModeQ {
     const PKT_TYPE: u16 = 401;
 }
-impl Query for DgpsModeQ {
-    type R = DgpsModeDt;
+impl PmtkQ for DgpsModeQ {
+    type DataType = DgpsModeDt;
 }
 
 
 #[cfg(test)]
 mod tests {
-    use crate::types::PmtkPacket;
+    use crate::packet::PmtkPacket;
     use super::*;
 
     #[test]

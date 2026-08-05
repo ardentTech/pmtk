@@ -1,19 +1,19 @@
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{Command, Message};
-use crate::types::PmtkPacket;
+use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
 pub struct LocusConfigCmd(pub u8);
 
-impl Message for LocusConfigCmd {
+impl PmtkSentence for LocusConfigCmd {
     const PKT_TYPE: u16 = 187;
 }
 
-impl Command for LocusConfigCmd {
-    type R = AckDt;
+impl PmtkCmd for LocusConfigCmd {
+    type DataType = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([1, self.0]);
@@ -24,7 +24,7 @@ impl Command for LocusConfigCmd {
 #[cfg(test)]
 mod tests {
     use core::str::FromStr;
-    use crate::types::{DataField, PmtkPacket};
+    use crate::packet::{DataField, PmtkPacket};
     use super::*;
 
     #[test]

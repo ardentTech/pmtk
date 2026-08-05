@@ -1,17 +1,17 @@
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{Command, Message};
-use crate::types::PmtkPacket;
+use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::packet::PmtkPacket;
 
 pub struct SetSupportQzssNmeaCmd(pub bool);
 
-impl Message for SetSupportQzssNmeaCmd {
+impl PmtkSentence for SetSupportQzssNmeaCmd {
     const PKT_TYPE: u16 = 351;
 }
 
-impl Command for SetSupportQzssNmeaCmd {
-    type R = AckDt;
+impl PmtkCmd for SetSupportQzssNmeaCmd {
+    type DataType = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([self.0 as u8]);
@@ -22,7 +22,7 @@ impl Command for SetSupportQzssNmeaCmd {
 #[cfg(test)]
 mod tests {
     use core::str::FromStr;
-    use crate::types::DataField;
+    use crate::packet::DataField;
     use super::*;
 
     #[test]

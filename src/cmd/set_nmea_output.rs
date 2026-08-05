@@ -2,8 +2,8 @@ use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
 use crate::dt::nmea_output::{Frequency, NmeaOutputDt};
-use crate::traits::{Command, Message};
-use crate::types::PmtkPacket;
+use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
@@ -17,12 +17,12 @@ pub struct SetNmeaOutputCmd {
     mchn: Frequency,
 }
 
-impl Message for SetNmeaOutputCmd {
+impl PmtkSentence for SetNmeaOutputCmd {
     const PKT_TYPE: u16 = 314;
 }
 
-impl Command for SetNmeaOutputCmd {
-    type R = AckDt;
+impl PmtkCmd for SetNmeaOutputCmd {
+    type DataType = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([
@@ -43,7 +43,7 @@ impl Command for SetNmeaOutputCmd {
 mod tests {
     use core::str::FromStr;
     use crate::dt::nmea_output::Frequency::{Disabled, OnceEveryFivePositionFixes, OnceEveryOnePositionFix};
-    use crate::types::DataField;
+    use crate::packet::DataField;
     use super::*;
 
     #[test]

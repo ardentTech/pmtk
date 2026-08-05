@@ -1,18 +1,18 @@
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{Command, Message};
-use crate::types::PmtkPacket;
+use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
 pub struct HotStartCmd;
 
-impl Message for HotStartCmd {
+impl PmtkSentence for HotStartCmd {
     const PKT_TYPE: u16 = 101;
 }
 
-impl Command for HotStartCmd {
-    type R = AckDt;
+impl PmtkCmd for HotStartCmd {
+    type DataType = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         PmtkPacket::new_command(Self::PKT_TYPE, None)

@@ -3,8 +3,8 @@ use nom::combinator::opt;
 use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number_in_range;
-use crate::traits::{Message, Response};
-use crate::types::DataField;
+use crate::traits::{PmtkSentence, PmtkDt};
+use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
@@ -28,7 +28,7 @@ impl TryFrom<u8> for SysMsgDt {
     }
 }
 
-impl Message for SysMsgDt {
+impl PmtkSentence for SysMsgDt {
     const PKT_TYPE: u16 = 10;
 }
 
@@ -47,13 +47,13 @@ impl TryFrom<DataField> for SysMsgDt {
     }
 }
 
-impl Response for SysMsgDt {}
+impl PmtkDt for SysMsgDt {}
 
 #[cfg(test)]
 mod tests {
     use core::str::FromStr;
     use super::*;
-    use crate::types::DataField;
+    use crate::packet::DataField;
 
     #[test]
     fn try_from_data_field_ok() {

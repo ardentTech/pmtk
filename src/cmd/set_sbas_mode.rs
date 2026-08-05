@@ -2,18 +2,18 @@ use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
 use crate::dt::sbas_mode::SbasModeDt;
-use crate::traits::{Command, Message};
-use crate::types::PmtkPacket;
+use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
 pub struct SetSbasModeCmd(pub SbasModeDt);
 
-impl Message for SetSbasModeCmd {
+impl PmtkSentence for SetSbasModeCmd {
     const PKT_TYPE: u16 = 319;
 }
-impl Command for SetSbasModeCmd {
-    type R = AckDt;
+impl PmtkCmd for SetSbasModeCmd {
+    type DataType = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([self.0 as u8]);
@@ -24,7 +24,7 @@ impl Command for SetSbasModeCmd {
 #[cfg(test)]
 mod tests {
     use core::str::FromStr;
-    use crate::types::DataField;
+    use crate::packet::DataField;
     use super::*;
 
     #[test]

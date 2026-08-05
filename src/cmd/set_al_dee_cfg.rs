@@ -1,8 +1,8 @@
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{Command, Message};
-use crate::types::PmtkPacket;
+use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::packet::PmtkPacket;
 
 const EXTENSION_GAP_MIN: u32 = 0;
 const EXTENSION_GAP_MAX: u32 = 3_600_000;
@@ -51,12 +51,12 @@ impl Default for SetAlDeeCfgCmd {
     }
 }
 
-impl Message for SetAlDeeCfgCmd {
+impl PmtkSentence for SetAlDeeCfgCmd {
     const PKT_TYPE: u16 = 223;
 }
 
-impl Command for SetAlDeeCfgCmd {
-    type R = AckDt;
+impl PmtkCmd for SetAlDeeCfgCmd {
+    type DataType = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([
@@ -69,7 +69,7 @@ impl Command for SetAlDeeCfgCmd {
 #[cfg(test)]
 mod tests {
     use core::str::FromStr;
-    use crate::types::DataField;
+    use crate::packet::DataField;
     use super::*;
 
     #[test]

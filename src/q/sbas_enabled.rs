@@ -1,19 +1,19 @@
 use crate::dt::sbas_enabled;
-use crate::traits::{Message, Query};
+use crate::traits::{PmtkSentence, PmtkQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct SbasEnabledQ {}
-impl Message for SbasEnabledQ {
+impl PmtkSentence for SbasEnabledQ {
     const PKT_TYPE: u16 = 413;
 }
-impl Query for SbasEnabledQ {
-    type R = sbas_enabled::SbasEnabledDt;
+impl PmtkQ for SbasEnabledQ {
+    type DataType = sbas_enabled::SbasEnabledDt;
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::types::PmtkPacket;
+    use crate::packet::PmtkPacket;
     use super::*;
 
     #[test]

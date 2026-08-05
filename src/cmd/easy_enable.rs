@@ -1,8 +1,8 @@
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{Command, Message};
-use crate::types::PmtkPacket;
+use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -19,12 +19,12 @@ pub struct EasyEnableCmd { // TODO this might be better as a Response type?
     enable: bool,
 }
 
-impl Message for EasyEnableCmd {
+impl PmtkSentence for EasyEnableCmd {
     const PKT_TYPE: u16 = 869;
 }
 
-impl Command for EasyEnableCmd {
-    type R = AckDt;
+impl PmtkCmd for EasyEnableCmd {
+    type DataType = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([self.cmd_type as u8, self.enable as u8]);
@@ -35,7 +35,7 @@ impl Command for EasyEnableCmd {
 #[cfg(test)]
 mod tests {
     use core::str::FromStr;
-    use crate::types::{DataField, PmtkPacket};
+    use crate::packet::{DataField, PmtkPacket};
     use super::*;
 
     #[test]

@@ -1,20 +1,20 @@
 use crate::dt::nmea_output::NmeaOutputDt;
-use crate::traits::{Message, Query};
+use crate::traits::{PmtkSentence, PmtkQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct NmeaOutputQ {}
-impl Message for NmeaOutputQ {
+impl PmtkSentence for NmeaOutputQ {
     const PKT_TYPE: u16 = 414;
 }
-impl Query for NmeaOutputQ {
-    type R = NmeaOutputDt;
+impl PmtkQ for NmeaOutputQ {
+    type DataType = NmeaOutputDt;
 }
 
 
 #[cfg(test)]
 mod tests {
-    use crate::types::PmtkPacket;
+    use crate::packet::PmtkPacket;
     use super::*;
 
     #[test]

@@ -7,7 +7,7 @@ use nom::combinator::map_res;
 use nom::IResult;
 use nom::sequence::preceded;
 use crate::error::PmtkError;
-use crate::types::PmtkPacket;
+use crate::packet::PmtkPacket;
 
 fn hex(data: &str) -> Result<u8, &'static str> {
     u8::from_str_radix(data, 16).map_err(|_| "Failed to parse checksum as hex number")

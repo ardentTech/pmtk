@@ -1,20 +1,20 @@
 use crate::dt::datum::DatumDt;
-use crate::traits::{Message, Query};
+use crate::traits::{PmtkSentence, PmtkQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct DatumQ {}
-impl Message for DatumQ {
+impl PmtkSentence for DatumQ {
     const PKT_TYPE: u16 = 430;
 }
-impl Query for DatumQ {
-    type R = DatumDt;
+impl PmtkQ for DatumQ {
+    type DataType = DatumDt;
 }
 
 
 #[cfg(test)]
 mod tests {
-    use crate::types::PmtkPacket;
+    use crate::packet::PmtkPacket;
     use super::*;
 
     #[test]

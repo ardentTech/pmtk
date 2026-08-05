@@ -1,19 +1,6 @@
-use core::str::from_utf8;
-use heapless::{format, String};
 use crate::error::PmtkError;
-use crate::error::PmtkError::Decoding;
 use crate::parse;
-use crate::dt::ack::AckDt;
-use crate::dt::dgps_mode::DgpsModeDt;
-use crate::dt::epo_info::EpoInfoDt;
-use crate::dt::nav_threshold::NavThresholdDt;
-use crate::dt::nmea_output::NmeaOutputDt;
-use crate::dt::release::ReleaseDt;
-use crate::dt::sbas_enabled::SbasEnabledDt;
-use crate::dt::sbas_mode::SbasModeDt;
-use crate::dt::sys_msg::SysMsgDt;
-use crate::dt::txt_msg::TxtMsgDt;
-use crate::traits::Message;
+use heapless::{String, format};
 
 const PACKET_LEN: usize = 255;
 pub(crate) const DATA_FIELD_LEN: usize = 242;
@@ -26,7 +13,7 @@ pub(crate) type DataField = String<DATA_FIELD_LEN>;
 pub struct PmtkPacket {
     pub(crate) checksum: u8,
     pub(crate) data_field: Option<DataField>, // TODO diff between Req (cmd + q) and Res?
-    pub(crate) pkt_type: u16
+    pub(crate) pkt_type: u16,
 }
 
 impl PmtkPacket {
@@ -80,51 +67,11 @@ impl PmtkPacket {
     }
 }
 
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(Debug, PartialEq)]
-pub enum PmtkResponse {
-    Ack(AckDt),
-    SysMsg(SysMsgDt),
-    TxtMsg(TxtMsgDt),
-    DgpsMode(DgpsModeDt),
-    SbasEnabled(SbasEnabledDt),
-    NmeaOutput(NmeaOutputDt),
-    SbasMode(SbasModeDt),
-    NavThreshold(NavThresholdDt),
-    Release(ReleaseDt),
-    EpoInfo(EpoInfoDt),
-}
-impl TryFrom<&[u8]> for PmtkResponse {
-    type Error = PmtkError;
-
-    fn try_from(buf: &[u8]) -> Result<Self, Self::Error> {
-        let packet = parse::packet(from_utf8(buf).map_err(|_| PmtkError::Parsing)?)?;
-
-        if let Some(data_field) = packet.data_field {
-            match packet.pkt_type {
-                AckDt::PKT_TYPE => Ok(Self::Ack(AckDt::try_from(data_field).map_err(|_| Decoding)?)),
-                SysMsgDt::PKT_TYPE => Ok(Self::SysMsg(SysMsgDt::try_from(data_field).map_err(|_| Decoding)?)),
-                TxtMsgDt::PKT_TYPE => Ok(Self::TxtMsg(TxtMsgDt::try_from(data_field).map_err(|_| Decoding)?)),
-                DgpsModeDt::PKT_TYPE => Ok(Self::DgpsMode(DgpsModeDt::try_from(data_field).map_err(|_| Decoding)?)),
-                SbasEnabledDt::PKT_TYPE => Ok(Self::SbasEnabled(SbasEnabledDt::try_from(data_field).map_err(|_| Decoding)?)),
-                NmeaOutputDt::PKT_TYPE => Ok(Self::NmeaOutput(NmeaOutputDt::try_from(data_field).map_err(|_| Decoding)?)),
-                SbasModeDt::PKT_TYPE => Ok(Self::SbasMode(SbasModeDt::try_from(data_field).map_err(|_| Decoding)?)),
-                NavThresholdDt::PKT_TYPE => Ok(Self::NavThreshold(NavThresholdDt::try_from(data_field).map_err(|_| Decoding)?)),
-                ReleaseDt::PKT_TYPE => Ok(Self::Release(ReleaseDt::try_from(data_field).map_err(|_| Decoding)?)),
-                EpoInfoDt::PKT_TYPE => Ok(Self::EpoInfo(EpoInfoDt::try_from(data_field).map_err(|_| Decoding)?)),
-                _ => Err(Decoding)
-            }
-        } else {
-            Err(Decoding)
-        }
-    }
-}
-
 
 #[cfg(test)]
 mod tests {
-    use core::str::FromStr;
     use super::*;
+    use core::str::FromStr;
 
     #[test]
     fn decode_command_ok() {
@@ -170,23 +117,5 @@ mod tests {
     #[test]
     fn generate_checksum_ok() {
         assert_eq!(PmtkPacket::generate_checksum(b"PMTK011,MTKGPS"), 08);
-    }
-
-    #[test]
-    fn pmtk_response_try_from_checksum_err() {
-        let raw = "$PMTK514,0,1,1,1,1,5,0,0,0,0,0,0,0,0,0,0,0,0,0*3B\r\n";
-        assert!(PmtkResponse::try_from(raw.as_bytes()).is_err());
-    }
-
-    #[test]
-    fn pmtk_response_try_from_parse_err() {
-        let raw = "$PMTK514,0,1,1,1,1,5,0,0,0,0,0,0,0,0,0,0,0,0*2B\r\n";
-        assert!(PmtkResponse::try_from(raw.as_bytes()).is_err());
-    }
-
-    #[test]
-    fn pmtk_response_try_from_ok() {
-        let raw = "$PMTK514,0,1,1,1,1,5,0,0,0,0,0,0,0,0,0,0,0,0,0*2B\r\n";
-        assert!(PmtkResponse::try_from(raw.as_bytes()).is_ok());
     }
 }
