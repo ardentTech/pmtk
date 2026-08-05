@@ -11,10 +11,10 @@ pub mod dt;
 pub mod q;
 pub mod cmd;
 
-struct Pmtk;
+pub struct Pmtk;
 
 impl Pmtk {
-    fn decode(&self, buf: &[u8]) -> Result<PmtkResponse, PmtkError> {
+    pub fn decode(&self, buf: &[u8]) -> Result<PmtkResponse, PmtkError> {
         PmtkResponse::try_from(buf)
     }
 }
