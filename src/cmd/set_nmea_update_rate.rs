@@ -9,24 +9,24 @@ const MAX_MS: u16 = 10_000;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct SetNmeaUpdateRate {
+pub struct SetNmeaUpdateRateCmd {
     ms: u16
 }
-impl SetNmeaUpdateRate {
-    pub fn new(ms: u16) -> Result<SetNmeaUpdateRate, PmtkError> {
+impl SetNmeaUpdateRateCmd {
+    pub fn new(ms: u16) -> Result<SetNmeaUpdateRateCmd, PmtkError> {
         if ms < MIN_MS || ms > MAX_MS {
             Err(PmtkError::OutOfRange(MIN_MS as u32, MAX_MS as u32, ms as u32))
         } else {
-            Ok(SetNmeaUpdateRate { ms })
+            Ok(SetNmeaUpdateRateCmd { ms })
         }
     }
 }
 
-impl Message for SetNmeaUpdateRate {
+impl Message for SetNmeaUpdateRateCmd {
     const PKT_TYPE: u16 = 220;
 }
 
-impl Command for SetNmeaUpdateRate {
+impl Command for SetNmeaUpdateRateCmd {
     type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
@@ -43,22 +43,22 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let cmd = SetNmeaUpdateRate { ms: 1000 };
+        let cmd = SetNmeaUpdateRateCmd { ms: 1000 };
         let packet = PmtkPacket {
             checksum: 0x1f,
             data_field: Some(DataField::from_str(",1000").unwrap()),
-            pkt_type: SetNmeaUpdateRate::PKT_TYPE,
+            pkt_type: SetNmeaUpdateRateCmd::PKT_TYPE,
         };
         assert_eq!(packet, cmd.encode().unwrap());
     }
 
     #[test]
     fn new_err() {
-        assert!(SetNmeaUpdateRate::new(MAX_MS + 1).is_err());
+        assert!(SetNmeaUpdateRateCmd::new(MAX_MS + 1).is_err());
     }
 
     #[test]
     fn new_ok() {
-        assert!(SetNmeaUpdateRate::new(MIN_MS).is_ok());
+        assert!(SetNmeaUpdateRateCmd::new(MIN_MS).is_ok());
     }
 }

@@ -6,19 +6,17 @@ use crate::types::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct LocusConfig {
-    pub log_frequency: u8
-}
+pub struct LocusConfigCmd(pub u8);
 
-impl Message for LocusConfig {
+impl Message for LocusConfigCmd {
     const PKT_TYPE: u16 = 187;
 }
 
-impl Command for LocusConfig {
+impl Command for LocusConfigCmd {
     type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
-        let data_field = encode_data_field([1, self.log_frequency]);
+        let data_field = encode_data_field([1, self.0]);
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
     }
 }
@@ -31,11 +29,11 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let cmd = LocusConfig { log_frequency: 5 };
+        let cmd = LocusConfigCmd(5);
         let packet = PmtkPacket {
             checksum: 0x38,
             data_field: Some(DataField::from_str(",1,5").unwrap()),
-            pkt_type: LocusConfig::PKT_TYPE,
+            pkt_type: LocusConfigCmd::PKT_TYPE,
         };
         assert_eq!(packet, cmd.encode().unwrap());
     }

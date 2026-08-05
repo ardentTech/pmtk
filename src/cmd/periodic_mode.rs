@@ -23,14 +23,14 @@ type Ms = u32;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct PeriodicMode {
+pub struct PeriodicModeCmd {
     mode: OperationMode,
     run_time: Option<Ms>,
     sleep_time: Option<Ms>,
     second_run_time: Option<Ms>,
     second_sleep_time: Option<Ms>,
 }
-impl PeriodicMode {
+impl PeriodicModeCmd {
     pub fn new(
         mode: OperationMode,
         run_time: Option<Ms>,
@@ -62,11 +62,11 @@ impl PeriodicMode {
     }
 }
 
-impl Message for PeriodicMode {
+impl Message for PeriodicModeCmd {
     const PKT_TYPE: u16 = 225;
 }
 
-impl Command for PeriodicMode {
+impl Command for PeriodicModeCmd {
     type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
@@ -97,7 +97,7 @@ mod tests {
 
     #[test]
     fn encode_always_locate_ok() {
-        let cmd = PeriodicMode {
+        let cmd = PeriodicModeCmd {
             mode: AlwaysLocateBackup,
             run_time: None,
             sleep_time: None,
@@ -107,14 +107,14 @@ mod tests {
         let packet = PmtkPacket {
             checksum: 0x22,
             data_field: Some(DataField::from_str(",9").unwrap()),
-            pkt_type: PeriodicMode::PKT_TYPE,
+            pkt_type: PeriodicModeCmd::PKT_TYPE,
         };
         assert_eq!(packet, cmd.encode().unwrap());
     }
 
     #[test]
     fn encode_periodic_ok() {
-        let cmd = PeriodicMode {
+        let cmd = PeriodicModeCmd {
             mode: PeriodicBackup,
             run_time: Some(3000),
             sleep_time: Some(12000),
@@ -124,33 +124,33 @@ mod tests {
         let packet = PmtkPacket {
             checksum: 0x16,
             data_field: Some(DataField::from_str(",1,3000,12000,18000,72000").unwrap()),
-            pkt_type: PeriodicMode::PKT_TYPE,
+            pkt_type: PeriodicModeCmd::PKT_TYPE,
         };
         assert_eq!(packet, cmd.encode().unwrap());
     }
 
     #[test]
     fn new_invalid_run_time_err() {
-        assert!(PeriodicMode::new(Normal, Some(TIME_MIN - 1), None, None, None).is_err());
+        assert!(PeriodicModeCmd::new(Normal, Some(TIME_MIN - 1), None, None, None).is_err());
     }
 
     #[test]
     fn new_invalid_sleep_time_err() {
-        assert!(PeriodicMode::new(Normal, None, Some(TIME_MAX + 1), None, None).is_err());
+        assert!(PeriodicModeCmd::new(Normal, None, Some(TIME_MAX + 1), None, None).is_err());
     }
 
     #[test]
     fn new_invalid_second_run_time_err() {
-        assert!(PeriodicMode::new(Normal, None, None, Some(TIME_MIN - 1), None).is_err());
+        assert!(PeriodicModeCmd::new(Normal, None, None, Some(TIME_MIN - 1), None).is_err());
     }
 
     #[test]
     fn new_invalid_second_sleep_time_err() {
-        assert!(PeriodicMode::new(Normal, None, None, None, Some(TIME_MAX + 1)).is_err());
+        assert!(PeriodicModeCmd::new(Normal, None, None, None, Some(TIME_MAX + 1)).is_err());
     }
 
     #[test]
     fn new_ok() {
-        assert!(PeriodicMode::new(PeriodicBackup, None, None, None, None).is_ok());
+        assert!(PeriodicModeCmd::new(PeriodicBackup, None, None, None, None).is_ok());
     }
 }

@@ -15,14 +15,14 @@ const SV_MAX: u8 = 4;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct SetAlDeeCfg {
+pub struct SetAlDeeCfgCmd {
     extension_gap: u32,
     extension_threshold: u32,
     snr: u8,
     sv: u8,
 }
 
-impl SetAlDeeCfg {
+impl SetAlDeeCfgCmd {
     pub fn new(extension_gap: u32, extension_threshold: u32, snr: u8, sv: u8) -> Result<Self, PmtkError> {
         if !(EXTENSION_GAP_MIN..=EXTENSION_GAP_MAX).contains(&extension_gap) {
             return Err(PmtkError::OutOfRange(EXTENSION_GAP_MIN, EXTENSION_GAP_MAX, extension_gap))
@@ -40,7 +40,7 @@ impl SetAlDeeCfg {
     }
 }
 
-impl Default for SetAlDeeCfg {
+impl Default for SetAlDeeCfgCmd {
     fn default() -> Self {
         Self {
             extension_gap: 60_000,
@@ -51,11 +51,11 @@ impl Default for SetAlDeeCfg {
     }
 }
 
-impl Message for SetAlDeeCfg {
+impl Message for SetAlDeeCfgCmd {
     const PKT_TYPE: u16 = 223;
 }
 
-impl Command for SetAlDeeCfg {
+impl Command for SetAlDeeCfgCmd {
     type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
@@ -74,22 +74,22 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let cmd = SetAlDeeCfg::new(60_000, 180_000, 25, 1).unwrap();
+        let cmd = SetAlDeeCfgCmd::new(60_000, 180_000, 25, 1).unwrap();
         let packet = PmtkPacket {
             checksum: 0x38,
             data_field: Some(DataField::from_str(",1,25,180000,60000").unwrap()),
-            pkt_type: SetAlDeeCfg::PKT_TYPE,
+            pkt_type: SetAlDeeCfgCmd::PKT_TYPE,
         };
         assert_eq!(packet, cmd.encode().unwrap());
     }
 
     #[test]
     fn new_err() {
-        assert!(SetAlDeeCfg::new(EXTENSION_GAP_MAX + 1, 180_000, 25, 1).is_err());
+        assert!(SetAlDeeCfgCmd::new(EXTENSION_GAP_MAX + 1, 180_000, 25, 1).is_err());
     }
 
     #[test]
     fn new_ok() {
-        assert!(SetAlDeeCfg::new(EXTENSION_GAP_MAX, 180_000, 25, 1).is_ok());
+        assert!(SetAlDeeCfgCmd::new(EXTENSION_GAP_MAX, 180_000, 25, 1).is_ok());
     }
 }

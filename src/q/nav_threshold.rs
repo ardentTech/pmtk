@@ -3,13 +3,13 @@ use crate::traits::{Message, Query};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
-pub struct NavThreshold {}
+pub struct NavThresholdQ {}
 
-impl Message for NavThreshold {
+impl Message for NavThresholdQ {
     const PKT_TYPE: u16 = 447;
 }
 
-impl Query for NavThreshold {
+impl Query for NavThresholdQ {
     type R = nav_threshold::NavThresholdDt;
 }
 
@@ -20,11 +20,11 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let query = NavThreshold {};
+        let query = NavThresholdQ {};
         let packet = PmtkPacket {
             checksum: 0x35,
             data_field: None,
-            pkt_type: NavThreshold::PKT_TYPE,
+            pkt_type: NavThresholdQ::PKT_TYPE,
         };
         assert_eq!(packet, query.encode().unwrap());
     }

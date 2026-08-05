@@ -3,13 +3,13 @@ use crate::traits::{Message, Query};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
-pub struct Release {}
+pub struct ReleaseQ {}
 
-impl Message for Release {
+impl Message for ReleaseQ {
     const PKT_TYPE: u16 = 605;
 }
 
-impl Query for Release {
+impl Query for ReleaseQ {
     type R = release::ReleaseDt;
 }
 
@@ -20,11 +20,11 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let query = Release {};
+        let query = ReleaseQ {};
         let packet = PmtkPacket {
             checksum: 0x31,
             data_field: None,
-            pkt_type: Release::PKT_TYPE,
+            pkt_type: ReleaseQ::PKT_TYPE,
         };
         assert_eq!(packet, query.encode().unwrap());
     }

@@ -5,13 +5,13 @@ use crate::types::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct HotStart;
+pub struct HotStartCmd;
 
-impl Message for HotStart {
+impl Message for HotStartCmd {
     const PKT_TYPE: u16 = 101;
 }
 
-impl Command for HotStart {
+impl Command for HotStartCmd {
     type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
@@ -25,11 +25,11 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let cmd = HotStart;
+        let cmd = HotStartCmd;
         let packet = PmtkPacket {
             checksum: 0x32,
             data_field: None,
-            pkt_type: HotStart::PKT_TYPE,
+            pkt_type: HotStartCmd::PKT_TYPE,
         };
         assert_eq!(packet, cmd.encode().unwrap());
     }

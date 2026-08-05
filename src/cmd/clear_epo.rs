@@ -5,13 +5,13 @@ use crate::types::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct ClearEpo;
+pub struct ClearEpoCmd;
 
-impl Message for ClearEpo {
+impl Message for ClearEpoCmd {
     const PKT_TYPE: u16 = 127;
 }
 
-impl Command for ClearEpo {
+impl Command for ClearEpoCmd {
     type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
@@ -25,11 +25,11 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let cmd = ClearEpo;
+        let cmd = ClearEpoCmd;
         let packet = PmtkPacket {
             checksum: 0x36,
             data_field: None,
-            pkt_type: ClearEpo::PKT_TYPE,
+            pkt_type: ClearEpoCmd::PKT_TYPE,
         };
         assert_eq!(packet, cmd.encode().unwrap());
     }

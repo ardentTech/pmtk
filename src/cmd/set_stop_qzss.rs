@@ -4,13 +4,13 @@ use crate::dt::ack::AckDt;
 use crate::traits::{Command, Message};
 use crate::types::PmtkPacket;
 
-pub struct SetStopQzss(pub bool);
+pub struct SetStopQzssCmd(pub bool);
 
-impl Message for SetStopQzss {
+impl Message for SetStopQzssCmd {
     const PKT_TYPE: u16 = 352;
 }
 
-impl Command for SetStopQzss {
+impl Command for SetStopQzssCmd {
     type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
@@ -27,11 +27,11 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let cmd = SetStopQzss(true);
+        let cmd = SetStopQzssCmd(true);
         let packet = PmtkPacket {
             checksum: 0x2B,
             data_field: Some(DataField::from_str(",1").unwrap()),
-            pkt_type: SetStopQzss::PKT_TYPE,
+            pkt_type: SetStopQzssCmd::PKT_TYPE,
         };
         assert_eq!(packet, cmd.encode().unwrap());
     }

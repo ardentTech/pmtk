@@ -4,13 +4,13 @@ use crate::dt::ack::AckDt;
 use crate::traits::{Command, Message};
 use crate::types::PmtkPacket;
 
-pub struct SetSbasEnabled(bool);
+pub struct SetSbasEnabledCmd(bool);
 
-impl Message for SetSbasEnabled {
+impl Message for SetSbasEnabledCmd {
     const PKT_TYPE: u16 = 313;
 }
 
-impl Command for SetSbasEnabled {
+impl Command for SetSbasEnabledCmd {
     type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
@@ -27,11 +27,11 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let cmd = SetSbasEnabled(true);
+        let cmd = SetSbasEnabledCmd(true);
         let packet = PmtkPacket {
             checksum: 0x2e,
             data_field: Some(DataField::from_str(",1").unwrap()),
-            pkt_type: SetSbasEnabled::PKT_TYPE,
+            pkt_type: SetSbasEnabledCmd::PKT_TYPE,
         };
         assert_eq!(packet, cmd.encode().unwrap());
     }

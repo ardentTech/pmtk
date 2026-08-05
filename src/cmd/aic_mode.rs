@@ -4,13 +4,13 @@ use crate::dt::ack::AckDt;
 use crate::traits::{Command, Message};
 use crate::types::PmtkPacket;
 
-pub struct AicMode(pub bool);
+pub struct AicModeCmd(pub bool);
 
-impl Message for AicMode {
+impl Message for AicModeCmd {
     const PKT_TYPE: u16 = 286;
 }
 
-impl Command for AicMode {
+impl Command for AicModeCmd {
     type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
@@ -27,11 +27,11 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let cmd = AicMode(true);
+        let cmd = AicModeCmd(true);
         let packet = PmtkPacket {
             checksum: 0x23,
             data_field: Some(DataField::from_str(",1").unwrap()),
-            pkt_type: AicMode::PKT_TYPE,
+            pkt_type: AicModeCmd::PKT_TYPE,
         };
         assert_eq!(packet, cmd.encode().unwrap());
     }

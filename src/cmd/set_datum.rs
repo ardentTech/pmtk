@@ -6,9 +6,9 @@ use crate::types::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct SetDatum(u8);
+pub struct SetDatumCmd(u8);
 
-impl SetDatum {
+impl SetDatumCmd {
     fn new(datum: u8) -> Result<Self, PmtkError> {
         if !(0..=222).contains(&datum) {
             return Err(PmtkError::OutOfRange(0, 222, datum as u32));
@@ -17,11 +17,11 @@ impl SetDatum {
     }
 }
 
-impl Message for SetDatum {
+impl Message for SetDatumCmd {
     const PKT_TYPE: u16 = 330;
 }
 
-impl Command for SetDatum {
+impl Command for SetDatumCmd {
     type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
@@ -38,11 +38,11 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let cmd = SetDatum(2);
+        let cmd = SetDatumCmd(2);
         let packet = PmtkPacket {
             checksum: 0x2c,
             data_field: Some(DataField::from_str(",2").unwrap()),
-            pkt_type: SetDatum::PKT_TYPE,
+            pkt_type: SetDatumCmd::PKT_TYPE,
         };
         assert_eq!(packet, cmd.encode().unwrap());
     }

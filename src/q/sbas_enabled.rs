@@ -3,11 +3,11 @@ use crate::traits::{Message, Query};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
-pub struct SbasEnabled {}
-impl Message for SbasEnabled {
+pub struct SbasEnabledQ {}
+impl Message for SbasEnabledQ {
     const PKT_TYPE: u16 = 413;
 }
-impl Query for SbasEnabled {
+impl Query for SbasEnabledQ {
     type R = sbas_enabled::SbasEnabledDt;
 }
 
@@ -18,11 +18,11 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let query = SbasEnabled {};
+        let query = SbasEnabledQ {};
         let packet = PmtkPacket {
             checksum: 0x34,
             data_field: None,
-            pkt_type: SbasEnabled::PKT_TYPE,
+            pkt_type: SbasEnabledQ::PKT_TYPE,
         };
         assert_eq!(packet, query.encode().unwrap());
     }

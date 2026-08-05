@@ -7,7 +7,7 @@ use crate::types::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct SetNmeaOutput {
+pub struct SetNmeaOutputCmd {
     gll: Frequency,
     rmc: Frequency,
     vtg: Frequency,
@@ -17,11 +17,11 @@ pub struct SetNmeaOutput {
     mchn: Frequency,
 }
 
-impl Message for SetNmeaOutput {
+impl Message for SetNmeaOutputCmd {
     const PKT_TYPE: u16 = 314;
 }
 
-impl Command for SetNmeaOutput {
+impl Command for SetNmeaOutputCmd {
     type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
@@ -48,7 +48,7 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let cmd = SetNmeaOutput {
+        let cmd = SetNmeaOutputCmd {
             gll: OnceEveryOnePositionFix,
             rmc: OnceEveryOnePositionFix,
             vtg: OnceEveryOnePositionFix,
@@ -60,7 +60,7 @@ mod tests {
         let packet = PmtkPacket {
             checksum: 0x2c,
             data_field: Some(DataField::from_str(",1,1,1,1,1,5,0,0,0,0,0,0,0,0,0,0,0,0,0").unwrap()),
-            pkt_type: SetNmeaOutput::PKT_TYPE,
+            pkt_type: SetNmeaOutputCmd::PKT_TYPE,
         };
         assert_eq!(packet, cmd.encode().unwrap());
     }

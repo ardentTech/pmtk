@@ -14,16 +14,16 @@ enum CmdType {
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct EasyEnable { // TODO this might be better as a Response type?
+pub struct EasyEnableCmd { // TODO this might be better as a Response type?
     cmd_type: CmdType,
     enable: bool,
 }
 
-impl Message for EasyEnable {
+impl Message for EasyEnableCmd {
     const PKT_TYPE: u16 = 869;
 }
 
-impl Command for EasyEnable {
+impl Command for EasyEnableCmd {
     type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
@@ -40,11 +40,11 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let cmd = EasyEnable { cmd_type: CmdType::Set, enable: true };
+        let cmd = EasyEnableCmd { cmd_type: CmdType::Set, enable: true };
         let packet = PmtkPacket {
             checksum: 0x35,
             data_field: Some(DataField::from_str(",1,1").unwrap()),
-            pkt_type: EasyEnable::PKT_TYPE,
+            pkt_type: EasyEnableCmd::PKT_TYPE,
         };
         assert_eq!(packet, cmd.encode().unwrap());
     }

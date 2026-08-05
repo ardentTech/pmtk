@@ -6,13 +6,13 @@ use crate::types::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct StandbyMode;
+pub struct StandbyModeCmd;
 
-impl Message for StandbyMode {
+impl Message for StandbyModeCmd {
     const PKT_TYPE: u16 = 161;
 }
 
-impl Command for StandbyMode {
+impl Command for StandbyModeCmd {
     type R = AckDt;
 
     fn encode(&self) -> Result<PmtkPacket, PmtkError> {
@@ -29,11 +29,11 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let cmd = StandbyMode;
+        let cmd = StandbyModeCmd;
         let packet = PmtkPacket {
             checksum: 0x28,
             data_field: Some(DataField::from_str(",0").unwrap()),
-            pkt_type: StandbyMode::PKT_TYPE,
+            pkt_type: StandbyModeCmd::PKT_TYPE,
         };
         assert_eq!(packet, cmd.encode().unwrap());
     }

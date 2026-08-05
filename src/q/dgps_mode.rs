@@ -3,11 +3,11 @@ use crate::traits::{Message, Query};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
-pub struct DgpsModeQuery {}
-impl Message for DgpsModeQuery {
+pub struct DgpsModeQ {}
+impl Message for DgpsModeQ {
     const PKT_TYPE: u16 = 401;
 }
-impl Query for DgpsModeQuery {
+impl Query for DgpsModeQ {
     type R = DgpsModeDt;
 }
 
@@ -19,11 +19,11 @@ mod tests {
 
     #[test]
     fn encode_ok() {
-        let query = DgpsModeQuery {};
+        let query = DgpsModeQ {};
         let packet = PmtkPacket {
             checksum: 0x37,
             data_field: None,
-            pkt_type: DgpsModeQuery::PKT_TYPE,
+            pkt_type: DgpsModeQ::PKT_TYPE,
         };
         assert_eq!(packet, query.encode().unwrap());
     }
