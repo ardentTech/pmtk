@@ -1,7 +1,7 @@
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
 use crate::packet::PmtkPacket;
 
 pub struct SetSbasEnabledCmd(bool);
@@ -10,10 +10,12 @@ impl PmtkSentence for SetSbasEnabledCmd {
     const PKT_TYPE: u16 = 313;
 }
 
-impl PmtkCmd for SetSbasEnabledCmd {
-    type DataType = AckDt;
+impl PmtkBiDir for SetSbasEnabledCmd {
+    type Dt = AckDt;
+}
 
-    fn encode(&self) -> Result<PmtkPacket, PmtkError> {
+impl PmtkCmd for SetSbasEnabledCmd {
+    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([self.0 as u8]);
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
     }
@@ -33,6 +35,6 @@ mod tests {
             data_field: Some(DataField::from_str(",1").unwrap()),
             pkt_type: SetSbasEnabledCmd::PKT_TYPE,
         };
-        assert_eq!(packet, cmd.encode().unwrap());
+        assert_eq!(packet, cmd.marshal().unwrap());
     }
 }

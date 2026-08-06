@@ -1,7 +1,7 @@
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
 use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -27,10 +27,12 @@ impl PmtkSentence for SetNavSpeedThresholdCmd {
     const PKT_TYPE: u16 = 386;
 }
 
-impl PmtkCmd for SetNavSpeedThresholdCmd {
-    type DataType = AckDt;
+impl PmtkBiDir for SetNavSpeedThresholdCmd {
+    type Dt = AckDt;
+}
 
-    fn encode(&self) -> Result<PmtkPacket, PmtkError> {
+impl PmtkCmd for SetNavSpeedThresholdCmd {
+    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([self.0]);
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
     }
@@ -50,7 +52,7 @@ mod tests {
             data_field: Some(DataField::from_str(",0.2").unwrap()),
             pkt_type: SetNavSpeedThresholdCmd::PKT_TYPE,
         };
-        assert_eq!(packet, cmd.encode().unwrap());
+        assert_eq!(packet, cmd.marshal().unwrap());
     }
 
     #[test]

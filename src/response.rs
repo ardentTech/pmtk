@@ -9,7 +9,7 @@ use crate::dt::sbas_mode::SbasModeDt;
 use crate::dt::sys_msg::SysMsgDt;
 use crate::dt::txt_msg::TxtMsgDt;
 use crate::error::PmtkError;
-use crate::error::PmtkError::Decoding;
+use crate::error::PmtkError::Parsing;
 use crate::parse;
 use crate::traits::PmtkSentence;
 use core::str::from_utf8;
@@ -38,20 +38,20 @@ impl TryFrom<&[u8]> for PmtkResponse {
         if let Some(data_field) = packet.data_field {
             match packet.pkt_type {
                 // TODO reduce duplication
-                AckDt::PKT_TYPE => Ok(Self::Ack(AckDt::try_from(data_field).map_err(|_| Decoding)?)),
-                SysMsgDt::PKT_TYPE => Ok(Self::SysMsg(SysMsgDt::try_from(data_field).map_err(|_| Decoding)?)),
-                TxtMsgDt::PKT_TYPE => Ok(Self::TxtMsg(TxtMsgDt::try_from(data_field).map_err(|_| Decoding)?)),
-                DgpsModeDt::PKT_TYPE => Ok(Self::DgpsMode(DgpsModeDt::try_from(data_field).map_err(|_| Decoding)?)),
-                SbasEnabledDt::PKT_TYPE => Ok(Self::SbasEnabled(SbasEnabledDt::try_from(data_field).map_err(|_| Decoding)?)),
-                NmeaOutputDt::PKT_TYPE => Ok(Self::NmeaOutput(NmeaOutputDt::try_from(data_field).map_err(|_| Decoding)?)),
-                SbasModeDt::PKT_TYPE => Ok(Self::SbasMode(SbasModeDt::try_from(data_field).map_err(|_| Decoding)?)),
-                NavThresholdDt::PKT_TYPE => Ok(Self::NavThreshold(NavThresholdDt::try_from(data_field).map_err(|_| Decoding)?)),
-                ReleaseDt::PKT_TYPE => Ok(Self::Release(ReleaseDt::try_from(data_field).map_err(|_| Decoding)?)),
-                EpoInfoDt::PKT_TYPE => Ok(Self::EpoInfo(EpoInfoDt::try_from(data_field).map_err(|_| Decoding)?)),
-                _ => Err(Decoding)
+                AckDt::PKT_TYPE => Ok(Self::Ack(AckDt::try_from(data_field).map_err(|_| Parsing)?)),
+                SysMsgDt::PKT_TYPE => Ok(Self::SysMsg(SysMsgDt::try_from(data_field).map_err(|_| Parsing)?)),
+                TxtMsgDt::PKT_TYPE => Ok(Self::TxtMsg(TxtMsgDt::try_from(data_field).map_err(|_| Parsing)?)),
+                DgpsModeDt::PKT_TYPE => Ok(Self::DgpsMode(DgpsModeDt::try_from(data_field).map_err(|_| Parsing)?)),
+                SbasEnabledDt::PKT_TYPE => Ok(Self::SbasEnabled(SbasEnabledDt::try_from(data_field).map_err(|_| Parsing)?)),
+                NmeaOutputDt::PKT_TYPE => Ok(Self::NmeaOutput(NmeaOutputDt::try_from(data_field).map_err(|_| Parsing)?)),
+                SbasModeDt::PKT_TYPE => Ok(Self::SbasMode(SbasModeDt::try_from(data_field).map_err(|_| Parsing)?)),
+                NavThresholdDt::PKT_TYPE => Ok(Self::NavThreshold(NavThresholdDt::try_from(data_field).map_err(|_| Parsing)?)),
+                ReleaseDt::PKT_TYPE => Ok(Self::Release(ReleaseDt::try_from(data_field).map_err(|_| Parsing)?)),
+                EpoInfoDt::PKT_TYPE => Ok(Self::EpoInfo(EpoInfoDt::try_from(data_field).map_err(|_| Parsing)?)),
+                _ => Err(Parsing)
             }
         } else {
-            Err(Decoding)
+            Err(Parsing)
         }
     }
 }

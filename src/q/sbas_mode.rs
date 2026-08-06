@@ -1,5 +1,5 @@
 use crate::dt::sbas_mode::SbasModeDt;
-use crate::traits::{PmtkSentence, PmtkQ};
+use crate::traits::{PmtkSentence, PmtkQ, PmtkBiDir};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
@@ -7,9 +7,12 @@ pub struct SbasModeQ {}
 impl PmtkSentence for SbasModeQ {
     const PKT_TYPE: u16 = 419;
 }
-impl PmtkQ for SbasModeQ {
-    type DataType = SbasModeDt;
+
+impl PmtkBiDir for SbasModeQ {
+    type Dt = SbasModeDt;
 }
+
+impl PmtkQ for SbasModeQ {}
 
 
 #[cfg(test)]
@@ -25,6 +28,6 @@ mod tests {
             data_field: None,
             pkt_type: SbasModeQ::PKT_TYPE,
         };
-        assert_eq!(packet, query.encode().unwrap());
+        assert_eq!(packet, query.marshal().unwrap());
     }
 }

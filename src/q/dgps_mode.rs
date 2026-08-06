@@ -1,5 +1,5 @@
 use crate::dt::dgps_mode::DgpsModeDt;
-use crate::traits::{PmtkSentence, PmtkQ};
+use crate::traits::{PmtkSentence, PmtkQ, PmtkBiDir};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
@@ -7,9 +7,12 @@ pub struct DgpsModeQ {}
 impl PmtkSentence for DgpsModeQ {
     const PKT_TYPE: u16 = 401;
 }
-impl PmtkQ for DgpsModeQ {
-    type DataType = DgpsModeDt;
+
+impl PmtkBiDir for DgpsModeQ {
+    type Dt = DgpsModeDt;
 }
+
+impl PmtkQ for DgpsModeQ {}
 
 
 #[cfg(test)]
@@ -25,6 +28,6 @@ mod tests {
             data_field: None,
             pkt_type: DgpsModeQ::PKT_TYPE,
         };
-        assert_eq!(packet, query.encode().unwrap());
+        assert_eq!(packet, query.marshal().unwrap());
     }
 }

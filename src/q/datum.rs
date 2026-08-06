@@ -1,5 +1,5 @@
 use crate::dt::datum::DatumDt;
-use crate::traits::{PmtkSentence, PmtkQ};
+use crate::traits::{PmtkSentence, PmtkQ, PmtkBiDir};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
@@ -7,9 +7,12 @@ pub struct DatumQ {}
 impl PmtkSentence for DatumQ {
     const PKT_TYPE: u16 = 430;
 }
-impl PmtkQ for DatumQ {
-    type DataType = DatumDt;
+
+impl PmtkBiDir for DatumQ {
+    type Dt = DatumDt;
 }
+
+impl PmtkQ for DatumQ {}
 
 
 #[cfg(test)]
@@ -25,6 +28,6 @@ mod tests {
             data_field: None,
             pkt_type: DatumQ::PKT_TYPE,
         };
-        assert_eq!(packet, query.encode().unwrap());
+        assert_eq!(packet, query.marshal().unwrap());
     }
 }

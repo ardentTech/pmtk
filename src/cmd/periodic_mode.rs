@@ -1,7 +1,7 @@
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
 use crate::packet::PmtkPacket;
 
 const TIME_MIN: u32 = 1_000;
@@ -66,10 +66,12 @@ impl PmtkSentence for PeriodicModeCmd {
     const PKT_TYPE: u16 = 225;
 }
 
-impl PmtkCmd for PeriodicModeCmd {
-    type DataType = AckDt;
+impl PmtkBiDir for PeriodicModeCmd {
+    type Dt = AckDt;
+}
 
-    fn encode(&self) -> Result<PmtkPacket, PmtkError> {
+impl PmtkCmd for PeriodicModeCmd {
+    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
         let mut data_field = encode_data_field([self.mode as u32]);
         if let Some(run_time) = self.run_time {
             data_field.push_str(&*encode_data_field([run_time]))?;
@@ -109,7 +111,7 @@ mod tests {
             data_field: Some(DataField::from_str(",9").unwrap()),
             pkt_type: PeriodicModeCmd::PKT_TYPE,
         };
-        assert_eq!(packet, cmd.encode().unwrap());
+        assert_eq!(packet, cmd.marshal().unwrap());
     }
 
     #[test]
@@ -126,7 +128,7 @@ mod tests {
             data_field: Some(DataField::from_str(",1,3000,12000,18000,72000").unwrap()),
             pkt_type: PeriodicModeCmd::PKT_TYPE,
         };
-        assert_eq!(packet, cmd.encode().unwrap());
+        assert_eq!(packet, cmd.marshal().unwrap());
     }
 
     #[test]

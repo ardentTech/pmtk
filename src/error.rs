@@ -8,7 +8,6 @@ pub enum PmtkError {
     StringCapacity,
     ChecksumMismatch,
     CoreFmt(fmt::Error),
-    Decoding,
     InvalidChoice(u32),
     InvalidNavSpeedThreshold(f32),
     OutOfRange(u32, u32, u32),

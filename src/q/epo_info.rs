@@ -1,5 +1,5 @@
 use crate::dt::epo_info::EpoInfoDt;
-use crate::traits::{PmtkSentence, PmtkQ};
+use crate::traits::{PmtkSentence, PmtkQ, PmtkBiDir};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
@@ -7,9 +7,12 @@ pub struct EpoInfoQ {}
 impl PmtkSentence for EpoInfoQ {
     const PKT_TYPE: u16 = 607;
 }
-impl PmtkQ for EpoInfoQ {
-    type DataType = EpoInfoDt;
+
+impl PmtkBiDir for EpoInfoQ {
+    type Dt = EpoInfoDt;
 }
+
+impl PmtkQ for EpoInfoQ {}
 
 
 #[cfg(test)]
@@ -25,6 +28,6 @@ mod tests {
             data_field: None,
             pkt_type: EpoInfoQ::PKT_TYPE,
         };
-        assert_eq!(packet, query.encode().unwrap());
+        assert_eq!(packet, query.marshal().unwrap());
     }
 }

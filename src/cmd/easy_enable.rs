@@ -1,7 +1,7 @@
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
 use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -23,10 +23,12 @@ impl PmtkSentence for EasyEnableCmd {
     const PKT_TYPE: u16 = 869;
 }
 
-impl PmtkCmd for EasyEnableCmd {
-    type DataType = AckDt;
+impl PmtkBiDir for EasyEnableCmd {
+    type Dt = AckDt;
+}
 
-    fn encode(&self) -> Result<PmtkPacket, PmtkError> {
+impl PmtkCmd for EasyEnableCmd {
+    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([self.cmd_type as u8, self.enable as u8]);
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
     }
@@ -46,6 +48,6 @@ mod tests {
             data_field: Some(DataField::from_str(",1,1").unwrap()),
             pkt_type: EasyEnableCmd::PKT_TYPE,
         };
-        assert_eq!(packet, cmd.encode().unwrap());
+        assert_eq!(packet, cmd.marshal().unwrap());
     }
 }

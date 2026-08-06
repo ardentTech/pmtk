@@ -1,7 +1,7 @@
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
 use crate::packet::PmtkPacket;
 
 const EXTENSION_GAP_MIN: u32 = 0;
@@ -55,10 +55,12 @@ impl PmtkSentence for SetAlDeeCfgCmd {
     const PKT_TYPE: u16 = 223;
 }
 
-impl PmtkCmd for SetAlDeeCfgCmd {
-    type DataType = AckDt;
+impl PmtkBiDir for SetAlDeeCfgCmd {
+    type Dt = AckDt;
+}
 
-    fn encode(&self) -> Result<PmtkPacket, PmtkError> {
+impl PmtkCmd for SetAlDeeCfgCmd {
+    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([
             self.sv as u32, self.snr as u32, self.extension_threshold, self.extension_gap
         ]);
@@ -80,7 +82,7 @@ mod tests {
             data_field: Some(DataField::from_str(",1,25,180000,60000").unwrap()),
             pkt_type: SetAlDeeCfgCmd::PKT_TYPE,
         };
-        assert_eq!(packet, cmd.encode().unwrap());
+        assert_eq!(packet, cmd.marshal().unwrap());
     }
 
     #[test]

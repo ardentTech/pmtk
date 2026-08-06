@@ -1,5 +1,5 @@
-use crate::dt::release;
-use crate::traits::{PmtkSentence, PmtkQ};
+use crate::dt::release::ReleaseDt;
+use crate::traits::{PmtkSentence, PmtkQ, PmtkBiDir};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
@@ -9,9 +9,11 @@ impl PmtkSentence for ReleaseQ {
     const PKT_TYPE: u16 = 605;
 }
 
-impl PmtkQ for ReleaseQ {
-    type DataType = release::ReleaseDt;
+impl PmtkBiDir for ReleaseQ {
+    type Dt = ReleaseDt;
 }
+
+impl PmtkQ for ReleaseQ {}
 
 #[cfg(test)]
 mod tests {
@@ -26,6 +28,6 @@ mod tests {
             data_field: None,
             pkt_type: ReleaseQ::PKT_TYPE,
         };
-        assert_eq!(packet, query.encode().unwrap());
+        assert_eq!(packet, query.marshal().unwrap());
     }
 }

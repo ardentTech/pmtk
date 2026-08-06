@@ -2,7 +2,7 @@ use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
 use crate::dt::nmea_output::{Frequency, NmeaOutputDt};
-use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
 use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -21,10 +21,12 @@ impl PmtkSentence for SetNmeaOutputCmd {
     const PKT_TYPE: u16 = 314;
 }
 
-impl PmtkCmd for SetNmeaOutputCmd {
-    type DataType = AckDt;
+impl PmtkBiDir for SetNmeaOutputCmd {
+    type Dt = NmeaOutputDt;
+}
 
-    fn encode(&self) -> Result<PmtkPacket, PmtkError> {
+impl PmtkCmd for SetNmeaOutputCmd {
+    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([
             self.gll as u8,
             self.rmc as u8,
@@ -62,6 +64,6 @@ mod tests {
             data_field: Some(DataField::from_str(",1,1,1,1,1,5,0,0,0,0,0,0,0,0,0,0,0,0,0").unwrap()),
             pkt_type: SetNmeaOutputCmd::PKT_TYPE,
         };
-        assert_eq!(packet, cmd.encode().unwrap());
+        assert_eq!(packet, cmd.marshal().unwrap());
     }
 }

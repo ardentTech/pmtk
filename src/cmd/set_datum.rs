@@ -1,7 +1,7 @@
 use crate::cmd::util::encode_data_field;
 use crate::dt::ack::AckDt;
 use crate::error::PmtkError;
-use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
 use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -21,10 +21,12 @@ impl PmtkSentence for SetDatumCmd {
     const PKT_TYPE: u16 = 330;
 }
 
-impl PmtkCmd for SetDatumCmd {
-    type DataType = AckDt;
+impl PmtkBiDir for SetDatumCmd {
+    type Dt = AckDt;
+}
 
-    fn encode(&self) -> Result<PmtkPacket, PmtkError> {
+impl PmtkCmd for SetDatumCmd {
+    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
         let data_field = encode_data_field([self.0]);
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
     }
@@ -44,6 +46,6 @@ mod tests {
             data_field: Some(DataField::from_str(",2").unwrap()),
             pkt_type: SetDatumCmd::PKT_TYPE,
         };
-        assert_eq!(packet, cmd.encode().unwrap());
+        assert_eq!(packet, cmd.marshal().unwrap());
     }
 }

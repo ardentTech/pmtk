@@ -1,5 +1,6 @@
 use crate::dt::nav_threshold;
-use crate::traits::{PmtkSentence, PmtkQ};
+use crate::dt::nav_threshold::NavThresholdDt;
+use crate::traits::{PmtkSentence, PmtkQ, PmtkBiDir};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
@@ -9,9 +10,11 @@ impl PmtkSentence for NavThresholdQ {
     const PKT_TYPE: u16 = 447;
 }
 
-impl PmtkQ for NavThresholdQ {
-    type DataType = nav_threshold::NavThresholdDt;
+impl PmtkBiDir for NavThresholdQ {
+    type Dt = NavThresholdDt;
 }
+
+impl PmtkQ for NavThresholdQ {}
 
 #[cfg(test)]
 mod tests {
@@ -26,6 +29,6 @@ mod tests {
             data_field: None,
             pkt_type: NavThresholdQ::PKT_TYPE,
         };
-        assert_eq!(packet, query.encode().unwrap());
+        assert_eq!(packet, query.marshal().unwrap());
     }
 }

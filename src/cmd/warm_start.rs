@@ -1,6 +1,6 @@
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{PmtkCmd, PmtkSentence};
+use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
 use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -11,10 +11,12 @@ impl PmtkSentence for WarmStartCmd {
     const PKT_TYPE: u16 = 102;
 }
 
-impl PmtkCmd for WarmStartCmd {
-    type DataType = AckDt;
+impl PmtkBiDir for WarmStartCmd {
+    type Dt = AckDt;
+}
 
-    fn encode(&self) -> Result<PmtkPacket, PmtkError> {
+impl PmtkCmd for WarmStartCmd {
+    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
         PmtkPacket::new_command(Self::PKT_TYPE, None)
     }
 }
@@ -31,6 +33,6 @@ mod tests {
             data_field: None,
             pkt_type: WarmStartCmd::PKT_TYPE,
         };
-        assert_eq!(packet, cmd.encode().unwrap());
+        assert_eq!(packet, cmd.marshal().unwrap());
     }
 }
