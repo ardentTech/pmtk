@@ -3,7 +3,7 @@ use nom::character::complete::char;
 use nom::combinator::opt;
 use crate::error::PmtkError;
 use crate::parse::number_in_range;
-use crate::traits::{PmtkSentence, PmtkDt};
+use crate::traits::{Packet, Response};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -35,7 +35,7 @@ pub struct AckDt {
     pub flag: AckFlag
 }
 
-impl PmtkSentence for AckDt {
+impl Packet for AckDt {
     const PKT_TYPE: u16 = 1;
 }
 
@@ -60,7 +60,7 @@ impl TryFrom<DataField> for AckDt {
     }
 }
 
-impl PmtkDt for AckDt {}
+impl Response for AckDt {}
 
 #[cfg(test)]
 mod tests {

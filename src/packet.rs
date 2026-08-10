@@ -2,7 +2,7 @@ use crate::error::PmtkError;
 use crate::parse;
 use heapless::{String, format};
 
-const PACKET_LEN: usize = 255;
+pub(crate) const PACKET_LEN: usize = 255;
 pub(crate) const DATA_FIELD_LEN: usize = 242;
 const PAYLOAD_LEN: usize = 246;
 
@@ -17,32 +17,16 @@ pub struct PmtkPacket {
 }
 
 impl PmtkPacket {
-    pub fn decode(raw: &str) -> Result<Self, PmtkError> {
+    pub fn deserialize(raw: &str) -> Result<Self, PmtkError> {
         parse::packet(raw)
-    }
-
-    pub fn encode(&self) -> Result<String<PACKET_LEN>, PmtkError> {
-        Ok(if let Some(data_field) = &self.data_field {
-            format!(PACKET_LEN; "$PMTK{}{}*{:X?}\r\n", self.pkt_type, data_field, self.checksum)?
-        } else {
-            format!(PACKET_LEN; "$PMTK{}*{:X?}\r\n", self.pkt_type, self.checksum)?
-        })
     }
 
     fn generate_checksum(data: &[u8]) -> u8 {
         data.iter().fold(0, |acc, &x| acc ^ x)
     }
 
-    fn payload(pkt_type: u16, data_field: &Option<DataField>) -> Result<String<PAYLOAD_LEN>, PmtkError> {
-        if let Some(data_field) = &data_field {
-            format!(PAYLOAD_LEN; "PMTK{}{}", pkt_type, data_field).map_err(PmtkError::from)
-        } else {
-            format!(PAYLOAD_LEN; "PMTK{}", pkt_type).map_err(PmtkError::from)
-        }
-    }
-
     pub(crate) fn new(pkt_type: u16, data_field: Option<DataField>, checksum: Option<u8>) -> Result<Self, PmtkError> {
-        let payload = Self::payload(pkt_type, &data_field)?;
+        let payload = Self::serialize_payload(pkt_type, &data_field)?;
         let gen_checksum = Self::generate_checksum(payload.as_bytes());
 
         if let Some(checksum) = checksum {
@@ -65,6 +49,19 @@ impl PmtkPacket {
     pub(crate) fn new_query(pkt_type: u16) -> Result<Self, PmtkError> {
         Self::new(pkt_type, None, None)
     }
+
+    pub fn serialize(&self) -> Result<String<PACKET_LEN>, PmtkError> {
+        let payload = Self::serialize_payload(self.pkt_type, &self.data_field)?;
+        format!(PACKET_LEN; "${}*{:X?}\r\n", payload, self.checksum).map_err(PmtkError::from)
+    }
+
+    fn serialize_payload(pkt_type: u16, data_field: &Option<DataField>) -> Result<String<PAYLOAD_LEN>, PmtkError> {
+        if let Some(data_field) = &data_field {
+            format!(PAYLOAD_LEN; "PMTK{}{}", pkt_type, data_field).map_err(PmtkError::from)
+        } else {
+            format!(PAYLOAD_LEN; "PMTK{}", pkt_type).map_err(PmtkError::from)
+        }
+    }
 }
 
 
@@ -77,7 +74,7 @@ mod tests {
     fn decode_command_ok() {
         assert_eq!(
             PmtkPacket { checksum: 0x2d, data_field: Some(String::from_str(",1").unwrap()), pkt_type: 301 },
-            PmtkPacket::decode("$PMTK301,1*2D\r\n").unwrap()
+            PmtkPacket::deserialize("$PMTK301,1*2D\r\n").unwrap()
         );
     }
 
@@ -85,7 +82,7 @@ mod tests {
     fn decode_query_ok() {
         assert_eq!(
             PmtkPacket { checksum: 0x37, data_field: None, pkt_type: 401 },
-            PmtkPacket::decode("$PMTK401*37\r\n").unwrap()
+            PmtkPacket::deserialize("$PMTK401*37\r\n").unwrap()
         );
     }
 
@@ -94,7 +91,7 @@ mod tests {
     fn encode_query_ok() {
         assert_eq!(
             "$PMTK401*37\r\n",
-            PmtkPacket::new_query(401).unwrap().encode().unwrap()
+            PmtkPacket::new_query(401).unwrap().serialize().unwrap()
         );
     }
 
@@ -102,7 +99,7 @@ mod tests {
     fn encode_command_data_field_some_ok() {
         assert_eq!(
             "$PMTK220,1000*1F\r\n",
-            PmtkPacket::new_command(220, Some(String::from_str(",1000").unwrap())).unwrap().encode().unwrap()
+            PmtkPacket::new_command(220, Some(String::from_str(",1000").unwrap())).unwrap().serialize().unwrap()
         );
     }
 
@@ -110,7 +107,7 @@ mod tests {
     fn encode_command_data_field_none_ok() {
         assert_eq!(
             "$PMTK102*31\r\n",
-            PmtkPacket::new_command(102, None).unwrap().encode().unwrap()
+            PmtkPacket::new_command(102, None).unwrap().serialize().unwrap()
         );
     }
 

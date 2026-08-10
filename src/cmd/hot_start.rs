@@ -1,23 +1,24 @@
+use heapless::String;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
+use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
 pub struct HotStartCmd;
 
-impl PmtkSentence for HotStartCmd {
+impl Packet for HotStartCmd {
     const PKT_TYPE: u16 = 101;
 }
 
-impl PmtkBiDir for HotStartCmd {
-    type Dt = AckDt;
+impl Request for HotStartCmd {
+    type R = AckDt;
 }
 
-impl PmtkCmd for HotStartCmd {
-    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
-        PmtkPacket::new_command(Self::PKT_TYPE, None)
+impl Cmd for HotStartCmd {
+    fn serialize(&self) -> Result<String<255>, PmtkError> {
+        PmtkPacket::new_command(Self::PKT_TYPE, None)?.serialize()
     }
 }
 
@@ -26,13 +27,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn encode_ok() {
-        let cmd = HotStartCmd;
-        let packet = PmtkPacket {
-            checksum: 0x32,
-            data_field: None,
-            pkt_type: HotStartCmd::PKT_TYPE,
-        };
-        assert_eq!(packet, cmd.marshal().unwrap());
+    fn serialize_ok() {
+        assert_eq!("$PMTK101*32\r\n", HotStartCmd {}.serialize().unwrap());
     }
 }

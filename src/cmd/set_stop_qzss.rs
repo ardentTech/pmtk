@@ -1,40 +1,33 @@
+use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
+use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
 pub struct SetStopQzssCmd(pub bool);
 
-impl PmtkSentence for SetStopQzssCmd {
+impl Packet for SetStopQzssCmd {
     const PKT_TYPE: u16 = 352;
 }
 
-impl PmtkBiDir for SetStopQzssCmd {
-    type Dt = AckDt;
+impl Request for SetStopQzssCmd {
+    type R = AckDt;
 }
 
-impl PmtkCmd for SetStopQzssCmd {
-    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
+impl Cmd for SetStopQzssCmd {
+    fn serialize(&self) -> Result<String<255>, PmtkError> {
         let data_field = encode_data_field([self.0 as u8]);
-        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
+        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use core::str::FromStr;
-    use crate::packet::DataField;
     use super::*;
 
     #[test]
-    fn encode_ok() {
-        let cmd = SetStopQzssCmd(true);
-        let packet = PmtkPacket {
-            checksum: 0x2B,
-            data_field: Some(DataField::from_str(",1").unwrap()),
-            pkt_type: SetStopQzssCmd::PKT_TYPE,
-        };
-        assert_eq!(packet, cmd.marshal().unwrap());
+    fn serialize_ok() {
+        assert_eq!("$PMTK352,1*2B\r\n", SetStopQzssCmd(true).serialize().unwrap());
     }
 }

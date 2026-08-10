@@ -3,14 +3,14 @@ use nom::combinator::opt;
 use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number_in_range;
-use crate::traits::{PmtkSentence, PmtkDt};
+use crate::traits::{Packet, Response};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct SbasEnabledDt(pub bool);
 
-impl PmtkSentence for SbasEnabledDt {
+impl Packet for SbasEnabledDt {
     const PKT_TYPE: u16 = 513;
 }
 
@@ -29,7 +29,7 @@ impl TryFrom<DataField> for SbasEnabledDt {
     }
 }
 
-impl PmtkDt for SbasEnabledDt {}
+impl Response for SbasEnabledDt {}
 
 #[cfg(test)]
 mod tests {

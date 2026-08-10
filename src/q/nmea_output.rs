@@ -1,33 +1,26 @@
 use crate::dt::nmea_output::NmeaOutputDt;
-use crate::traits::{PmtkSentence, PmtkQ, PmtkBiDir};
+use crate::traits::{Packet, Q, Request};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct NmeaOutputQ {}
-impl PmtkSentence for NmeaOutputQ {
+impl Packet for NmeaOutputQ {
     const PKT_TYPE: u16 = 414;
 }
 
-impl PmtkBiDir for NmeaOutputQ {
-    type Dt = NmeaOutputDt;
+impl Request for NmeaOutputQ {
+    type R = NmeaOutputDt;
 }
 
-impl PmtkQ for NmeaOutputQ {}
+impl Q for NmeaOutputQ {}
 
 
 #[cfg(test)]
 mod tests {
-    use crate::packet::PmtkPacket;
     use super::*;
 
     #[test]
-    fn encode_ok() {
-        let query = NmeaOutputQ {};
-        let packet = PmtkPacket {
-            checksum: 0x33,
-            data_field: None,
-            pkt_type: NmeaOutputQ::PKT_TYPE,
-        };
-        assert_eq!(packet, query.marshal().unwrap());
+    fn serialize_ok() {
+        assert_eq!("$PMTK414*33\r\n", NmeaOutputQ {}.serialize().unwrap());
     }
 }

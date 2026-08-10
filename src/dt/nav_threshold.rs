@@ -2,14 +2,14 @@ use nom::character::complete::char;
 use nom::number::complete::float;
 use nom::Parser;
 use crate::error::PmtkError;
-use crate::traits::{PmtkSentence, PmtkDt};
+use crate::traits::{Packet, Response};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct NavThresholdDt(pub f32);
 
-impl PmtkSentence for NavThresholdDt {
+impl Packet for NavThresholdDt {
     const PKT_TYPE: u16 = 527;
 }
 
@@ -24,7 +24,7 @@ impl TryFrom<DataField> for NavThresholdDt {
     }
 }
 
-impl PmtkDt for NavThresholdDt {}
+impl Response for NavThresholdDt {}
 
 #[cfg(test)]
 mod tests {

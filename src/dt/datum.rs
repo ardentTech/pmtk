@@ -2,14 +2,14 @@ use nom::character::complete::char;
 use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number_in_range;
-use crate::traits::{PmtkSentence, PmtkDt};
+use crate::traits::{Packet, Response};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct DatumDt(pub u8);
 
-impl PmtkSentence for DatumDt {
+impl Packet for DatumDt {
     const PKT_TYPE: u16 = 530;
 }
 
@@ -24,7 +24,7 @@ impl TryFrom<DataField> for DatumDt {
     }
 }
 
-impl PmtkDt for DatumDt {}
+impl Response for DatumDt {}
 
 #[cfg(test)]
 mod tests {

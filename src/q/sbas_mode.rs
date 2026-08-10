@@ -1,33 +1,26 @@
 use crate::dt::sbas_mode::SbasModeDt;
-use crate::traits::{PmtkSentence, PmtkQ, PmtkBiDir};
+use crate::traits::{Packet, Q, Request};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct SbasModeQ {}
-impl PmtkSentence for SbasModeQ {
+impl Packet for SbasModeQ {
     const PKT_TYPE: u16 = 419;
 }
 
-impl PmtkBiDir for SbasModeQ {
-    type Dt = SbasModeDt;
+impl Request for SbasModeQ {
+    type R = SbasModeDt;
 }
 
-impl PmtkQ for SbasModeQ {}
+impl Q for SbasModeQ {}
 
 
 #[cfg(test)]
 mod tests {
-    use crate::packet::PmtkPacket;
     use super::*;
 
     #[test]
-    fn encode_ok() {
-        let query = SbasModeQ {};
-        let packet = PmtkPacket {
-            checksum: 0x3e,
-            data_field: None,
-            pkt_type: SbasModeQ::PKT_TYPE,
-        };
-        assert_eq!(packet, query.marshal().unwrap());
+    fn serialize_ok() {
+        assert_eq!("$PMTK419*3E\r\n", SbasModeQ {}.serialize().unwrap());
     }
 }

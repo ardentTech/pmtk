@@ -1,7 +1,8 @@
+use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
+use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -19,35 +20,27 @@ pub struct EasyEnableCmd { // TODO this might be better as a Response type?
     enable: bool,
 }
 
-impl PmtkSentence for EasyEnableCmd {
+impl Packet for EasyEnableCmd {
     const PKT_TYPE: u16 = 869;
 }
 
-impl PmtkBiDir for EasyEnableCmd {
-    type Dt = AckDt;
+impl Request for EasyEnableCmd {
+    type R = AckDt;
 }
 
-impl PmtkCmd for EasyEnableCmd {
-    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
+impl Cmd for EasyEnableCmd {
+    fn serialize(&self) -> Result<String<255>, PmtkError> {
         let data_field = encode_data_field([self.cmd_type as u8, self.enable as u8]);
-        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
+        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use core::str::FromStr;
-    use crate::packet::{DataField, PmtkPacket};
     use super::*;
 
     #[test]
-    fn encode_ok() {
-        let cmd = EasyEnableCmd { cmd_type: CmdType::Set, enable: true };
-        let packet = PmtkPacket {
-            checksum: 0x35,
-            data_field: Some(DataField::from_str(",1,1").unwrap()),
-            pkt_type: EasyEnableCmd::PKT_TYPE,
-        };
-        assert_eq!(packet, cmd.marshal().unwrap());
+    fn serialize_ok() {
+        assert_eq!("$PMTK869,1,1*35\r\n", EasyEnableCmd { cmd_type: CmdType::Set, enable: true }.serialize().unwrap());
     }
 }

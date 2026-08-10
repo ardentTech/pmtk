@@ -1,33 +1,26 @@
 use crate::dt::release::ReleaseDt;
-use crate::traits::{PmtkSentence, PmtkQ, PmtkBiDir};
+use crate::traits::{Packet, Q, Request};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct ReleaseQ {}
 
-impl PmtkSentence for ReleaseQ {
+impl Packet for ReleaseQ {
     const PKT_TYPE: u16 = 605;
 }
 
-impl PmtkBiDir for ReleaseQ {
-    type Dt = ReleaseDt;
+impl Request for ReleaseQ {
+    type R = ReleaseDt;
 }
 
-impl PmtkQ for ReleaseQ {}
+impl Q for ReleaseQ {}
 
 #[cfg(test)]
 mod tests {
-    use crate::packet::PmtkPacket;
     use super::*;
 
     #[test]
-    fn encode_ok() {
-        let query = ReleaseQ {};
-        let packet = PmtkPacket {
-            checksum: 0x31,
-            data_field: None,
-            pkt_type: ReleaseQ::PKT_TYPE,
-        };
-        assert_eq!(packet, query.marshal().unwrap());
+    fn serialize_ok() {
+        assert_eq!("$PMTK605*31\r\n", ReleaseQ {}.serialize().unwrap());
     }
 }

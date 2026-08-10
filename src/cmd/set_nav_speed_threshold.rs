@@ -1,7 +1,8 @@
+use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
+use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -18,41 +19,33 @@ impl SetNavSpeedThresholdCmd {
 }
 
 #[cfg(not(feature = "mt3339"))]
-impl PmtkSentence for SetNavSpeedThresholdCmd {
+impl Packet for SetNavSpeedThresholdCmd {
     const PKT_TYPE: u16 = 397;
 }
 
 #[cfg(feature = "mt3339")]
-impl PmtkSentence for SetNavSpeedThresholdCmd {
+impl Packet for SetNavSpeedThresholdCmd {
     const PKT_TYPE: u16 = 386;
 }
 
-impl PmtkBiDir for SetNavSpeedThresholdCmd {
-    type Dt = AckDt;
+impl Request for SetNavSpeedThresholdCmd {
+    type R = AckDt;
 }
 
-impl PmtkCmd for SetNavSpeedThresholdCmd {
-    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
+impl Cmd for SetNavSpeedThresholdCmd {
+    fn serialize(&self) -> Result<String<255>, PmtkError> {
         let data_field = encode_data_field([self.0]);
-        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
+        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use core::str::FromStr;
-    use crate::packet::DataField;
     use super::*;
 
     #[test]
-    fn encode_ok() {
-        let cmd = SetNavSpeedThresholdCmd(0.2);
-        let packet = PmtkPacket {
-            checksum: 0x3f,
-            data_field: Some(DataField::from_str(",0.2").unwrap()),
-            pkt_type: SetNavSpeedThresholdCmd::PKT_TYPE,
-        };
-        assert_eq!(packet, cmd.marshal().unwrap());
+    fn serialize_ok() {
+        assert_eq!("$PMTK386,0.2*3F\r\n", SetNavSpeedThresholdCmd(0.2).serialize().unwrap());
     }
 
     #[test]

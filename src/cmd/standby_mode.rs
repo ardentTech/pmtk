@@ -1,42 +1,35 @@
+use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
+use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
 pub struct StandbyModeCmd;
 
-impl PmtkSentence for StandbyModeCmd {
+impl Packet for StandbyModeCmd {
     const PKT_TYPE: u16 = 161;
 }
 
-impl PmtkBiDir for StandbyModeCmd {
-    type Dt = AckDt;
+impl Request for StandbyModeCmd {
+    type R = AckDt;
 }
 
-impl PmtkCmd for StandbyModeCmd {
-    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
+impl Cmd for StandbyModeCmd {
+    fn serialize(&self) -> Result<String<255>, PmtkError> {
         let data_field = encode_data_field([0]);
-        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
+        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use core::str::FromStr;
-    use crate::packet::DataField;
     use super::*;
 
     #[test]
-    fn encode_ok() {
-        let cmd = StandbyModeCmd;
-        let packet = PmtkPacket {
-            checksum: 0x28,
-            data_field: Some(DataField::from_str(",0").unwrap()),
-            pkt_type: StandbyModeCmd::PKT_TYPE,
-        };
-        assert_eq!(packet, cmd.marshal().unwrap());
+    fn serialize_ok() {
+        assert_eq!("$PMTK161,0*28\r\n", StandbyModeCmd {}.serialize().unwrap());
     }
 }

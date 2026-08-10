@@ -1,8 +1,9 @@
+use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
 use crate::dt::nmea_output::{Frequency, NmeaOutputDt};
-use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
+use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -17,16 +18,16 @@ pub struct SetNmeaOutputCmd {
     mchn: Frequency,
 }
 
-impl PmtkSentence for SetNmeaOutputCmd {
+impl Packet for SetNmeaOutputCmd {
     const PKT_TYPE: u16 = 314;
 }
 
-impl PmtkBiDir for SetNmeaOutputCmd {
-    type Dt = NmeaOutputDt;
+impl Request for SetNmeaOutputCmd {
+    type R = NmeaOutputDt;
 }
 
-impl PmtkCmd for SetNmeaOutputCmd {
-    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
+impl Cmd for SetNmeaOutputCmd {
+    fn serialize(&self) -> Result<String<255>, PmtkError> {
         let data_field = encode_data_field([
             self.gll as u8,
             self.rmc as u8,
@@ -37,7 +38,7 @@ impl PmtkCmd for SetNmeaOutputCmd {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             self.mchn as u8,
         ]);
-        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
+        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
 
@@ -49,7 +50,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn encode_ok() {
+    fn serialize_ok() {
         let cmd = SetNmeaOutputCmd {
             gll: OnceEveryOnePositionFix,
             rmc: OnceEveryOnePositionFix,
@@ -59,11 +60,6 @@ mod tests {
             gsv: OnceEveryFivePositionFixes,
             mchn: Disabled
         };
-        let packet = PmtkPacket {
-            checksum: 0x2c,
-            data_field: Some(DataField::from_str(",1,1,1,1,1,5,0,0,0,0,0,0,0,0,0,0,0,0,0").unwrap()),
-            pkt_type: SetNmeaOutputCmd::PKT_TYPE,
-        };
-        assert_eq!(packet, cmd.marshal().unwrap());
+        assert_eq!("$PMTK314,1,1,1,1,1,5,0,0,0,0,0,0,0,0,0,0,0,0,0*2C\r\n", cmd.serialize().unwrap());
     }
 }

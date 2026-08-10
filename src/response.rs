@@ -11,7 +11,7 @@ use crate::dt::txt_msg::TxtMsgDt;
 use crate::error::PmtkError;
 use crate::error::PmtkError::Parsing;
 use crate::parse;
-use crate::traits::PmtkSentence;
+use crate::traits::Packet;
 use core::str::from_utf8;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]

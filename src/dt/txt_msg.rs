@@ -2,14 +2,14 @@ use core::str::FromStr;
 use heapless::String;
 use nom::character::complete::char;
 use crate::error::PmtkError;
-use crate::traits::{PmtkSentence, PmtkDt};
+use crate::traits::{Packet, Response};
 use crate::packet::{DataField, DATA_FIELD_LEN};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct TxtMsgDt(pub String<DATA_FIELD_LEN>);
 
-impl PmtkSentence for TxtMsgDt {
+impl Packet for TxtMsgDt {
     const PKT_TYPE: u16 = 11;
 }
 
@@ -24,7 +24,7 @@ impl TryFrom<DataField> for TxtMsgDt {
     }
 }
 
-impl PmtkDt for TxtMsgDt {}
+impl Response for TxtMsgDt {}
 
 #[cfg(test)]
 mod tests {

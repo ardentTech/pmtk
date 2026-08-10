@@ -1,7 +1,8 @@
+use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
+use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
 const TIME_MIN: u32 = 1_000;
@@ -62,16 +63,16 @@ impl PeriodicModeCmd {
     }
 }
 
-impl PmtkSentence for PeriodicModeCmd {
+impl Packet for PeriodicModeCmd {
     const PKT_TYPE: u16 = 225;
 }
 
-impl PmtkBiDir for PeriodicModeCmd {
-    type Dt = AckDt;
+impl Request for PeriodicModeCmd {
+    type R = AckDt;
 }
 
-impl PmtkCmd for PeriodicModeCmd {
-    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
+impl Cmd for PeriodicModeCmd {
+    fn serialize(&self) -> Result<String<255>, PmtkError> {
         let mut data_field = encode_data_field([self.mode as u32]);
         if let Some(run_time) = self.run_time {
             data_field.push_str(&*encode_data_field([run_time]))?;
@@ -86,7 +87,7 @@ impl PmtkCmd for PeriodicModeCmd {
             data_field.push_str(&*encode_data_field([second_sleep_time]))?;
         }
 
-        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
+        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
 
@@ -98,7 +99,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn encode_always_locate_ok() {
+    fn serialize_always_locate_ok() {
         let cmd = PeriodicModeCmd {
             mode: AlwaysLocateBackup,
             run_time: None,
@@ -106,16 +107,11 @@ mod tests {
             second_run_time: None,
             second_sleep_time: None
         };
-        let packet = PmtkPacket {
-            checksum: 0x22,
-            data_field: Some(DataField::from_str(",9").unwrap()),
-            pkt_type: PeriodicModeCmd::PKT_TYPE,
-        };
-        assert_eq!(packet, cmd.marshal().unwrap());
+        assert_eq!("$PMTK225,9*22\r\n", cmd.serialize().unwrap());
     }
 
     #[test]
-    fn encode_periodic_ok() {
+    fn serialize_periodic_ok() {
         let cmd = PeriodicModeCmd {
             mode: PeriodicBackup,
             run_time: Some(3000),
@@ -123,12 +119,7 @@ mod tests {
             second_run_time: Some(18000),
             second_sleep_time: Some(72000)
         };
-        let packet = PmtkPacket {
-            checksum: 0x16,
-            data_field: Some(DataField::from_str(",1,3000,12000,18000,72000").unwrap()),
-            pkt_type: PeriodicModeCmd::PKT_TYPE,
-        };
-        assert_eq!(packet, cmd.marshal().unwrap());
+        assert_eq!("$PMTK225,1,3000,12000,18000,72000*16\r\n", cmd.serialize().unwrap());
     }
 
     #[test]

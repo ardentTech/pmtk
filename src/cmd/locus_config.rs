@@ -1,42 +1,35 @@
+use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
+use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
 pub struct LocusConfigCmd(pub u8);
 
-impl PmtkSentence for LocusConfigCmd {
+impl Packet for LocusConfigCmd {
     const PKT_TYPE: u16 = 187;
 }
 
-impl PmtkBiDir for LocusConfigCmd {
-    type Dt = AckDt;
+impl Request for LocusConfigCmd {
+    type R = AckDt;
 }
 
-impl PmtkCmd for LocusConfigCmd {
-    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
+impl Cmd for LocusConfigCmd {
+    fn serialize(&self) -> Result<String<255>, PmtkError> {
         let data_field = encode_data_field([1, self.0]);
-        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
+        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use core::str::FromStr;
-    use crate::packet::{DataField, PmtkPacket};
     use super::*;
 
     #[test]
-    fn encode_ok() {
-        let cmd = LocusConfigCmd(5);
-        let packet = PmtkPacket {
-            checksum: 0x38,
-            data_field: Some(DataField::from_str(",1,5").unwrap()),
-            pkt_type: LocusConfigCmd::PKT_TYPE,
-        };
-        assert_eq!(packet, cmd.marshal().unwrap());
+    fn serialize_ok() {
+        assert_eq!("$PMTK187,1,5*38\r\n", LocusConfigCmd(5).serialize().unwrap());
     }
 }

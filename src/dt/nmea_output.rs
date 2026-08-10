@@ -3,7 +3,7 @@ use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number;
 use crate::dt::nmea_output::Frequency::*;
-use crate::traits::{PmtkSentence, PmtkDt};
+use crate::traits::{Packet, Response};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -45,7 +45,7 @@ pub struct NmeaOutputDt {
     pub mchn: Frequency,
 }
 
-impl PmtkSentence for NmeaOutputDt {
+impl Packet for NmeaOutputDt {
     const PKT_TYPE: u16 = 514;
 }
 
@@ -107,7 +107,7 @@ impl TryFrom<DataField> for NmeaOutputDt {
     }
 }
 
-impl PmtkDt for NmeaOutputDt {}
+impl Response for NmeaOutputDt {}
 
 #[cfg(test)]
 mod tests {

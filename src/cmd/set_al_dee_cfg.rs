@@ -1,7 +1,8 @@
+use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
+use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
 const EXTENSION_GAP_MIN: u32 = 0;
@@ -51,20 +52,20 @@ impl Default for SetAlDeeCfgCmd {
     }
 }
 
-impl PmtkSentence for SetAlDeeCfgCmd {
+impl Packet for SetAlDeeCfgCmd {
     const PKT_TYPE: u16 = 223;
 }
 
-impl PmtkBiDir for SetAlDeeCfgCmd {
-    type Dt = AckDt;
+impl Request for SetAlDeeCfgCmd {
+    type R = AckDt;
 }
 
-impl PmtkCmd for SetAlDeeCfgCmd {
-    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
+impl Cmd for SetAlDeeCfgCmd {
+    fn serialize(&self) -> Result<String<255>, PmtkError> {
         let data_field = encode_data_field([
             self.sv as u32, self.snr as u32, self.extension_threshold, self.extension_gap
         ]);
-        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
+        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
 
@@ -75,14 +76,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn encode_ok() {
-        let cmd = SetAlDeeCfgCmd::new(60_000, 180_000, 25, 1).unwrap();
-        let packet = PmtkPacket {
-            checksum: 0x38,
-            data_field: Some(DataField::from_str(",1,25,180000,60000").unwrap()),
-            pkt_type: SetAlDeeCfgCmd::PKT_TYPE,
-        };
-        assert_eq!(packet, cmd.marshal().unwrap());
+    fn serialize_ok() {
+        assert_eq!("$PMTK223,1,25,180000,60000*38\r\n", SetAlDeeCfgCmd::new(60_000, 180_000, 25, 1).unwrap().serialize().unwrap());
     }
 
     #[test]

@@ -2,7 +2,7 @@ use nom::character::complete::char;
 use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number;
-use crate::traits::{PmtkSentence, PmtkDt};
+use crate::traits::{Packet, Response};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -19,7 +19,7 @@ pub struct EpoInfoDt {
     pub lctow: u32,
 }
 
-impl PmtkSentence for EpoInfoDt {
+impl Packet for EpoInfoDt {
     const PKT_TYPE: u16 = 707;
 }
 
@@ -61,7 +61,7 @@ impl TryFrom<DataField> for EpoInfoDt {
     }
 }
 
-impl PmtkDt for EpoInfoDt {}
+impl Response for EpoInfoDt {}
 
 #[cfg(test)]
 mod tests {

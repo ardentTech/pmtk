@@ -3,7 +3,7 @@ use nom::combinator::opt;
 use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number_in_range;
-use crate::traits::{PmtkSentence, PmtkDt};
+use crate::traits::{Packet, Response};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -14,7 +14,7 @@ pub enum SbasModeDt {
     Integrity = 0x1,
 }
 
-impl PmtkSentence for SbasModeDt {
+impl Packet for SbasModeDt {
     const PKT_TYPE: u16 = 519;
 }
 
@@ -45,7 +45,7 @@ impl TryFrom<DataField> for SbasModeDt {
     }
 }
 
-impl PmtkDt for SbasModeDt {}
+impl Response for SbasModeDt {}
 
 #[cfg(test)]
 mod tests {

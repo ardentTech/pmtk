@@ -1,33 +1,26 @@
 use crate::dt::dgps_mode::DgpsModeDt;
-use crate::traits::{PmtkSentence, PmtkQ, PmtkBiDir};
+use crate::traits::{Packet, Q, Request};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct DgpsModeQ {}
-impl PmtkSentence for DgpsModeQ {
+impl Packet for DgpsModeQ {
     const PKT_TYPE: u16 = 401;
 }
 
-impl PmtkBiDir for DgpsModeQ {
-    type Dt = DgpsModeDt;
+impl Request for DgpsModeQ {
+    type R = DgpsModeDt;
 }
 
-impl PmtkQ for DgpsModeQ {}
+impl Q for DgpsModeQ {}
 
 
 #[cfg(test)]
 mod tests {
-    use crate::packet::PmtkPacket;
     use super::*;
 
     #[test]
-    fn encode_ok() {
-        let query = DgpsModeQ {};
-        let packet = PmtkPacket {
-            checksum: 0x37,
-            data_field: None,
-            pkt_type: DgpsModeQ::PKT_TYPE,
-        };
-        assert_eq!(packet, query.marshal().unwrap());
+    fn serialize_ok() {
+        assert_eq!("$PMTK401*37\r\n", DgpsModeQ {}.serialize().unwrap());
     }
 }

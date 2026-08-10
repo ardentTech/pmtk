@@ -1,23 +1,24 @@
+use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::ack::AckDt;
-use crate::traits::{PmtkCmd, PmtkBiDir, PmtkSentence};
+use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
 pub struct AicModeCmd(pub bool);
 
-impl PmtkSentence for AicModeCmd {
+impl Packet for AicModeCmd {
     const PKT_TYPE: u16 = 286;
 }
 
-impl PmtkBiDir for AicModeCmd {
-    type Dt = AckDt;
+impl Request for AicModeCmd {
+    type R = AckDt;
 }
 
-impl PmtkCmd for AicModeCmd {
-    fn marshal(&self) -> Result<PmtkPacket, PmtkError> {
+impl Cmd for AicModeCmd {
+    fn serialize(&self) -> Result<String<255>, PmtkError> {
         let data_field = encode_data_field([self.0 as u8]);
-        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))
+        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
 
@@ -28,13 +29,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn encode_ok() {
-        let cmd = AicModeCmd(true);
-        let packet = PmtkPacket {
-            checksum: 0x23,
-            data_field: Some(DataField::from_str(",1").unwrap()),
-            pkt_type: AicModeCmd::PKT_TYPE,
-        };
-        assert_eq!(packet, cmd.marshal().unwrap());
+    fn serialize_ok() {
+        assert_eq!("$PMTK286,1*23\r\n", AicModeCmd(true).serialize().unwrap());
     }
 }

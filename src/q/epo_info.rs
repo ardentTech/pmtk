@@ -1,33 +1,26 @@
 use crate::dt::epo_info::EpoInfoDt;
-use crate::traits::{PmtkSentence, PmtkQ, PmtkBiDir};
+use crate::traits::{Packet, Q, Request};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct EpoInfoQ {}
-impl PmtkSentence for EpoInfoQ {
+impl Packet for EpoInfoQ {
     const PKT_TYPE: u16 = 607;
 }
 
-impl PmtkBiDir for EpoInfoQ {
-    type Dt = EpoInfoDt;
+impl Request for EpoInfoQ {
+    type R = EpoInfoDt;
 }
 
-impl PmtkQ for EpoInfoQ {}
+impl Q for EpoInfoQ {}
 
 
 #[cfg(test)]
 mod tests {
-    use crate::packet::PmtkPacket;
     use super::*;
 
     #[test]
-    fn encode_ok() {
-        let query = EpoInfoQ {};
-        let packet = PmtkPacket {
-            checksum: 0x33,
-            data_field: None,
-            pkt_type: EpoInfoQ::PKT_TYPE,
-        };
-        assert_eq!(packet, query.marshal().unwrap());
+    fn serialize_ok() {
+        assert_eq!("$PMTK607*33\r\n", EpoInfoQ {}.serialize().unwrap());
     }
 }

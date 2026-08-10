@@ -3,7 +3,7 @@ use nom::combinator::opt;
 use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number_in_range;
-use crate::traits::{PmtkSentence, PmtkDt};
+use crate::traits::{Packet, Response};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -15,7 +15,7 @@ pub enum DgpsModeDt {
     WAAS = 0x2,
 }
 
-impl PmtkSentence for DgpsModeDt {
+impl Packet for DgpsModeDt {
     const PKT_TYPE: u16 = 501;
 }
 
@@ -47,7 +47,7 @@ impl TryFrom<DataField> for DgpsModeDt {
     }
 }
 
-impl PmtkDt for DgpsModeDt {}
+impl Response for DgpsModeDt {}
 
 #[cfg(test)]
 mod tests {
