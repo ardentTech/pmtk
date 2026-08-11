@@ -33,7 +33,7 @@ impl TryFrom<&[u8]> for PmtkResponse {
     type Error = PmtkError;
 
     fn try_from(buf: &[u8]) -> Result<Self, Self::Error> {
-        let packet = parse::packet(from_utf8(buf).map_err(|_| PmtkError::Parsing)?)?;
+        let packet = parse::packet(from_utf8(buf).map_err(|_| Parsing)?)?;
 
         if let Some(data_field) = packet.data_field {
             match packet.pkt_type {

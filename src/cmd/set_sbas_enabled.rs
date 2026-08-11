@@ -5,7 +5,7 @@ use crate::dt::ack::AckDt;
 use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
-pub struct SetSbasEnabledCmd(bool);
+pub struct SetSbasEnabledCmd(pub bool);
 
 impl Packet for SetSbasEnabledCmd {
     const PKT_TYPE: u16 = 313;

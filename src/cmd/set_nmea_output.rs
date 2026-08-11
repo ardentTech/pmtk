@@ -1,21 +1,23 @@
 use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
-use crate::dt::ack::AckDt;
 use crate::dt::nmea_output::{Frequency, NmeaOutputDt};
 use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
+// TODO impl default?
+// TODO `new` method?
+
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
 pub struct SetNmeaOutputCmd {
-    gll: Frequency,
-    rmc: Frequency,
-    vtg: Frequency,
-    gga: Frequency,
-    gsa: Frequency,
-    gsv: Frequency,
-    mchn: Frequency,
+    pub gll: Frequency,
+    pub rmc: Frequency,
+    pub vtg: Frequency,
+    pub gga: Frequency,
+    pub gsa: Frequency,
+    pub gsv: Frequency,
+    pub mchn: Frequency,
 }
 
 impl Packet for SetNmeaOutputCmd {
@@ -44,9 +46,7 @@ impl Cmd for SetNmeaOutputCmd {
 
 #[cfg(test)]
 mod tests {
-    use core::str::FromStr;
     use crate::dt::nmea_output::Frequency::{Disabled, OnceEveryFivePositionFixes, OnceEveryOnePositionFix};
-    use crate::packet::DataField;
     use super::*;
 
     #[test]

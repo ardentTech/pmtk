@@ -10,7 +10,7 @@ use crate::packet::PmtkPacket;
 pub struct SetDatumCmd(u8);
 
 impl SetDatumCmd {
-    fn new(datum: u8) -> Result<Self, PmtkError> {
+    pub fn new(datum: u8) -> Result<Self, PmtkError> {
         if !(0..=222).contains(&datum) {
             return Err(PmtkError::OutOfRange(0, 222, datum as u32));
         }

@@ -26,7 +26,7 @@ pub trait Request: Packet {
     }
 }
 
-trait Dt: Response {}
+pub trait Dt: Response {}
 
 pub trait Cmd: Request {
     fn serialize(&self) -> Result<String<255>, PmtkError>;

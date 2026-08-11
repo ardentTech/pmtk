@@ -7,7 +7,7 @@ use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Copy, Clone, Debug, PartialEq)]
-enum CmdType {
+pub enum CmdType {
     Query = 0x0,
     Set = 0x1,
     ResultForQueryOperation = 0x2
@@ -16,8 +16,8 @@ enum CmdType {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
 pub struct EasyEnableCmd { // TODO this might be better as a Response type?
-    cmd_type: CmdType,
-    enable: bool,
+    pub cmd_type: CmdType,
+    pub enable: bool,
 }
 
 impl Packet for EasyEnableCmd {
