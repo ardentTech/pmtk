@@ -68,8 +68,6 @@ impl Cmd for SetAlDeeCfgCmd {
 
 #[cfg(test)]
 mod tests {
-    use core::str::FromStr;
-    use crate::packet::DataField;
     use super::*;
 
     #[test]

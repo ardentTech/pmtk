@@ -29,7 +29,6 @@ impl Response for DatumDt {}
 #[cfg(test)]
 mod tests {
     use core::str::FromStr;
-    use crate::dt::nav_threshold::NavThresholdDt;
     use super::*;
 
     #[test]

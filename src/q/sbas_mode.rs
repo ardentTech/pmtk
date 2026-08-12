@@ -3,6 +3,7 @@ use crate::traits::{Packet, Q, Request};
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct SbasModeQ {}
+
 impl Packet for SbasModeQ {
     const PKT_TYPE: u16 = 419;
 }

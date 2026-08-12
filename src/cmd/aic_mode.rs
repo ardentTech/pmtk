@@ -4,6 +4,8 @@ use crate::error::PmtkError;
 use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[derive(Debug, Copy, Clone)]
 pub struct AicModeCmd(pub bool);
 
 impl Packet for AicModeCmd {
