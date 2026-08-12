@@ -1,7 +1,6 @@
 use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
-use crate::dt::ack::AckDt;
 use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
@@ -13,9 +12,7 @@ impl Packet for LocusConfigCmd {
     const PKT_TYPE: u16 = 187;
 }
 
-impl Request for LocusConfigCmd {
-    type R = AckDt;
-}
+impl Request for LocusConfigCmd {}
 
 impl Cmd for LocusConfigCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {

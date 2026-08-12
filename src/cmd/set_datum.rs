@@ -1,6 +1,5 @@
 use heapless::String;
 use crate::cmd::util::encode_data_field;
-use crate::dt::ack::AckDt;
 use crate::error::PmtkError;
 use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
@@ -22,9 +21,7 @@ impl Packet for SetDatumCmd {
     const PKT_TYPE: u16 = 330;
 }
 
-impl Request for SetDatumCmd {
-    type R = AckDt;
-}
+impl Request for SetDatumCmd {}
 
 impl Cmd for SetDatumCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {

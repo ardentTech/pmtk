@@ -1,4 +1,3 @@
-use crate::dt::datum::DatumDt;
 use crate::traits::{Packet, Q, Request};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -8,9 +7,7 @@ impl Packet for DatumQ {
     const PKT_TYPE: u16 = 430;
 }
 
-impl Request for DatumQ {
-    type R = DatumDt;
-}
+impl Request for DatumQ {}
 
 impl Q for DatumQ {}
 

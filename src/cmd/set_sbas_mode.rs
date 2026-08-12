@@ -1,7 +1,6 @@
 use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
-use crate::dt::ack::AckDt;
 use crate::dt::sbas_mode::SbasModeDt;
 use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
@@ -14,9 +13,7 @@ impl Packet for SetSbasModeCmd {
     const PKT_TYPE: u16 = 319;
 }
 
-impl Request for SetSbasModeCmd {
-    type R = AckDt;
-}
+impl Request for SetSbasModeCmd {}
 
 impl Cmd for SetSbasModeCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {

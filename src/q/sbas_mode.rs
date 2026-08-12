@@ -1,4 +1,3 @@
-use crate::dt::sbas_mode::SbasModeDt;
 use crate::traits::{Packet, Q, Request};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -8,9 +7,7 @@ impl Packet for SbasModeQ {
     const PKT_TYPE: u16 = 419;
 }
 
-impl Request for SbasModeQ {
-    type R = SbasModeDt;
-}
+impl Request for SbasModeQ {}
 
 impl Q for SbasModeQ {}
 

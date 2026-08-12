@@ -1,7 +1,6 @@
 use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
-use crate::dt::ack::AckDt;
 use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
@@ -28,9 +27,7 @@ impl Packet for SetNavSpeedThresholdCmd {
     const PKT_TYPE: u16 = 386;
 }
 
-impl Request for SetNavSpeedThresholdCmd {
-    type R = AckDt;
-}
+impl Request for SetNavSpeedThresholdCmd {}
 
 impl Cmd for SetNavSpeedThresholdCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {
@@ -43,6 +40,13 @@ impl Cmd for SetNavSpeedThresholdCmd {
 mod tests {
     use super::*;
 
+    #[cfg(not(feature = "mt3339"))]
+    #[test]
+    fn serialize_ok() {
+        assert_eq!("$PMTK397,0.2*3F\r\n", SetNavSpeedThresholdCmd(0.2).serialize().unwrap());
+    }
+
+    #[cfg(feature = "mt3339")]
     #[test]
     fn serialize_ok() {
         assert_eq!("$PMTK386,0.2*3F\r\n", SetNavSpeedThresholdCmd(0.2).serialize().unwrap());

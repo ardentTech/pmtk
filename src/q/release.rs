@@ -1,4 +1,3 @@
-use crate::dt::release::ReleaseDt;
 use crate::traits::{Packet, Q, Request};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -9,9 +8,7 @@ impl Packet for ReleaseQ {
     const PKT_TYPE: u16 = 605;
 }
 
-impl Request for ReleaseQ {
-    type R = ReleaseDt;
-}
+impl Request for ReleaseQ {}
 
 impl Q for ReleaseQ {}
 

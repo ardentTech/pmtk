@@ -1,4 +1,3 @@
-use crate::dt::nav_threshold::NavThresholdDt;
 use crate::traits::{Packet, Q, Request};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -9,9 +8,7 @@ impl Packet for NavThresholdQ {
     const PKT_TYPE: u16 = 447;
 }
 
-impl Request for NavThresholdQ {
-    type R = NavThresholdDt;
-}
+impl Request for NavThresholdQ {}
 
 impl Q for NavThresholdQ {}
 

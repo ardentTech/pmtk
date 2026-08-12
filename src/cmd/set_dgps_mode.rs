@@ -1,7 +1,6 @@
 use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
-use crate::dt::ack::AckDt;
 use crate::dt::dgps_mode::DgpsModeDt;
 use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
@@ -14,9 +13,7 @@ impl Packet for SetDgpsModeCmd {
     const PKT_TYPE: u16 = 301;
 }
 
-impl Request for SetDgpsModeCmd {
-    type R = AckDt;
-}
+impl Request for SetDgpsModeCmd {}
 
 impl Cmd for SetDgpsModeCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {

@@ -1,7 +1,6 @@
 use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
-use crate::dt::ack::AckDt;
 use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
@@ -11,9 +10,7 @@ impl Packet for AicModeCmd {
     const PKT_TYPE: u16 = 286;
 }
 
-impl Request for AicModeCmd {
-    type R = AckDt;
-}
+impl Request for AicModeCmd {}
 
 impl Cmd for AicModeCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {
@@ -24,8 +21,6 @@ impl Cmd for AicModeCmd {
 
 #[cfg(test)]
 mod tests {
-    use core::str::FromStr;
-    use crate::packet::{DataField, PmtkPacket};
     use super::*;
 
     #[test]

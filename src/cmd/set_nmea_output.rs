@@ -1,7 +1,7 @@
 use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
-use crate::dt::nmea_output::{Frequency, NmeaOutputDt};
+use crate::dt::nmea_output::Frequency;
 use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
@@ -24,9 +24,7 @@ impl Packet for SetNmeaOutputCmd {
     const PKT_TYPE: u16 = 314;
 }
 
-impl Request for SetNmeaOutputCmd {
-    type R = NmeaOutputDt;
-}
+impl Request for SetNmeaOutputCmd {}
 
 impl Cmd for SetNmeaOutputCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {

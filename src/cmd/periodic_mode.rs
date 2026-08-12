@@ -1,7 +1,6 @@
 use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
-use crate::dt::ack::AckDt;
 use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
@@ -67,9 +66,7 @@ impl Packet for PeriodicModeCmd {
     const PKT_TYPE: u16 = 225;
 }
 
-impl Request for PeriodicModeCmd {
-    type R = AckDt;
-}
+impl Request for PeriodicModeCmd {}
 
 impl Cmd for PeriodicModeCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {
@@ -93,9 +90,7 @@ impl Cmd for PeriodicModeCmd {
 
 #[cfg(test)]
 mod tests {
-    use core::str::FromStr;
     use crate::cmd::periodic_mode::OperationMode::{AlwaysLocateBackup, Normal, PeriodicBackup};
-    use crate::packet::DataField;
     use super::*;
 
     #[test]

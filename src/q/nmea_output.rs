@@ -1,4 +1,3 @@
-use crate::dt::nmea_output::NmeaOutputDt;
 use crate::traits::{Packet, Q, Request};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -8,9 +7,7 @@ impl Packet for NmeaOutputQ {
     const PKT_TYPE: u16 = 414;
 }
 
-impl Request for NmeaOutputQ {
-    type R = NmeaOutputDt;
-}
+impl Request for NmeaOutputQ {}
 
 impl Q for NmeaOutputQ {}
 

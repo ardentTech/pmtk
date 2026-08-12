@@ -1,4 +1,3 @@
-use crate::dt::epo_info::EpoInfoDt;
 use crate::traits::{Packet, Q, Request};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -8,9 +7,7 @@ impl Packet for EpoInfoQ {
     const PKT_TYPE: u16 = 607;
 }
 
-impl Request for EpoInfoQ {
-    type R = EpoInfoDt;
-}
+impl Request for EpoInfoQ {}
 
 impl Q for EpoInfoQ {}
 

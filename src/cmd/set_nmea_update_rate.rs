@@ -1,7 +1,6 @@
 use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
-use crate::dt::ack::AckDt;
 use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
@@ -27,9 +26,7 @@ impl Packet for SetNmeaUpdateRateCmd {
     const PKT_TYPE: u16 = 220;
 }
 
-impl Request for SetNmeaUpdateRateCmd {
-    type R = AckDt;
-}
+impl Request for SetNmeaUpdateRateCmd {}
 
 impl Cmd for SetNmeaUpdateRateCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {

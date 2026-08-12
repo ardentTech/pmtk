@@ -1,4 +1,3 @@
-use crate::dt::dgps_mode::DgpsModeDt;
 use crate::traits::{Packet, Q, Request};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -8,9 +7,7 @@ impl Packet for DgpsModeQ {
     const PKT_TYPE: u16 = 401;
 }
 
-impl Request for DgpsModeQ {
-    type R = DgpsModeDt;
-}
+impl Request for DgpsModeQ {}
 
 impl Q for DgpsModeQ {}
 

@@ -7,6 +7,7 @@ pub(crate) const DATA_FIELD_LEN: usize = 242;
 const PAYLOAD_LEN: usize = 246;
 
 pub(crate) type DataField = String<DATA_FIELD_LEN>;
+pub(crate) type SerializedPacket = String<PACKET_LEN>;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
@@ -50,7 +51,7 @@ impl PmtkPacket {
         Self::new(pkt_type, None, None)
     }
 
-    pub fn serialize(&self) -> Result<String<PACKET_LEN>, PmtkError> {
+    pub fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let payload = Self::serialize_payload(self.pkt_type, &self.data_field)?;
         format!(PACKET_LEN; "${}*{:X?}\r\n", payload, self.checksum).map_err(PmtkError::from)
     }

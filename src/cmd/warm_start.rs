@@ -1,6 +1,5 @@
 use heapless::String;
 use crate::error::PmtkError;
-use crate::dt::ack::AckDt;
 use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
@@ -12,9 +11,7 @@ impl Packet for WarmStartCmd {
     const PKT_TYPE: u16 = 102;
 }
 
-impl Request for WarmStartCmd {
-    type R = AckDt;
-}
+impl Request for WarmStartCmd {}
 
 impl Cmd for WarmStartCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {

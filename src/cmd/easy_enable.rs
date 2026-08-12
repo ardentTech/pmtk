@@ -24,9 +24,7 @@ impl Packet for EasyEnableCmd {
     const PKT_TYPE: u16 = 869;
 }
 
-impl Request for EasyEnableCmd {
-    type R = AckDt;
-}
+impl Request for EasyEnableCmd {}
 
 impl Cmd for EasyEnableCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {
