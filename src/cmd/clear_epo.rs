@@ -1,7 +1,4 @@
-use heapless::String;
-use crate::error::PmtkError;
 use crate::traits::{Cmd, Request, Packet};
-use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
@@ -13,11 +10,7 @@ impl Packet for ClearEpoCmd {
 
 impl Request for ClearEpoCmd {}
 
-impl Cmd for ClearEpoCmd {
-    fn serialize(&self) -> Result<String<255>, PmtkError> {
-        PmtkPacket::new_command(Self::PKT_TYPE, None)?.serialize()
-    }
-}
+impl Cmd for ClearEpoCmd {}
 
 #[cfg(test)]
 mod tests {
