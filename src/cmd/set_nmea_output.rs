@@ -5,11 +5,10 @@ use crate::dt::nmea_output::Frequency;
 use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
-// TODO impl default?
 // TODO `new` method?
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(Debug, Copy, Clone)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct SetNmeaOutputCmd {
     pub gll: Frequency,
     pub rmc: Frequency,

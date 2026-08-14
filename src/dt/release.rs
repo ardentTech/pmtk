@@ -8,9 +8,10 @@ use crate::traits::{Packet, Response};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct ReleaseDt {
     pub build_id: u16,
+    //pub s: Option<[u8; 16]>, // TODO so can impl Copy?
     pub s: Option<String<16>>,
 }
 
@@ -32,12 +33,11 @@ impl TryFrom<DataField> for ReleaseDt {
             None
         } else {
             Some(String::try_from(s)?)
+            // TODO need better error for this:
+            //Some(s.as_bytes().try_into().map_err(|_| PmtkError::Parsing)?)
         };
 
-        Ok(ReleaseDt {
-            build_id,
-            s
-        })
+        Ok(ReleaseDt { build_id, s })
     }
 }
 

@@ -6,7 +6,7 @@ use crate::traits::{Packet, Response};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct NavThresholdDt(pub f32);
 
 impl Packet for NavThresholdDt {

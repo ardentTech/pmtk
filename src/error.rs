@@ -3,7 +3,7 @@ use core::fmt;
 use heapless::CapacityError;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum PmtkError {
     StringCapacity,
     ChecksumMismatch,

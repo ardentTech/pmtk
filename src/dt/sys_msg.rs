@@ -7,7 +7,7 @@ use crate::traits::{Packet, Response};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum SysMsgDt {
     Unknown = 0x0,
     Startup = 0x1,

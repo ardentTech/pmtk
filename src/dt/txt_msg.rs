@@ -6,7 +6,7 @@ use crate::traits::{Packet, Response};
 use crate::packet::{DataField, DATA_FIELD_LEN};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct TxtMsgDt(pub String<DATA_FIELD_LEN>);
 
 impl Packet for TxtMsgDt {

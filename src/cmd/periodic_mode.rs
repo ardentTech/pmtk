@@ -8,7 +8,7 @@ const TIME_MIN: u32 = 1_000;
 const TIME_MAX: u32 = 518_400_000;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(Copy, Clone, Debug, Default, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub enum OperationMode {
     #[default]
     Normal = 0x0,

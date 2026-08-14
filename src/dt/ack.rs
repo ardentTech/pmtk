@@ -7,7 +7,7 @@ use crate::traits::{Packet, Response};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum AckFlag {
     Invalid = 0x0,
     Unsupported = 0x1,
@@ -29,7 +29,7 @@ impl TryFrom<u8> for AckFlag {
 }
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct AckDt {
     pub cmd: u16,
     pub flag: AckFlag

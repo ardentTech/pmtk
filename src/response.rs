@@ -15,7 +15,7 @@ use crate::traits::Packet;
 use core::str::from_utf8;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum PmtkResponse {
     Ack(AckDt),
     SysMsg(SysMsgDt),
