@@ -5,7 +5,7 @@ use crate::packet::DataField;
 pub(crate) fn encode_data_field<T: Display, const N: usize>(data: [T; N]) -> DataField {
     let mut data_field = String::new();
     for c in data {
-        write!(data_field, ",{}", c).unwrap();
+        write!(data_field, ",{}", c).unwrap(); // TODO remove unwrap()
     }
     data_field
 }

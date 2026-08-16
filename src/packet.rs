@@ -13,11 +13,12 @@ pub(crate) type SerializedPacket = String<PACKET_LEN>;
 #[derive(Debug, PartialEq)]
 pub struct PmtkPacket {
     pub(crate) checksum: u8,
-    pub(crate) data_field: Option<DataField>, // TODO diff between Req (cmd + q) and Res?
+    pub(crate) data_field: Option<DataField>,
     pub(crate) pkt_type: u16,
 }
 
 impl PmtkPacket {
+    /// Desrializes the PMTK packet.
     pub fn deserialize(raw: &str) -> Result<Self, PmtkError> {
         parse::packet(raw)
     }
@@ -51,6 +52,7 @@ impl PmtkPacket {
         Self::new(pkt_type, None, None)
     }
 
+    /// Serializes the PMTK packet.
     pub fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let payload = Self::serialize_payload(self.pkt_type, &self.data_field)?;
         format!(PACKET_LEN; "${}*{:X?}\r\n", payload, self.checksum).map_err(PmtkError::from)

@@ -50,10 +50,12 @@ impl TryFrom<DataField> for AckDt {
         let (i, cmd) = opt(|i| number_in_range::<u16>(i, 0, 1000)).parse(i)?;
         let (i, _) = comma(i)?;
         let (_, flag) = opt(|i| number_in_range::<u8>(i, 0, 3)).parse(i)?;
-        let flag = AckFlag::try_from(flag.unwrap())?;
-
-        if let Some(cmd) = cmd {
-            Ok(AckDt { cmd, flag })
+        if let Some(f) = flag {
+            if let Some(cmd) = cmd {
+                Ok(AckDt { cmd, flag: AckFlag::try_from(f)? })
+            } else {
+                Err(PmtkError::Parsing)
+            }
         } else {
             Err(PmtkError::Parsing)
         }
