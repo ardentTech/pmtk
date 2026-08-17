@@ -7,7 +7,13 @@ use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct SetSbasModeCmd(pub SbasModeDt);
+pub struct SetSbasModeCmd(SbasModeDt);
+
+impl SetSbasModeCmd {
+    pub fn new(mode: SbasModeDt) -> Self {
+        Self(mode)
+    }
+}
 
 impl Packet for SetSbasModeCmd {
     const PKT_TYPE: u16 = 319;

@@ -6,7 +6,13 @@ use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct SetSupportQzssNmeaCmd(pub bool);
+pub struct SetSupportQzssNmeaCmd(bool);
+
+impl SetSupportQzssNmeaCmd {
+    pub fn new(enable: bool) -> Self {
+        Self(enable)
+    }
+}
 
 impl Packet for SetSupportQzssNmeaCmd {
     const PKT_TYPE: u16 = 351;

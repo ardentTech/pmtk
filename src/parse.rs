@@ -51,7 +51,7 @@ pub(crate) fn packet(i: &str) -> Result<PmtkPacket, PmtkError> {
     PmtkPacket::new(
         pkt_type,
         if !data_field.is_empty() {
-            Some(String::from_str(data_field).map_err(|_| PmtkError::Parsing)?) // TODO is this the right error?
+            Some(String::from_str(data_field).map_err(|_| PmtkError::Parsing)?)
         } else {
             None
         },

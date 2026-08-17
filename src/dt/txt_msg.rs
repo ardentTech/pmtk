@@ -19,7 +19,7 @@ impl TryFrom<DataField> for TxtMsgDt {
     fn try_from(value: DataField) -> Result<Self, Self::Error> {
         let i = value.as_str();
         let (msg, _) = char(',')(i)?;
-        // TODO this is weird bc msg will be DATA_FIELD_LEN - 1 when parsing succeeds
+        // TODO is this weird bc msg will be DATA_FIELD_LEN - 1 when parsing succeeds?
         Ok(TxtMsgDt(String::from_str(msg)?))
     }
 }

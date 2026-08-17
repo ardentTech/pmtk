@@ -33,7 +33,6 @@ impl TryFrom<DataField> for ReleaseDt {
             None
         } else {
             Some(String::try_from(s)?)
-            // TODO need better error for this:
             //Some(s.as_bytes().try_into().map_err(|_| PmtkError::Parsing)?)
         };
 

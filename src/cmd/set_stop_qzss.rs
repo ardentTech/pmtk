@@ -6,7 +6,13 @@ use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct SetStopQzssCmd(pub bool);
+pub struct SetStopQzssCmd(bool);
+
+impl SetStopQzssCmd {
+    pub fn new(enable: bool) -> Self {
+        Self(!enable)
+    }
+}
 
 impl Packet for SetStopQzssCmd {
     const PKT_TYPE: u16 = 352;
@@ -26,7 +32,12 @@ mod tests {
     use super::*;
 
     #[test]
-    fn serialize_ok() {
-        assert_eq!("$PMTK352,1*2B\r\n", SetStopQzssCmd(true).serialize().unwrap());
+    fn serialize_enable_ok() {
+        assert_eq!("$PMTK352,0*2A\r\n", SetStopQzssCmd::new(true).serialize().unwrap());
+    }
+
+    #[test]
+    fn serialize_disable_ok() {
+        assert_eq!("$PMTK352,1*2B\r\n", SetStopQzssCmd::new(false).serialize().unwrap());
     }
 }

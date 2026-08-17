@@ -6,7 +6,13 @@ use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct LocusConfigCmd(pub u8);
+pub struct LocusConfigCmd(u8);
+
+impl LocusConfigCmd {
+    pub fn new(interval: u8) -> Self {
+        Self(interval)
+    }
+}
 
 impl Packet for LocusConfigCmd {
     const PKT_TYPE: u16 = 187;

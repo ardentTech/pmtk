@@ -24,7 +24,7 @@ impl TryFrom<DataField> for SbasEnabledDt {
         if let Some(enabled) = enabled {
             Ok(SbasEnabledDt(enabled == 1))
         } else {
-            Err(PmtkError::Parsing) // TODO too generic?
+            Err(PmtkError::Parsing)
         }
     }
 }

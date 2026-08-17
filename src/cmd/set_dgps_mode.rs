@@ -7,7 +7,13 @@ use crate::packet::PmtkPacket;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct SetDgpsModeCmd(pub DgpsModeDt);
+pub struct SetDgpsModeCmd(DgpsModeDt);
+
+impl SetDgpsModeCmd {
+    pub fn new(mode: DgpsModeDt) -> Self {
+        Self(mode)
+    }
+}
 
 impl Packet for SetDgpsModeCmd {
     const PKT_TYPE: u16 = 301;

@@ -14,6 +14,8 @@ use crate::parse;
 use crate::traits::Packet;
 use core::str::from_utf8;
 
+// TODO i'm not convinced this belongs in this crate instead of letting downstream impls handle it...
+
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Clone, Debug, PartialEq)]
 pub enum PmtkResponse {

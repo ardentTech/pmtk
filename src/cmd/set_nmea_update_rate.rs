@@ -9,15 +9,14 @@ const MAX_MS: u16 = 10_000;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
-pub struct SetNmeaUpdateRateCmd {
-    ms: u16
-}
+pub struct SetNmeaUpdateRateCmd(u16);
+
 impl SetNmeaUpdateRateCmd {
     pub fn new(ms: u16) -> Result<SetNmeaUpdateRateCmd, PmtkError> {
         if ms < MIN_MS || ms > MAX_MS {
             Err(PmtkError::OutOfRange(MIN_MS as u32, MAX_MS as u32, ms as u32))
         } else {
-            Ok(SetNmeaUpdateRateCmd { ms })
+            Ok(SetNmeaUpdateRateCmd(ms))
         }
     }
 }
@@ -30,7 +29,7 @@ impl Request for SetNmeaUpdateRateCmd {}
 
 impl Cmd for SetNmeaUpdateRateCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {
-        let data_field = encode_data_field([self.ms as u32])?;
+        let data_field = encode_data_field([self.0 as u32])?;
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
@@ -41,7 +40,7 @@ mod tests {
 
     #[test]
     fn serialize_ok() {
-        assert_eq!("$PMTK220,1000*1F\r\n", SetNmeaUpdateRateCmd { ms: 1000 }.serialize().unwrap());
+        assert_eq!("$PMTK220,1000*1F\r\n", SetNmeaUpdateRateCmd(1000).serialize().unwrap());
     }
 
     #[test]

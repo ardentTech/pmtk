@@ -15,8 +15,14 @@ pub enum CmdType {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
 pub struct EasyEnableCmd { // TODO this might be better as a Response type?
-    pub cmd_type: CmdType,
-    pub enable: bool,
+    cmd_type: CmdType,
+    enable: bool,
+}
+
+impl EasyEnableCmd {
+    pub fn new(cmd_type: CmdType, enable: bool) -> Self {
+        Self { cmd_type, enable }
+    }
 }
 
 impl Packet for EasyEnableCmd {
