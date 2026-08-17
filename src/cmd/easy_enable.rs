@@ -27,7 +27,7 @@ impl Request for EasyEnableCmd {}
 
 impl Cmd for EasyEnableCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {
-        let data_field = encode_data_field([self.cmd_type as u8, self.enable as u8]);
+        let data_field = encode_data_field([self.cmd_type as u8, self.enable as u8])?;
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }

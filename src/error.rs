@@ -5,13 +5,14 @@ use heapless::CapacityError;
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum PmtkError {
-    StringCapacity,
     ChecksumMismatch,
     CoreFmt(fmt::Error),
+    Encoding,
     InvalidChoice(u32),
     InvalidNavSpeedThreshold(f32),
     OutOfRange(u32, u32, u32),
-    Parsing
+    Parsing,
+    StringCapacity,
 }
 impl<'a> From<nom::Err<nom::error::Error<&'a str>>> for PmtkError {
     fn from(_error: nom::Err<nom::error::Error<&'a str>>) -> Self {

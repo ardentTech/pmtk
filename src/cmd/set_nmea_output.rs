@@ -5,18 +5,30 @@ use crate::dt::nmea_output::Frequency;
 use crate::traits::{Cmd, Request, Packet};
 use crate::packet::PmtkPacket;
 
-// TODO `new` method?
-
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct SetNmeaOutputCmd {
-    pub gll: Frequency,
-    pub rmc: Frequency,
-    pub vtg: Frequency,
-    pub gga: Frequency,
-    pub gsa: Frequency,
-    pub gsv: Frequency,
-    pub mchn: Frequency,
+    gll: Frequency,
+    rmc: Frequency,
+    vtg: Frequency,
+    gga: Frequency,
+    gsa: Frequency,
+    gsv: Frequency,
+    mchn: Frequency,
+}
+
+impl SetNmeaOutputCmd {
+    pub fn new(
+        gll: Frequency,
+        rmc: Frequency,
+        vtg: Frequency,
+        gga: Frequency,
+        gsa: Frequency,
+        gsv: Frequency,
+        mchn: Frequency,
+    ) -> Self {
+        Self { gll, rmc, vtg, gga, gsa, gsv, mchn }
+    }
 }
 
 impl Packet for SetNmeaOutputCmd {
@@ -36,7 +48,7 @@ impl Cmd for SetNmeaOutputCmd {
             self.gsv as u8,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             self.mchn as u8,
-        ]);
+        ])?;
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }

@@ -45,20 +45,18 @@ impl TryFrom<DataField> for AckDt {
     fn try_from(value: DataField) -> Result<Self, Self::Error> {
         let i = value.as_str();
         let mut comma = char(',');
-
         let (i, _) = comma(i)?;
         let (i, cmd) = opt(|i| number_in_range::<u16>(i, 0, 1000)).parse(i)?;
         let (i, _) = comma(i)?;
         let (_, flag) = opt(|i| number_in_range::<u8>(i, 0, 3)).parse(i)?;
+
+        let mut res = Err(PmtkError::Parsing);
         if let Some(f) = flag {
             if let Some(cmd) = cmd {
-                Ok(AckDt { cmd, flag: AckFlag::try_from(f)? })
-            } else {
-                Err(PmtkError::Parsing)
+                res = Ok(AckDt { cmd, flag: AckFlag::try_from(f)? })
             }
-        } else {
-            Err(PmtkError::Parsing)
         }
+        res
     }
 }
 

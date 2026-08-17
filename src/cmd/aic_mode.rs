@@ -16,7 +16,7 @@ impl Request for AicModeCmd {}
 
 impl Cmd for AicModeCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {
-        let data_field = encode_data_field([self.0 as u8]);
+        let data_field = encode_data_field([self.0 as u8])?;
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }

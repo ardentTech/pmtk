@@ -25,7 +25,7 @@ impl Request for SetNmeaBaudRateCmd {}
 
 impl Cmd for SetNmeaBaudRateCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {
-        let data_field = encode_data_field([self.0]);
+        let data_field = encode_data_field([self.0])?;
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }

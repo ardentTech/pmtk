@@ -30,7 +30,7 @@ impl Request for SetNmeaUpdateRateCmd {}
 
 impl Cmd for SetNmeaUpdateRateCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {
-        let data_field = encode_data_field([self.ms as u32]);
+        let data_field = encode_data_field([self.ms as u32])?;
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }

@@ -70,18 +70,18 @@ impl Request for PeriodicModeCmd {}
 
 impl Cmd for PeriodicModeCmd {
     fn serialize(&self) -> Result<String<255>, PmtkError> {
-        let mut data_field = encode_data_field([self.mode as u32]);
+        let mut data_field = encode_data_field([self.mode as u32])?;
         if let Some(run_time) = self.run_time {
-            data_field.push_str(&*encode_data_field([run_time]))?;
+            data_field.push_str(&*encode_data_field([run_time])?)?;
         }
         if let Some(sleep_time) = self.sleep_time {
-            data_field.push_str(&*encode_data_field([sleep_time]))?;
+            data_field.push_str(&*encode_data_field([sleep_time])?)?;
         }
         if let Some(second_run_time) = self.second_run_time {
-            data_field.push_str(&*encode_data_field([second_run_time]))?;
+            data_field.push_str(&*encode_data_field([second_run_time])?)?;
         }
         if let Some(second_sleep_time) = self.second_sleep_time {
-            data_field.push_str(&*encode_data_field([second_sleep_time]))?;
+            data_field.push_str(&*encode_data_field([second_sleep_time])?)?;
         }
 
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
