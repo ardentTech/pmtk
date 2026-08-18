@@ -27,7 +27,7 @@ If you find a bug, or, say, a new version of the PMTK standard comes out:
 - [x] check for and refactor `unwrap`s
 - [x] opt for consistent use of `fn new` with private struct members on cmd
 - [ ] return pub heapless:String vs [u8; N]?
-- [ ] refactor 255 literals to const
+- [x] refactor 255 literals to const
 
 ### Resources
 

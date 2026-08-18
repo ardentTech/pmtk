@@ -1,8 +1,7 @@
-use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::traits::{Cmd, Request, Packet};
-use crate::packet::PmtkPacket;
+use crate::packet::{PmtkPacket, SerializedPacket};
 
 const EXTENSION_GAP_MIN: u32 = 0;
 const EXTENSION_GAP_MAX: u32 = 3_600_000;
@@ -58,7 +57,7 @@ impl Packet for SetAlDeeCfgCmd {
 impl Request for SetAlDeeCfgCmd {}
 
 impl Cmd for SetAlDeeCfgCmd {
-    fn serialize(&self) -> Result<String<255>, PmtkError> {
+    fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([
             self.sv as u32, self.snr as u32, self.extension_threshold, self.extension_gap
         ])?;

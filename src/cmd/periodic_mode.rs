@@ -1,8 +1,7 @@
-use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::traits::{Cmd, Request, Packet};
-use crate::packet::PmtkPacket;
+use crate::packet::{PmtkPacket, SerializedPacket};
 
 const TIME_MIN: u32 = 1_000;
 const TIME_MAX: u32 = 518_400_000;
@@ -69,7 +68,7 @@ impl Packet for PeriodicModeCmd {
 impl Request for PeriodicModeCmd {}
 
 impl Cmd for PeriodicModeCmd {
-    fn serialize(&self) -> Result<String<255>, PmtkError> {
+    fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let mut data_field = encode_data_field([self.mode as u32])?;
         if let Some(run_time) = self.run_time {
             data_field.push_str(&*encode_data_field([run_time])?)?;

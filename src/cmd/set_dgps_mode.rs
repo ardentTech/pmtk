@@ -1,9 +1,8 @@
-use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::dt::dgps_mode::DgpsModeDt;
 use crate::traits::{Cmd, Request, Packet};
-use crate::packet::PmtkPacket;
+use crate::packet::{PmtkPacket, SerializedPacket};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
@@ -22,7 +21,7 @@ impl Packet for SetDgpsModeCmd {
 impl Request for SetDgpsModeCmd {}
 
 impl Cmd for SetDgpsModeCmd {
-    fn serialize(&self) -> Result<String<255>, PmtkError> {
+    fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([self.0 as u8])?;
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }

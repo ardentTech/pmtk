@@ -1,8 +1,7 @@
-use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::traits::{Cmd, Request, Packet};
-use crate::packet::PmtkPacket;
+use crate::packet::{PmtkPacket, SerializedPacket};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -32,7 +31,7 @@ impl Packet for EasyEnableCmd {
 impl Request for EasyEnableCmd {}
 
 impl Cmd for EasyEnableCmd {
-    fn serialize(&self) -> Result<String<255>, PmtkError> {
+    fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([self.cmd_type as u8, self.enable as u8])?;
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }

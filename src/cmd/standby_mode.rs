@@ -1,8 +1,7 @@
-use heapless::String;
 use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
 use crate::traits::{Cmd, Request, Packet};
-use crate::packet::PmtkPacket;
+use crate::packet::{PmtkPacket, SerializedPacket};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
@@ -15,7 +14,7 @@ impl Packet for StandbyModeCmd {
 impl Request for StandbyModeCmd {}
 
 impl Cmd for StandbyModeCmd {
-    fn serialize(&self) -> Result<String<255>, PmtkError> {
+    fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([0])?;
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
