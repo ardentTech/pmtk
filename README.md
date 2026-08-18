@@ -1,8 +1,8 @@
 # PMTK
 
 `#![no_std]` implementation of PMTK (rev. A11) definitions for the MT3318, MT3329 and MT3339 MediaTek chips. This
-includes definitions of the commands, queries and data types with de/serialization functionality but for simplicity does
-not include higher-level abstractions.
+includes definitions of the commands, queries and data types with de/serialization functionality and minimal
+higher-level abstractions.
 
 ### Cargo Features
 
