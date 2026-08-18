@@ -1,5 +1,3 @@
-use core::str::FromStr;
-use heapless::String;
 use nom::character::complete::char;
 use crate::error::PmtkError;
 use crate::traits::{Packet, Response};
@@ -7,7 +5,7 @@ use crate::packet::{DataField, DATA_FIELD_LEN};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Clone, Debug, PartialEq)]
-pub struct TxtMsgDt(pub String<DATA_FIELD_LEN>);
+pub struct TxtMsgDt(pub [u8; DATA_FIELD_LEN]);
 
 impl Packet for TxtMsgDt {
     const PKT_TYPE: u16 = 11;
@@ -19,8 +17,10 @@ impl TryFrom<DataField> for TxtMsgDt {
     fn try_from(value: DataField) -> Result<Self, Self::Error> {
         let i = value.as_str();
         let (msg, _) = char(',')(i)?;
-        // TODO is this weird bc msg will be DATA_FIELD_LEN - 1 when parsing succeeds?
-        Ok(TxtMsgDt(String::from_str(msg)?))
+
+        let mut buf = [0u8; DATA_FIELD_LEN];
+        msg.as_bytes().iter().enumerate().for_each(|(i, b)| buf[i] = *b);
+        Ok(TxtMsgDt(buf))
     }
 }
 
@@ -29,6 +29,7 @@ impl Response for TxtMsgDt {}
 #[cfg(test)]
 mod tests {
     use core::str::FromStr;
+    use nom::AsBytes;
     use super::*;
     use crate::packet::DataField;
 
@@ -36,6 +37,6 @@ mod tests {
     fn try_from_data_field_ok() {
         let data_field = DataField::from_str(",MTKGPS").unwrap();
         let txt_msg = TxtMsgDt::try_from(data_field).unwrap();
-        assert_eq!(txt_msg.0, "MTKGPS");
+        assert_eq!(txt_msg.0, [77, 84, 75, 71, 80, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
     }
 }

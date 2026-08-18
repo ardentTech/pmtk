@@ -1,4 +1,3 @@
-use heapless::String;
 use nom::bytes::complete::take_until;
 use nom::character::complete::char;
 use nom::Parser;
@@ -8,11 +7,10 @@ use crate::traits::{Packet, Response};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct ReleaseDt {
     pub build_id: u16,
-    //pub s: Option<[u8; 16]>, // TODO so can impl Copy?
-    pub s: Option<String<16>>,
+    pub s: Option<[u8; 16]>,
 }
 
 impl Packet for ReleaseDt {
@@ -32,8 +30,9 @@ impl TryFrom<DataField> for ReleaseDt {
         let s = if s.is_empty() {
             None
         } else {
-            Some(String::try_from(s)?)
-            //Some(s.as_bytes().try_into().map_err(|_| PmtkError::Parsing)?)
+            let mut buf = [0u8; 16];
+            s.as_bytes().iter().enumerate().for_each(|(i, b)| buf[i] = *b);
+            Some(buf)
         };
 
         Ok(ReleaseDt { build_id, s })
@@ -52,6 +51,6 @@ mod tests {
         let data_field = DataField::from_str(",AXN_1.3,2102,ABCD").unwrap();
         let release = ReleaseDt::try_from(data_field).unwrap();
         assert_eq!(release.build_id, 2102);
-        assert_eq!(release.s.unwrap(), "AXN_1.3");
+        assert_eq!(release.s.unwrap(), [65, 88, 78, 95, 49, 46, 51, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
     }
 }
