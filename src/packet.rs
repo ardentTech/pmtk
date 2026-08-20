@@ -11,7 +11,7 @@ pub(crate) type SerializedPacket = String<PACKET_LEN>;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
-pub struct PmtkPacket { // TODO any way for this to be private?
+pub struct PmtkPacket {
     pub(crate) checksum: u8,
     pub(crate) data_field: Option<DataField>,
     pub(crate) pkt_type: u16,

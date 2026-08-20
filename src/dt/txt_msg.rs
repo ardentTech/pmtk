@@ -29,7 +29,6 @@ impl Response for TxtMsgDt {}
 #[cfg(test)]
 mod tests {
     use core::str::FromStr;
-    use nom::AsBytes;
     use super::*;
     use crate::packet::DataField;
 

@@ -18,16 +18,9 @@ If you find a bug, or, say, a new version of the PMTK standard comes out:
 * fix and/or expand the unit tests and ensure they pass with: `$ cargo test -F mt3339`
 * open a PR
 
-### TODO
+### Ideas
 
-- [x] doc comments
-- [x] trim error enum
-- [x] resolve warnings from `check`
-- [x] check for and refactor `unwrap`s
-- [x] opt for consistent use of `fn new` with private struct members on cmd
-- [x] return pub heapless:String vs [u8; N]?
-- [x] refactor 255 literals to const
-- [ ] integrate `serde` traits
+- [ ] integrate `serde` traits via `serde` feature
 
 ### Resources
 
