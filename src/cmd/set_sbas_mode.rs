@@ -1,8 +1,8 @@
-use crate::cmd::util::encode_data_field;
-use crate::error::PmtkError;
 use crate::dt::sbas_mode::SbasModeDt;
-use crate::traits::{Cmd, Request, Packet};
+use crate::error::PmtkError;
 use crate::packet::{PmtkPacket, SerializedPacket};
+use crate::traits::{Cmd, Packet, Request};
+use crate::util::encode_data_field;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]

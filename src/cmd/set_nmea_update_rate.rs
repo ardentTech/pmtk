@@ -1,7 +1,7 @@
-use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
-use crate::traits::{Cmd, Request, Packet};
 use crate::packet::{PmtkPacket, SerializedPacket};
+use crate::traits::{Cmd, Packet, Request};
+use crate::util::encode_data_field;
 
 const MIN_MS: u16 = 100;
 const MAX_MS: u16 = 10_000;

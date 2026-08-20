@@ -1,7 +1,7 @@
-use crate::cmd::util::encode_data_field;
 use crate::error::PmtkError;
-use crate::traits::{Cmd, Request, Packet};
 use crate::packet::{PmtkPacket, SerializedPacket};
+use crate::traits::{Cmd, Packet, Request};
+use crate::util::encode_data_field;
 
 const TIME_MIN: u32 = 1_000;
 const TIME_MAX: u32 = 518_400_000;
@@ -89,8 +89,8 @@ impl Cmd for PeriodicModeCmd {
 
 #[cfg(test)]
 mod tests {
-    use crate::cmd::periodic_mode::OperationMode::{AlwaysLocateBackup, Normal, PeriodicBackup};
     use super::*;
+    use crate::cmd::periodic_mode::OperationMode::{AlwaysLocateBackup, Normal, PeriodicBackup};
 
     #[test]
     fn serialize_always_locate_ok() {

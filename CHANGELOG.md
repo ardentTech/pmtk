@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Changed
 
 - return byte array instead of `heapless::String` in public API
+- split `EasyEnable` cmd into discrete q and dt types
 
 ## [0.1.0] - 2026-08-14
 

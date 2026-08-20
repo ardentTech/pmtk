@@ -9,3 +9,5 @@ pub mod release;
 pub mod epo_info;
 pub mod nav_threshold;
 pub mod datum;
+#[cfg(feature = "mt3339")]
+pub mod easy_enable;

@@ -1,27 +1,21 @@
 use crate::error::PmtkError;
 use crate::packet::{PmtkPacket, SerializedPacket};
-use crate::traits::{Cmd, Packet, Request};
+use crate::traits::{Packet, Q, Request};
 use crate::util::encode_data_field;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(Debug, Copy, Clone)]
-pub struct EasyEnableCmd(bool);
+#[derive(Debug, PartialEq)]
+pub struct EasyEnable {}
 
-impl EasyEnableCmd {
-    pub fn new(enable: bool) -> Self {
-        Self(enable)
-    }
-}
-
-impl Packet for EasyEnableCmd {
+impl Packet for EasyEnable {
     const PKT_TYPE: u16 = 869;
 }
 
-impl Request for EasyEnableCmd {}
+impl Request for EasyEnable {}
 
-impl Cmd for EasyEnableCmd {
+impl Q for EasyEnable {
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
-        let data_field = encode_data_field([1, self.0 as u8])?;
+        let data_field = encode_data_field([0u8])?;
         PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
@@ -32,6 +26,6 @@ mod tests {
 
     #[test]
     fn serialize_ok() {
-        assert_eq!("$PMTK869,1,1*35\r\n", EasyEnableCmd(true).serialize().unwrap());
+        assert_eq!("$PMTK869,0*29\r\n", EasyEnable {}.serialize().unwrap());
     }
 }

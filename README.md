@@ -21,13 +21,13 @@ If you find a bug, or, say, a new version of the PMTK standard comes out:
 ### TODO
 
 - [x] doc comments
-- [ ] knock out `TODO`s
 - [x] trim error enum
 - [x] resolve warnings from `check`
 - [x] check for and refactor `unwrap`s
 - [x] opt for consistent use of `fn new` with private struct members on cmd
 - [x] return pub heapless:String vs [u8; N]?
 - [x] refactor 255 literals to const
+- [ ] integrate `serde` traits
 
 ### Resources
 

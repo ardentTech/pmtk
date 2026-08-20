@@ -27,4 +27,3 @@ pub mod set_datum;
 pub mod set_support_qzss_nmea;
 #[cfg(feature = "mt3339")]
 pub mod set_stop_qzss;
-mod util;
