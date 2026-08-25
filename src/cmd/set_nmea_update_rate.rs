@@ -1,6 +1,6 @@
 use crate::error::PmtkError;
 use crate::packet::{PmtkPacket, SerializedPacket};
-use crate::traits::{Cmd, Packet, Request};
+use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
 const MIN_MS: u16 = 100;
@@ -24,9 +24,7 @@ impl Packet for SetNmeaUpdateRateCmd {
     const PKT_TYPE: u16 = 220;
 }
 
-impl Request for SetNmeaUpdateRateCmd {}
-
-impl Cmd for SetNmeaUpdateRateCmd {
+impl CmdQ for SetNmeaUpdateRateCmd {
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([self.0 as u32])?;
         PmtkPacket::new_request(Self::PKT_TYPE, Some(data_field))?.serialize()

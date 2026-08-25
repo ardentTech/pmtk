@@ -1,4 +1,4 @@
-use crate::traits::{Packet, Q, Request};
+use crate::traits::{Packet, CmdQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
@@ -8,9 +8,7 @@ impl Packet for ReleaseQ {
     const PKT_TYPE: u16 = 605;
 }
 
-impl Request for ReleaseQ {}
-
-impl Q for ReleaseQ {}
+impl CmdQ for ReleaseQ {}
 
 #[cfg(test)]
 mod tests {

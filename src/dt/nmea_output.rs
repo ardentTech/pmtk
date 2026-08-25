@@ -3,7 +3,7 @@ use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number;
 use crate::dt::nmea_output::Frequency::*;
-use crate::traits::{Packet, Response};
+use crate::traits::{Dt, Packet};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -107,7 +107,7 @@ impl TryFrom<DataField> for NmeaOutputDt {
     }
 }
 
-impl Response for NmeaOutputDt {}
+impl Dt for NmeaOutputDt {}
 
 #[cfg(test)]
 mod tests {

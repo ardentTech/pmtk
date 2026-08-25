@@ -1,4 +1,4 @@
-use crate::traits::{Cmd, Request, Packet};
+use crate::traits::{CmdQ, Packet};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
@@ -8,9 +8,7 @@ impl Packet for FullColdStartCmd {
     const PKT_TYPE: u16 = 104;
 }
 
-impl Request for FullColdStartCmd {}
-
-impl Cmd for FullColdStartCmd {}
+impl CmdQ for FullColdStartCmd {}
 
 #[cfg(test)]
 mod tests {

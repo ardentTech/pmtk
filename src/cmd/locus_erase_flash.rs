@@ -1,6 +1,6 @@
 use crate::error::PmtkError;
 use crate::packet::{PmtkPacket, SerializedPacket};
-use crate::traits::{Cmd, Packet, Request};
+use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -11,9 +11,7 @@ impl Packet for LocusEraseFlash {
     const PKT_TYPE: u16 = 184;
 }
 
-impl Request for LocusEraseFlash {}
-
-impl Cmd for LocusEraseFlash {
+impl CmdQ for LocusEraseFlash {
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([1u8])?;
         PmtkPacket::new_request(Self::PKT_TYPE, Some(data_field))?.serialize()

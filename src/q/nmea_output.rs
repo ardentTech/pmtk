@@ -1,4 +1,4 @@
-use crate::traits::{Packet, Q, Request};
+use crate::traits::{Packet, CmdQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
@@ -8,9 +8,7 @@ impl Packet for NmeaOutputQ {
     const PKT_TYPE: u16 = 414;
 }
 
-impl Request for NmeaOutputQ {}
-
-impl Q for NmeaOutputQ {}
+impl CmdQ for NmeaOutputQ {}
 
 
 #[cfg(test)]

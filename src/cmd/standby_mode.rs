@@ -1,6 +1,6 @@
 use crate::error::PmtkError;
 use crate::packet::{PmtkPacket, SerializedPacket};
-use crate::traits::{Cmd, Packet, Request};
+use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -11,9 +11,7 @@ impl Packet for StandbyModeCmd {
     const PKT_TYPE: u16 = 161;
 }
 
-impl Request for StandbyModeCmd {}
-
-impl Cmd for StandbyModeCmd {
+impl CmdQ for StandbyModeCmd {
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([0])?;
         PmtkPacket::new_request(Self::PKT_TYPE, Some(data_field))?.serialize()

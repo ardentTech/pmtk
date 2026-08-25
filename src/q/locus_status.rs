@@ -1,4 +1,4 @@
-use crate::traits::{Packet, Request, Q};
+use crate::traits::{Packet, CmdQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
@@ -8,9 +8,7 @@ impl Packet for LocusStatus {
     const PKT_TYPE: u16 = 183;
 }
 
-impl Request for LocusStatus {}
-
-impl Q for LocusStatus {}
+impl CmdQ for LocusStatus {}
 
 #[cfg(test)]
 mod tests {

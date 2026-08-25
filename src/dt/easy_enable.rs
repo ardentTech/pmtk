@@ -3,7 +3,7 @@ use nom::combinator::opt;
 use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number_in_range;
-use crate::traits::{Packet, Response};
+use crate::traits::{Dt, Packet};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -32,7 +32,7 @@ impl TryFrom<DataField> for EasyEnableDt {
     }
 }
 
-impl Response for EasyEnableDt {}
+impl Dt for EasyEnableDt {}
 
 #[cfg(test)]
 mod tests {

@@ -2,7 +2,7 @@ use nom::character::complete::char;
 use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number_in_range;
-use crate::traits::{Packet, Response};
+use crate::traits::{Dt, Packet};
 use crate::packet::DataField;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -24,7 +24,7 @@ impl TryFrom<DataField> for DatumDt {
     }
 }
 
-impl Response for DatumDt {}
+impl Dt for DatumDt {}
 
 #[cfg(test)]
 mod tests {

@@ -1,7 +1,7 @@
 use crate::dt::nmea_output::Frequency;
 use crate::error::PmtkError;
 use crate::packet::{PmtkPacket, SerializedPacket};
-use crate::traits::{Cmd, Packet, Request};
+use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -34,9 +34,7 @@ impl Packet for SetNmeaOutputCmd {
     const PKT_TYPE: u16 = 314;
 }
 
-impl Request for SetNmeaOutputCmd {}
-
-impl Cmd for SetNmeaOutputCmd {
+impl CmdQ for SetNmeaOutputCmd {
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([
             self.gll as u8,

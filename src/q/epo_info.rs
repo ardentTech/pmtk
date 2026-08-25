@@ -1,4 +1,4 @@
-use crate::traits::{Packet, Q, Request};
+use crate::traits::{Packet, CmdQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
@@ -7,9 +7,7 @@ impl Packet for EpoInfoQ {
     const PKT_TYPE: u16 = 607;
 }
 
-impl Request for EpoInfoQ {}
-
-impl Q for EpoInfoQ {}
+impl CmdQ for EpoInfoQ {}
 
 
 #[cfg(test)]

@@ -1,4 +1,4 @@
-use crate::traits::{Cmd, Request, Packet};
+use crate::traits::{CmdQ, Packet};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
@@ -8,9 +8,7 @@ impl Packet for HotStartCmd {
     const PKT_TYPE: u16 = 101;
 }
 
-impl Request for HotStartCmd {}
-
-impl Cmd for HotStartCmd {}
+impl CmdQ for HotStartCmd {}
 
 #[cfg(test)]
 mod tests {

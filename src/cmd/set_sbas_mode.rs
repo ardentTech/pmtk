@@ -1,7 +1,7 @@
 use crate::dt::sbas_mode::SbasModeDt;
 use crate::error::PmtkError;
 use crate::packet::{PmtkPacket, SerializedPacket};
-use crate::traits::{Cmd, Packet, Request};
+use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -18,9 +18,7 @@ impl Packet for SetSbasModeCmd {
     const PKT_TYPE: u16 = 319;
 }
 
-impl Request for SetSbasModeCmd {}
-
-impl Cmd for SetSbasModeCmd {
+impl CmdQ for SetSbasModeCmd {
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([self.0 as u8])?;
         PmtkPacket::new_request(Self::PKT_TYPE, Some(data_field))?.serialize()

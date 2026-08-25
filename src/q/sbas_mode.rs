@@ -1,4 +1,4 @@
-use crate::traits::{Packet, Q, Request};
+use crate::traits::{Packet, CmdQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
@@ -8,9 +8,7 @@ impl Packet for SbasModeQ {
     const PKT_TYPE: u16 = 419;
 }
 
-impl Request for SbasModeQ {}
-
-impl Q for SbasModeQ {}
+impl CmdQ for SbasModeQ {}
 
 
 #[cfg(test)]

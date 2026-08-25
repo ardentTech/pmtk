@@ -1,6 +1,6 @@
 use crate::error::PmtkError;
 use crate::packet::{PmtkPacket, SerializedPacket};
-use crate::traits::{Cmd, Packet, Request};
+use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
 const TIME_MIN: u32 = 1_000;
@@ -65,9 +65,7 @@ impl Packet for PeriodicModeCmd {
     const PKT_TYPE: u16 = 225;
 }
 
-impl Request for PeriodicModeCmd {}
-
-impl Cmd for PeriodicModeCmd {
+impl CmdQ for PeriodicModeCmd {
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let mut data_field = encode_data_field([self.mode as u32])?;
         if let Some(run_time) = self.run_time {

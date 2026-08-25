@@ -1,6 +1,6 @@
 use nom::character::complete::char;
 use crate::error::PmtkError;
-use crate::traits::{Packet, Response};
+use crate::traits::{Dt, Packet};
 use crate::packet::{DataField, DATA_FIELD_LEN};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -24,7 +24,7 @@ impl TryFrom<DataField> for TxtMsgDt {
     }
 }
 
-impl Response for TxtMsgDt {}
+impl Dt for TxtMsgDt {}
 
 #[cfg(test)]
 mod tests {

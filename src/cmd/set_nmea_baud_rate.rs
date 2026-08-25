@@ -1,6 +1,6 @@
 use crate::error::PmtkError;
 use crate::packet::{PmtkPacket, SerializedPacket};
-use crate::traits::{Cmd, Packet, Request};
+use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -20,9 +20,7 @@ impl Packet for SetNmeaBaudRateCmd {
     const PKT_TYPE: u16 = 251;
 }
 
-impl Request for SetNmeaBaudRateCmd {}
-
-impl Cmd for SetNmeaBaudRateCmd {
+impl CmdQ for SetNmeaBaudRateCmd {
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([self.0])?;
         PmtkPacket::new_request(Self::PKT_TYPE, Some(data_field))?.serialize()

@@ -1,4 +1,4 @@
-use crate::traits::{Packet, Q, Request};
+use crate::traits::{Packet, CmdQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
@@ -7,9 +7,7 @@ pub struct SbasEnabledQ {}
 impl Packet for SbasEnabledQ {
     const PKT_TYPE: u16 = 413;
 }
-
-impl Request for SbasEnabledQ {}
-impl Q for SbasEnabledQ {}
+impl CmdQ for SbasEnabledQ {}
 
 #[cfg(test)]
 mod tests {

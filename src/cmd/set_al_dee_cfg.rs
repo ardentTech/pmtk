@@ -1,6 +1,6 @@
 use crate::error::PmtkError;
 use crate::packet::{PmtkPacket, SerializedPacket};
-use crate::traits::{Cmd, Packet, Request};
+use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
 const EXTENSION_GAP_MIN: u32 = 0;
@@ -54,9 +54,7 @@ impl Packet for SetAlDeeCfgCmd {
     const PKT_TYPE: u16 = 223;
 }
 
-impl Request for SetAlDeeCfgCmd {}
-
-impl Cmd for SetAlDeeCfgCmd {
+impl CmdQ for SetAlDeeCfgCmd {
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([
             self.sv as u32, self.snr as u32, self.extension_threshold, self.extension_gap

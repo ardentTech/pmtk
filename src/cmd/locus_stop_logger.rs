@@ -1,6 +1,6 @@
 use crate::error::PmtkError;
 use crate::packet::{PmtkPacket, SerializedPacket};
-use crate::traits::{Cmd, Packet, Request};
+use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -17,9 +17,7 @@ impl Packet for LocusStopLogger {
     const PKT_TYPE: u16 = 185;
 }
 
-impl Request for LocusStopLogger {}
-
-impl Cmd for LocusStopLogger {
+impl CmdQ for LocusStopLogger {
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([self.0 as u8])?;
         PmtkPacket::new_request(Self::PKT_TYPE, Some(data_field))?.serialize()

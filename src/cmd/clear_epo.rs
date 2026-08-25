@@ -1,4 +1,4 @@
-use crate::traits::{Cmd, Request, Packet};
+use crate::traits::{CmdQ, Packet};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Copy, Clone)]
@@ -8,9 +8,7 @@ impl Packet for ClearEpoCmd {
     const PKT_TYPE: u16 = 127;
 }
 
-impl Request for ClearEpoCmd {}
-
-impl Cmd for ClearEpoCmd {}
+impl CmdQ for ClearEpoCmd {}
 
 #[cfg(test)]
 mod tests {

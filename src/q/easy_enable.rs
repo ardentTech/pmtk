@@ -1,6 +1,6 @@
 use crate::error::PmtkError;
 use crate::packet::{PmtkPacket, SerializedPacket};
-use crate::traits::{Packet, Q, Request};
+use crate::traits::{Packet, CmdQ};
 use crate::util::encode_data_field;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -11,9 +11,7 @@ impl Packet for EasyEnable {
     const PKT_TYPE: u16 = 869;
 }
 
-impl Request for EasyEnable {}
-
-impl Q for EasyEnable {
+impl CmdQ for EasyEnable {
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([0u8])?;
         PmtkPacket::new_request(Self::PKT_TYPE, Some(data_field))?.serialize()

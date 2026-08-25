@@ -1,4 +1,4 @@
-use crate::traits::{Packet, Q, Request};
+use crate::traits::{Packet, CmdQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
@@ -7,9 +7,7 @@ impl Packet for DgpsModeQ {
     const PKT_TYPE: u16 = 401;
 }
 
-impl Request for DgpsModeQ {}
-
-impl Q for DgpsModeQ {}
+impl CmdQ for DgpsModeQ {}
 
 
 #[cfg(test)]
