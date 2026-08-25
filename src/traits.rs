@@ -22,6 +22,6 @@ pub trait Cmd: Request {
 pub trait Q: Request {
     /// Serializes a PMTK query.
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
-        PmtkPacket::new_query(Self::PKT_TYPE)?.serialize()
+        PmtkPacket::new_query(Self::PKT_TYPE, None)?.serialize()
     }
 }

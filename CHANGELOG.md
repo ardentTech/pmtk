@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- add locus 184, 185 and 186 commands
+- add locus 183, 622 queries
+
 ## [0.2.0] - 2026-08-20
 
 ### Added

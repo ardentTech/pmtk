@@ -48,8 +48,9 @@ impl PmtkPacket {
         Self::new(pkt_type, data_field, None)
     }
 
-    pub(crate) fn new_query(pkt_type: u16) -> Result<Self, PmtkError> {
-        Self::new(pkt_type, None, None)
+    // TODO same as above
+    pub(crate) fn new_query(pkt_type: u16, data_field: Option<DataField>) -> Result<Self, PmtkError> {
+        Self::new(pkt_type, data_field, None)
     }
 
     /// Serializes the PMTK packet.
@@ -94,7 +95,7 @@ mod tests {
     fn encode_query_ok() {
         assert_eq!(
             "$PMTK401*37\r\n",
-            PmtkPacket::new_query(401).unwrap().serialize().unwrap()
+            PmtkPacket::new_query(401, None).unwrap().serialize().unwrap()
         );
     }
 
