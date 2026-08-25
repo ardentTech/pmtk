@@ -16,7 +16,7 @@ impl Request for StandbyModeCmd {}
 impl Cmd for StandbyModeCmd {
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([0])?;
-        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
+        PmtkPacket::new_request(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
 

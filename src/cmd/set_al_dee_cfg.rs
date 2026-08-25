@@ -61,7 +61,7 @@ impl Cmd for SetAlDeeCfgCmd {
         let data_field = encode_data_field([
             self.sv as u32, self.snr as u32, self.extension_threshold, self.extension_gap
         ])?;
-        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
+        PmtkPacket::new_request(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
 

@@ -48,7 +48,7 @@ impl Cmd for SetNmeaOutputCmd {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             self.mchn as u8,
         ])?;
-        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
+        PmtkPacket::new_request(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
 

@@ -44,12 +44,7 @@ impl PmtkPacket {
         )
     }
 
-    pub(crate) fn new_command(pkt_type: u16, data_field: Option<DataField>) -> Result<Self, PmtkError> {
-        Self::new(pkt_type, data_field, None)
-    }
-
-    // TODO same as above
-    pub(crate) fn new_query(pkt_type: u16, data_field: Option<DataField>) -> Result<Self, PmtkError> {
+    pub(crate) fn new_request(pkt_type: u16, data_field: Option<DataField>) -> Result<Self, PmtkError> {
         Self::new(pkt_type, data_field, None)
     }
 
@@ -95,7 +90,7 @@ mod tests {
     fn encode_query_ok() {
         assert_eq!(
             "$PMTK401*37\r\n",
-            PmtkPacket::new_query(401, None).unwrap().serialize().unwrap()
+            PmtkPacket::new_request(401, None).unwrap().serialize().unwrap()
         );
     }
 
@@ -103,7 +98,7 @@ mod tests {
     fn encode_command_data_field_some_ok() {
         assert_eq!(
             "$PMTK220,1000*1F\r\n",
-            PmtkPacket::new_command(220, Some(String::from_str(",1000").unwrap())).unwrap().serialize().unwrap()
+            PmtkPacket::new_request(220, Some(String::from_str(",1000").unwrap())).unwrap().serialize().unwrap()
         );
     }
 
@@ -111,7 +106,7 @@ mod tests {
     fn encode_command_data_field_none_ok() {
         assert_eq!(
             "$PMTK102*31\r\n",
-            PmtkPacket::new_command(102, None).unwrap().serialize().unwrap()
+            PmtkPacket::new_request(102, None).unwrap().serialize().unwrap()
         );
     }
 

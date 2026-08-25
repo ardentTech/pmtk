@@ -22,7 +22,7 @@ impl Request for SetSbasEnabledCmd {}
 impl Cmd for SetSbasEnabledCmd {
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([self.0 as u8])?;
-        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
+        PmtkPacket::new_request(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
 

@@ -16,7 +16,7 @@ impl Request for LocusLogNow {}
 impl Cmd for LocusLogNow {
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
         let data_field = encode_data_field([1u8])?;
-        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
+        PmtkPacket::new_request(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
 

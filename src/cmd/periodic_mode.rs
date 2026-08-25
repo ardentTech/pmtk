@@ -83,7 +83,7 @@ impl Cmd for PeriodicModeCmd {
             data_field.push_str(&*encode_data_field([second_sleep_time])?)?;
         }
 
-        PmtkPacket::new_command(Self::PKT_TYPE, Some(data_field))?.serialize()
+        PmtkPacket::new_request(Self::PKT_TYPE, Some(data_field))?.serialize()
     }
 }
 

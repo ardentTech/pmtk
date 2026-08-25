@@ -15,13 +15,13 @@ pub trait Dt: Response {}
 pub trait Cmd: Request {
     /// Serializes a PMTK command.
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
-        PmtkPacket::new_command(Self::PKT_TYPE, None)?.serialize()
+        PmtkPacket::new_request(Self::PKT_TYPE, None)?.serialize()
     }
 }
 
 pub trait Q: Request {
     /// Serializes a PMTK query.
     fn serialize(&self) -> Result<SerializedPacket, PmtkError> {
-        PmtkPacket::new_query(Self::PKT_TYPE, None)?.serialize()
+        PmtkPacket::new_request(Self::PKT_TYPE, None)?.serialize()
     }
 }
