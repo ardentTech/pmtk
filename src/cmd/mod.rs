@@ -27,3 +27,9 @@ pub mod set_datum;
 pub mod set_support_qzss_nmea;
 #[cfg(feature = "mt3339")]
 pub mod set_stop_qzss;
+#[cfg(feature = "mt3339")]
+pub mod locus_stop_logger;
+#[cfg(feature = "mt3339")]
+pub mod locus_erase_flash;
+#[cfg(feature = "mt3339")]
+pub mod locus_log_now;
