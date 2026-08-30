@@ -1,6 +1,10 @@
 use crate::dt::ack::AckDt;
 use crate::dt::dgps_mode::DgpsModeDt;
+#[cfg(feature = "mt3339")]
+use crate::dt::easy_enable::EasyEnableDt;
 use crate::dt::epo_info::EpoInfoDt;
+#[cfg(feature = "mt3339")]
+use crate::dt::log::LogDt;
 use crate::dt::nav_threshold::NavThresholdDt;
 use crate::dt::nmea_output::NmeaOutputDt;
 use crate::dt::release::ReleaseDt;
@@ -11,8 +15,8 @@ use crate::dt::txt_msg::TxtMsgDt;
 use crate::error::PmtkError;
 use crate::error::PmtkError::Parsing;
 use crate::parse;
-use crate::traits::Packet;
 use core::str::from_utf8;
+use crate::traits::Packet;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Clone, Debug, PartialEq)]
@@ -27,6 +31,10 @@ pub enum PmtkResponse {
     NavThreshold(NavThresholdDt),
     Release(ReleaseDt),
     EpoInfo(EpoInfoDt),
+    #[cfg(feature = "mt3339")]
+    EasyEnable(EasyEnableDt),
+    #[cfg(feature = "mt3339")]
+    Log(LogDt),
 }
 
 impl TryFrom<&[u8]> for PmtkResponse {
@@ -38,16 +46,20 @@ impl TryFrom<&[u8]> for PmtkResponse {
 
         if let Some(data_field) = packet.data_field {
             match packet.pkt_type {
-                [48, 48, 49] => Ok(Self::Ack(AckDt::try_from(data_field)?)),
-                [48, 49, 48] => Ok(Self::SysMsg(SysMsgDt::try_from(data_field)?)),
-                [48, 49, 49] => Ok(Self::TxtMsg(TxtMsgDt::try_from(data_field)?)),
-                [53, 48, 49] => Ok(Self::DgpsMode(DgpsModeDt::try_from(data_field)?)),
-                [53, 49, 51] => Ok(Self::SbasEnabled(SbasEnabledDt::try_from(data_field)?)),
-                [53, 49, 52] => Ok(Self::NmeaOutput(NmeaOutputDt::try_from(data_field)?)),
-                [53, 49, 57] => Ok(Self::SbasMode(SbasModeDt::try_from(data_field)?)),
-                [53, 50, 55] => Ok(Self::NavThreshold(NavThresholdDt::try_from(data_field)?)),
-                [55, 48, 53] => Ok(Self::Release(ReleaseDt::try_from(data_field)?)),
-                [55, 48, 55] => Ok(Self::EpoInfo(EpoInfoDt::try_from(data_field)?)),
+                AckDt::PKT_TYPE => Ok(Self::Ack(AckDt::try_from(data_field)?)),
+                SysMsgDt::PKT_TYPE => Ok(Self::SysMsg(SysMsgDt::try_from(data_field)?)),
+                TxtMsgDt::PKT_TYPE => Ok(Self::TxtMsg(TxtMsgDt::try_from(data_field)?)),
+                DgpsModeDt::PKT_TYPE => Ok(Self::DgpsMode(DgpsModeDt::try_from(data_field)?)),
+                SbasEnabledDt::PKT_TYPE => Ok(Self::SbasEnabled(SbasEnabledDt::try_from(data_field)?)),
+                NmeaOutputDt::PKT_TYPE => Ok(Self::NmeaOutput(NmeaOutputDt::try_from(data_field)?)),
+                SbasModeDt::PKT_TYPE => Ok(Self::SbasMode(SbasModeDt::try_from(data_field)?)),
+                NavThresholdDt::PKT_TYPE => Ok(Self::NavThreshold(NavThresholdDt::try_from(data_field)?)),
+                ReleaseDt::PKT_TYPE => Ok(Self::Release(ReleaseDt::try_from(data_field)?)),
+                EpoInfoDt::PKT_TYPE => Ok(Self::EpoInfo(EpoInfoDt::try_from(data_field)?)),
+                #[cfg(feature = "mt3339")]
+                EasyEnableDt::PKT_TYPE => Ok(Self::EasyEnable(EasyEnableDt::try_from(data_field)?)),
+                #[cfg(feature = "mt3339")]
+                LogDt::PKT_TYPE => Ok(Self::Log(LogDt::try_from(data_field)?)),
                 _ => Err(Parsing)
             }
         } else {

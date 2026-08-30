@@ -7,7 +7,7 @@ use crate::traits::{Dt, Packet};
 use crate::packet::{DataField, PktType};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct EasyEnableDt(pub bool);
 
 impl Packet for EasyEnableDt {
