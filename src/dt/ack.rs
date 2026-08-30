@@ -2,7 +2,7 @@ use nom::Parser;
 use nom::character::complete::char;
 use nom::combinator::opt;
 use crate::error::PmtkError;
-use crate::parse::number_in_range;
+use crate::parse::{number_in_range, packet_type};
 use crate::traits::{Dt, Packet};
 use crate::packet::{DataField, PktType};
 
@@ -31,7 +31,7 @@ impl TryFrom<u8> for AckFlag {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct AckDt {
-    pub cmd: u16,
+    pub cmd: PktType,
     pub flag: AckFlag
 }
 
@@ -46,15 +46,14 @@ impl TryFrom<DataField> for AckDt {
         let i = value.as_str();
         let mut comma = char(',');
         let (i, _) = comma(i)?;
-        let (i, cmd) = opt(|i| number_in_range::<u16>(i, 0, 1000)).parse(i)?;
+        //let (i, cmd) = opt(|i| number_in_range::<u16>(i, 0, 1000)).parse(i)?;
+        let (i, cmd) = packet_type(i)?;
         let (i, _) = comma(i)?;
         let (_, flag) = opt(|i| number_in_range::<u8>(i, 0, 3)).parse(i)?;
 
         let mut res = Err(PmtkError::Parsing);
         if let Some(f) = flag {
-            if let Some(cmd) = cmd {
-                res = Ok(AckDt { cmd, flag: AckFlag::try_from(f)? })
-            }
+            res = Ok(AckDt { cmd, flag: AckFlag::try_from(f)? })
         }
         res
     }
@@ -72,7 +71,7 @@ mod tests {
     fn try_from_data_field_ok() {
         let data_field = DataField::from_str(",604,3").unwrap();
         let ack_data = AckDt::try_from(data_field).unwrap();
-        assert_eq!(ack_data.cmd, 604);
+        assert_eq!(ack_data.cmd, [54, 48, 52]);
         assert_eq!(ack_data.flag, AckFlag::ActionSucceeded);
     }
 }

@@ -59,7 +59,7 @@ pub(crate) fn packet(i: &str) -> Result<PmtkPacket, PmtkError> {
     )
 }
 
-fn packet_type(i: &str) -> IResult<&str, PktType> {
+pub(crate) fn packet_type(i: &str) -> IResult<&str, PktType> {
     map_res(take(3usize), |packet_type: &str| {
         packet_type.as_bytes().try_into()
     }).parse(i)
