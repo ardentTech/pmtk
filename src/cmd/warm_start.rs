@@ -1,3 +1,4 @@
+use crate::packet::PktType;
 use crate::traits::{CmdQ, Packet};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -5,7 +6,7 @@ use crate::traits::{CmdQ, Packet};
 pub struct WarmStartCmd;
 
 impl Packet for WarmStartCmd {
-    const PKT_TYPE: u16 = 102;
+    const PKT_TYPE: PktType = [49, 48, 50]; // 102
 }
 
 impl CmdQ for WarmStartCmd {}

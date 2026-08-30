@@ -1,6 +1,6 @@
 use crate::dt::nmea_output::Frequency;
 use crate::error::PmtkError;
-use crate::packet::{PmtkPacket, SerializedPacket};
+use crate::packet::{PktType, PmtkPacket, SerializedPacket};
 use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
@@ -31,7 +31,7 @@ impl SetNmeaOutputCmd {
 }
 
 impl Packet for SetNmeaOutputCmd {
-    const PKT_TYPE: u16 = 314;
+    const PKT_TYPE: PktType = [51, 49, 52]; // 314
 }
 
 impl CmdQ for SetNmeaOutputCmd {

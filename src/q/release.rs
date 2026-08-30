@@ -1,3 +1,4 @@
+use crate::packet::PktType;
 use crate::traits::{Packet, CmdQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -5,7 +6,7 @@ use crate::traits::{Packet, CmdQ};
 pub struct ReleaseQ {}
 
 impl Packet for ReleaseQ {
-    const PKT_TYPE: u16 = 605;
+    const PKT_TYPE: PktType = [54, 48, 53]; // 605
 }
 
 impl CmdQ for ReleaseQ {}

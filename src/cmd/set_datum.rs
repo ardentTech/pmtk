@@ -1,5 +1,5 @@
 use crate::error::PmtkError;
-use crate::packet::{PmtkPacket, SerializedPacket};
+use crate::packet::{PktType, PmtkPacket, SerializedPacket};
 use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
@@ -17,7 +17,7 @@ impl SetDatumCmd {
 }
 
 impl Packet for SetDatumCmd {
-    const PKT_TYPE: u16 = 330;
+    const PKT_TYPE: PktType = [51, 51, 48]; // 330
 }
 
 impl CmdQ for SetDatumCmd {

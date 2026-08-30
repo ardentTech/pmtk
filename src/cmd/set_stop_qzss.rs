@@ -1,5 +1,5 @@
 use crate::error::PmtkError;
-use crate::packet::{PmtkPacket, SerializedPacket};
+use crate::packet::{PktType, PmtkPacket, SerializedPacket};
 use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
@@ -14,7 +14,7 @@ impl SetStopQzssCmd {
 }
 
 impl Packet for SetStopQzssCmd {
-    const PKT_TYPE: u16 = 352;
+    const PKT_TYPE: PktType = [51, 53, 50]; // 352
 }
 
 impl CmdQ for SetStopQzssCmd {

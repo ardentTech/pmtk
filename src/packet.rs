@@ -7,6 +7,7 @@ pub(crate) const DATA_FIELD_LEN: usize = 242;
 const PAYLOAD_LEN: usize = 246;
 
 pub(crate) type DataField = String<DATA_FIELD_LEN>;
+pub(crate) type PktType = [u8; 3];
 pub(crate) type SerializedPacket = String<PACKET_LEN>;
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -14,7 +15,7 @@ pub(crate) type SerializedPacket = String<PACKET_LEN>;
 pub struct PmtkPacket {
     pub(crate) checksum: u8,
     pub(crate) data_field: Option<DataField>,
-    pub(crate) pkt_type: u16,
+    pub(crate) pkt_type: PktType,
 }
 
 impl PmtkPacket {
@@ -27,7 +28,7 @@ impl PmtkPacket {
         data.iter().fold(0, |acc, &x| acc ^ x)
     }
 
-    pub(crate) fn new(pkt_type: u16, data_field: Option<DataField>, checksum: Option<u8>) -> Result<Self, PmtkError> {
+    pub(crate) fn new(pkt_type: PktType, data_field: Option<DataField>, checksum: Option<u8>) -> Result<Self, PmtkError> {
         let payload = Self::serialize_payload(pkt_type, &data_field)?;
         let gen_checksum = Self::generate_checksum(payload.as_bytes());
 
@@ -44,7 +45,7 @@ impl PmtkPacket {
         )
     }
 
-    pub(crate) fn new_request(pkt_type: u16, data_field: Option<DataField>) -> Result<Self, PmtkError> {
+    pub(crate) fn new_request(pkt_type: PktType, data_field: Option<DataField>) -> Result<Self, PmtkError> {
         Self::new(pkt_type, data_field, None)
     }
 
@@ -54,11 +55,11 @@ impl PmtkPacket {
         format!(PACKET_LEN; "${}*{:X?}\r\n", payload, self.checksum).map_err(PmtkError::from)
     }
 
-    fn serialize_payload(pkt_type: u16, data_field: &Option<DataField>) -> Result<String<PAYLOAD_LEN>, PmtkError> {
+    fn serialize_payload(pkt_type: PktType, data_field: &Option<DataField>) -> Result<String<PAYLOAD_LEN>, PmtkError> {
         if let Some(data_field) = &data_field {
-            format!(PAYLOAD_LEN; "PMTK{}{}", pkt_type, data_field).map_err(PmtkError::from)
+            format!(PAYLOAD_LEN; "PMTK{}{}{}{}", pkt_type[0] as char, pkt_type[1] as char, pkt_type[2] as char, data_field).map_err(PmtkError::from)
         } else {
-            format!(PAYLOAD_LEN; "PMTK{}", pkt_type).map_err(PmtkError::from)
+            format!(PAYLOAD_LEN; "PMTK{}{}{}", pkt_type[0] as char, pkt_type[1] as char, pkt_type[2] as char).map_err(PmtkError::from)
         }
     }
 }
@@ -72,7 +73,7 @@ mod tests {
     #[test]
     fn decode_command_ok() {
         assert_eq!(
-            PmtkPacket { checksum: 0x2d, data_field: Some(String::from_str(",1").unwrap()), pkt_type: 301 },
+            PmtkPacket { checksum: 0x2d, data_field: Some(String::from_str(",1").unwrap()), pkt_type: [51, 48, 49] },
             PmtkPacket::deserialize("$PMTK301,1*2D\r\n").unwrap()
         );
     }
@@ -80,7 +81,7 @@ mod tests {
     #[test]
     fn decode_query_ok() {
         assert_eq!(
-            PmtkPacket { checksum: 0x37, data_field: None, pkt_type: 401 },
+            PmtkPacket { checksum: 0x37, data_field: None, pkt_type: [52, 48, 49] },
             PmtkPacket::deserialize("$PMTK401*37\r\n").unwrap()
         );
     }
@@ -90,7 +91,7 @@ mod tests {
     fn encode_query_ok() {
         assert_eq!(
             "$PMTK401*37\r\n",
-            PmtkPacket::new_request(401, None).unwrap().serialize().unwrap()
+            PmtkPacket::new_request([52, 48, 49], None).unwrap().serialize().unwrap()
         );
     }
 
@@ -98,7 +99,7 @@ mod tests {
     fn encode_command_data_field_some_ok() {
         assert_eq!(
             "$PMTK220,1000*1F\r\n",
-            PmtkPacket::new_request(220, Some(String::from_str(",1000").unwrap())).unwrap().serialize().unwrap()
+            PmtkPacket::new_request([50, 50, 48], Some(String::from_str(",1000").unwrap())).unwrap().serialize().unwrap()
         );
     }
 
@@ -106,7 +107,7 @@ mod tests {
     fn encode_command_data_field_none_ok() {
         assert_eq!(
             "$PMTK102*31\r\n",
-            PmtkPacket::new_request(102, None).unwrap().serialize().unwrap()
+            PmtkPacket::new_request([49, 48, 50], None).unwrap().serialize().unwrap()
         );
     }
 

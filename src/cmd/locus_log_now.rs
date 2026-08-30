@@ -1,5 +1,5 @@
 use crate::error::PmtkError;
-use crate::packet::{PmtkPacket, SerializedPacket};
+use crate::packet::{PktType, PmtkPacket, SerializedPacket};
 use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
@@ -8,7 +8,7 @@ use crate::util::encode_data_field;
 pub struct LocusLogNow {}
 
 impl Packet for LocusLogNow {
-    const PKT_TYPE: u16 = 186;
+    const PKT_TYPE: PktType = [49, 56, 54]; // 186
 }
 
 impl CmdQ for LocusLogNow {

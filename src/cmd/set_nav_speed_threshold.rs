@@ -1,5 +1,5 @@
 use crate::error::PmtkError;
-use crate::packet::{PmtkPacket, SerializedPacket};
+use crate::packet::{PktType, PmtkPacket, SerializedPacket};
 use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
@@ -18,12 +18,12 @@ impl SetNavSpeedThresholdCmd {
 
 #[cfg(not(feature = "mt3339"))]
 impl Packet for SetNavSpeedThresholdCmd {
-    const PKT_TYPE: u16 = 397;
+    const PKT_TYPE: PktType = [51, 57, 55]; // 397
 }
 
 #[cfg(feature = "mt3339")]
 impl Packet for SetNavSpeedThresholdCmd {
-    const PKT_TYPE: u16 = 386;
+    const PKT_TYPE: PktType = [51, 56, 54]; // 386
 }
 
 impl CmdQ for SetNavSpeedThresholdCmd {

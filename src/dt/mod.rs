@@ -11,3 +11,5 @@ pub mod nav_threshold;
 pub mod datum;
 #[cfg(feature = "mt3339")]
 pub mod easy_enable;
+#[cfg(feature = "mt3339")]
+pub mod log;

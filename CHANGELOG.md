@@ -6,9 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- `LogDt` response
+
 ### Changed
 
 - combined `Cmd` and `Q` traits
+- Packet.PKT_TYPE from u16 to [u8; 3] to accommodate num (e.g. "314") and alpha (e.g. "LOG")
 
 ### Removed
 

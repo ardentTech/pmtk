@@ -4,7 +4,7 @@ use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number_in_range;
 use crate::traits::{Dt, Packet};
-use crate::packet::DataField;
+use crate::packet::{DataField, PktType};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
@@ -16,7 +16,7 @@ pub enum DgpsModeDt {
 }
 
 impl Packet for DgpsModeDt {
-    const PKT_TYPE: u16 = 501;
+    const PKT_TYPE: PktType = [53, 48, 49]; // 501
 }
 
 impl TryFrom<u8> for DgpsModeDt {

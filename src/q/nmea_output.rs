@@ -1,3 +1,4 @@
+use crate::packet::PktType;
 use crate::traits::{Packet, CmdQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -5,7 +6,7 @@ use crate::traits::{Packet, CmdQ};
 pub struct NmeaOutputQ {}
 
 impl Packet for NmeaOutputQ {
-    const PKT_TYPE: u16 = 414;
+    const PKT_TYPE: PktType = [52, 49, 52]; // 414
 }
 
 impl CmdQ for NmeaOutputQ {}

@@ -4,7 +4,7 @@ use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number;
 use crate::traits::{Dt, Packet};
-use crate::packet::DataField;
+use crate::packet::{DataField, PktType};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -14,7 +14,7 @@ pub struct ReleaseDt {
 }
 
 impl Packet for ReleaseDt {
-    const PKT_TYPE: u16 = 705;
+    const PKT_TYPE: PktType = [55, 48, 53]; // 705
 }
 
 impl TryFrom<DataField> for ReleaseDt {

@@ -3,14 +3,14 @@ use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number_in_range;
 use crate::traits::{Dt, Packet};
-use crate::packet::DataField;
+use crate::packet::{DataField, PktType};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct DatumDt(pub u8);
 
 impl Packet for DatumDt {
-    const PKT_TYPE: u16 = 530;
+    const PKT_TYPE: PktType = [53, 51, 48]; // 530
 }
 
 impl TryFrom<DataField> for DatumDt {

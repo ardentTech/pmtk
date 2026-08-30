@@ -38,16 +38,16 @@ impl TryFrom<&[u8]> for PmtkResponse {
 
         if let Some(data_field) = packet.data_field {
             match packet.pkt_type {
-                AckDt::PKT_TYPE => Ok(Self::Ack(AckDt::try_from(data_field)?)),
-                SysMsgDt::PKT_TYPE => Ok(Self::SysMsg(SysMsgDt::try_from(data_field)?)),
-                TxtMsgDt::PKT_TYPE => Ok(Self::TxtMsg(TxtMsgDt::try_from(data_field)?)),
-                DgpsModeDt::PKT_TYPE => Ok(Self::DgpsMode(DgpsModeDt::try_from(data_field)?)),
-                SbasEnabledDt::PKT_TYPE => Ok(Self::SbasEnabled(SbasEnabledDt::try_from(data_field)?)),
-                NmeaOutputDt::PKT_TYPE => Ok(Self::NmeaOutput(NmeaOutputDt::try_from(data_field)?)),
-                SbasModeDt::PKT_TYPE => Ok(Self::SbasMode(SbasModeDt::try_from(data_field)?)),
-                NavThresholdDt::PKT_TYPE => Ok(Self::NavThreshold(NavThresholdDt::try_from(data_field)?)),
-                ReleaseDt::PKT_TYPE => Ok(Self::Release(ReleaseDt::try_from(data_field)?)),
-                EpoInfoDt::PKT_TYPE => Ok(Self::EpoInfo(EpoInfoDt::try_from(data_field)?)),
+                [48, 48, 49] => Ok(Self::Ack(AckDt::try_from(data_field)?)),
+                [48, 49, 48] => Ok(Self::SysMsg(SysMsgDt::try_from(data_field)?)),
+                [48, 49, 49] => Ok(Self::TxtMsg(TxtMsgDt::try_from(data_field)?)),
+                [53, 48, 49] => Ok(Self::DgpsMode(DgpsModeDt::try_from(data_field)?)),
+                [53, 49, 51] => Ok(Self::SbasEnabled(SbasEnabledDt::try_from(data_field)?)),
+                [53, 49, 52] => Ok(Self::NmeaOutput(NmeaOutputDt::try_from(data_field)?)),
+                [53, 49, 57] => Ok(Self::SbasMode(SbasModeDt::try_from(data_field)?)),
+                [53, 50, 55] => Ok(Self::NavThreshold(NavThresholdDt::try_from(data_field)?)),
+                [55, 48, 53] => Ok(Self::Release(ReleaseDt::try_from(data_field)?)),
+                [55, 48, 55] => Ok(Self::EpoInfo(EpoInfoDt::try_from(data_field)?)),
                 _ => Err(Parsing)
             }
         } else {

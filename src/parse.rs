@@ -7,7 +7,7 @@ use nom::combinator::map_res;
 use nom::IResult;
 use nom::sequence::preceded;
 use crate::error::PmtkError;
-use crate::packet::PmtkPacket;
+use crate::packet::{PktType, PmtkPacket};
 
 fn hex(data: &str) -> Result<u8, &'static str> {
     u8::from_str_radix(data, 16).map_err(|_| "Failed to parse checksum as hex number")
@@ -59,9 +59,9 @@ pub(crate) fn packet(i: &str) -> Result<PmtkPacket, PmtkError> {
     )
 }
 
-fn packet_type(i: &str) -> IResult<&str, u16> {
+fn packet_type(i: &str) -> IResult<&str, PktType> {
     map_res(take(3usize), |packet_type: &str| {
-        u16::from_str_radix(packet_type, 10).map_err(|_| PmtkError::Parsing)
+        packet_type.as_bytes().try_into()
     }).parse(i)
 }
 
@@ -69,4 +69,21 @@ fn talker_id(i: &str) -> IResult<&str, &str> {
     map_res(preceded(char('$'), take(4usize)), |talker_id| {
         if talker_id != "PMTK" { return Err("Invalid talker id") } else { Ok(talker_id) }
     }).parse(i)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn packet_type_numeric_ok() {
+        let res = packet_type("419").unwrap();
+        assert_eq!([52, 49, 57], res.1)
+    }
+
+    #[test]
+    fn packet_type_char_ok() {
+        let res = packet_type("LOG").unwrap();
+        assert_eq!([76, 79, 71], res.1)
+    }
 }

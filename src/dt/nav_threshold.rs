@@ -3,14 +3,14 @@ use nom::number::complete::float;
 use nom::Parser;
 use crate::error::PmtkError;
 use crate::traits::{Dt, Packet};
-use crate::packet::DataField;
+use crate::packet::{DataField, PktType};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct NavThresholdDt(pub f32);
 
 impl Packet for NavThresholdDt {
-    const PKT_TYPE: u16 = 527;
+    const PKT_TYPE: PktType = [53, 50, 55]; // 527
 }
 
 impl TryFrom<DataField> for NavThresholdDt {

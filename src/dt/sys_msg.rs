@@ -4,7 +4,7 @@ use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number_in_range;
 use crate::traits::{Dt, Packet};
-use crate::packet::DataField;
+use crate::packet::{DataField, PktType};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -29,7 +29,7 @@ impl TryFrom<u8> for SysMsgDt {
 }
 
 impl Packet for SysMsgDt {
-    const PKT_TYPE: u16 = 10;
+    const PKT_TYPE: PktType = [48, 49, 48]; // 010
 }
 
 impl TryFrom<DataField> for SysMsgDt {

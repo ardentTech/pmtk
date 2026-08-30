@@ -1,5 +1,5 @@
 use crate::error::PmtkError;
-use crate::packet::{PmtkPacket, SerializedPacket};
+use crate::packet::{PktType, PmtkPacket, SerializedPacket};
 use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
@@ -8,7 +8,7 @@ use crate::util::encode_data_field;
 pub struct LocusEraseFlash {}
 
 impl Packet for LocusEraseFlash {
-    const PKT_TYPE: u16 = 184;
+    const PKT_TYPE: PktType = [49, 56, 52]; // 184
 }
 
 impl CmdQ for LocusEraseFlash {

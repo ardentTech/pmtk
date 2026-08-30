@@ -1,3 +1,4 @@
+use crate::packet::PktType;
 use crate::traits::{CmdQ, Packet};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -5,7 +6,7 @@ use crate::traits::{CmdQ, Packet};
 pub struct ClearEpoCmd;
 
 impl Packet for ClearEpoCmd {
-    const PKT_TYPE: u16 = 127;
+    const PKT_TYPE: PktType = [49, 50, 55]; // 127
 }
 
 impl CmdQ for ClearEpoCmd {}

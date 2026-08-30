@@ -4,7 +4,7 @@ use nom::combinator::opt;
 use crate::error::PmtkError;
 use crate::parse::number_in_range;
 use crate::traits::{Dt, Packet};
-use crate::packet::DataField;
+use crate::packet::{DataField, PktType};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -36,7 +36,7 @@ pub struct AckDt {
 }
 
 impl Packet for AckDt {
-    const PKT_TYPE: u16 = 1;
+    const PKT_TYPE: PktType = [48, 48, 49]; // 001
 }
 
 impl TryFrom<DataField> for AckDt {

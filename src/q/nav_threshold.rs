@@ -1,3 +1,4 @@
+use crate::packet::PktType;
 use crate::traits::{Packet, CmdQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -5,7 +6,7 @@ use crate::traits::{Packet, CmdQ};
 pub struct NavThresholdQ {}
 
 impl Packet for NavThresholdQ {
-    const PKT_TYPE: u16 = 447;
+    const PKT_TYPE: PktType = [52, 52, 55]; // 447
 }
 
 impl CmdQ for NavThresholdQ {}

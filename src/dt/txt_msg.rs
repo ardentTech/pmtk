@@ -1,14 +1,14 @@
 use nom::character::complete::char;
 use crate::error::PmtkError;
 use crate::traits::{Dt, Packet};
-use crate::packet::{DataField, DATA_FIELD_LEN};
+use crate::packet::{DataField, DATA_FIELD_LEN, PktType};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Clone, Debug, PartialEq)]
 pub struct TxtMsgDt(pub [u8; DATA_FIELD_LEN]);
 
 impl Packet for TxtMsgDt {
-    const PKT_TYPE: u16 = 11;
+    const PKT_TYPE: PktType = [48, 49, 49]; // 011
 }
 
 impl TryFrom<DataField> for TxtMsgDt {

@@ -1,5 +1,5 @@
 use crate::error::PmtkError;
-use crate::packet::{PmtkPacket, SerializedPacket};
+use crate::packet::{PktType, PmtkPacket, SerializedPacket};
 use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
@@ -14,7 +14,7 @@ impl LocusStopLogger {
 }
 
 impl Packet for LocusStopLogger {
-    const PKT_TYPE: u16 = 185;
+    const PKT_TYPE: PktType = [49, 56, 53]; // 185
 }
 
 impl CmdQ for LocusStopLogger {

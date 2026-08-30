@@ -1,3 +1,4 @@
+use crate::packet::PktType;
 use crate::traits::{Packet, CmdQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -5,7 +6,7 @@ use crate::traits::{Packet, CmdQ};
 pub struct LocusStatus {}
 
 impl Packet for LocusStatus {
-    const PKT_TYPE: u16 = 183;
+    const PKT_TYPE: PktType = [49, 56, 51]; // 183
 }
 
 impl CmdQ for LocusStatus {}

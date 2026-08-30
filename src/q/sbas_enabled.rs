@@ -1,3 +1,4 @@
+use crate::packet::PktType;
 use crate::traits::{Packet, CmdQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -5,7 +6,7 @@ use crate::traits::{Packet, CmdQ};
 pub struct SbasEnabledQ {}
 
 impl Packet for SbasEnabledQ {
-    const PKT_TYPE: u16 = 413;
+    const PKT_TYPE: PktType = [52, 49, 51]; // 413
 }
 impl CmdQ for SbasEnabledQ {}
 

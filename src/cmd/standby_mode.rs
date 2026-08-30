@@ -1,5 +1,5 @@
 use crate::error::PmtkError;
-use crate::packet::{PmtkPacket, SerializedPacket};
+use crate::packet::{PktType, PmtkPacket, SerializedPacket};
 use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
@@ -8,7 +8,7 @@ use crate::util::encode_data_field;
 pub struct StandbyModeCmd;
 
 impl Packet for StandbyModeCmd {
-    const PKT_TYPE: u16 = 161;
+    const PKT_TYPE: PktType = [49, 54, 49]; // 161
 }
 
 impl CmdQ for StandbyModeCmd {

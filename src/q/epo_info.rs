@@ -1,10 +1,11 @@
+use crate::packet::PktType;
 use crate::traits::{Packet, CmdQ};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct EpoInfoQ {}
 impl Packet for EpoInfoQ {
-    const PKT_TYPE: u16 = 607;
+    const PKT_TYPE: PktType = [54, 48, 55]; // 607
 }
 
 impl CmdQ for EpoInfoQ {}

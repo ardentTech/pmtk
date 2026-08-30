@@ -1,5 +1,5 @@
 use crate::error::PmtkError;
-use crate::packet::{PmtkPacket, SerializedPacket};
+use crate::packet::{PktType, PmtkPacket, SerializedPacket};
 use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
@@ -21,7 +21,7 @@ impl SetNmeaUpdateRateCmd {
 }
 
 impl Packet for SetNmeaUpdateRateCmd {
-    const PKT_TYPE: u16 = 220;
+    const PKT_TYPE: PktType = [50, 50, 48]; // 220
 }
 
 impl CmdQ for SetNmeaUpdateRateCmd {

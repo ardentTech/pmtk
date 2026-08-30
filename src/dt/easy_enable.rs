@@ -4,14 +4,14 @@ use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number_in_range;
 use crate::traits::{Dt, Packet};
-use crate::packet::DataField;
+use crate::packet::{DataField, PktType};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, PartialEq)]
 pub struct EasyEnableDt(pub bool);
 
 impl Packet for EasyEnableDt {
-    const PKT_TYPE: u16 = 869;
+    const PKT_TYPE: PktType = [56, 54, 57]; // 869
 }
 
 impl TryFrom<DataField> for EasyEnableDt {

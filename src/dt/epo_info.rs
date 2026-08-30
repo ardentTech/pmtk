@@ -3,7 +3,7 @@ use nom::Parser;
 use crate::error::PmtkError;
 use crate::parse::number;
 use crate::traits::{Dt, Packet};
-use crate::packet::DataField;
+use crate::packet::{DataField, PktType};
 
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -20,7 +20,7 @@ pub struct EpoInfoDt {
 }
 
 impl Packet for EpoInfoDt {
-    const PKT_TYPE: u16 = 707;
+    const PKT_TYPE: PktType = [55, 48, 55]; // 707
 }
 
 impl TryFrom<DataField> for EpoInfoDt {
