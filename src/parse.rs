@@ -9,8 +9,11 @@ use nom::sequence::preceded;
 use crate::error::PmtkError;
 use crate::packet::{PktType, PmtkPacket};
 
-fn hex(data: &str) -> Result<u8, &'static str> {
+pub(crate) fn hex8(data: &str) -> Result<u8, &'static str> {
     u8::from_str_radix(data, 16).map_err(|_| "Failed to parse checksum as hex number")
+}
+pub(crate) fn hex32(data: &str) -> Result<u32, &'static str> {
+    u32::from_str_radix(data, 16).map_err(|_| "Failed to parse checksum as hex number")
 }
 
 fn num<I: FromStr>(data: &str) -> Result<I, &'static str> {
@@ -18,7 +21,7 @@ fn num<I: FromStr>(data: &str) -> Result<I, &'static str> {
 }
 
 fn checksum(i: &str) -> IResult<&str, u8> {
-    map_res(preceded(char('*'), take(2usize)), hex).parse(i)
+    map_res(preceded(char('*'), take(2usize)), hex8).parse(i)
 }
 
 pub(crate) fn number<T: FromStr>(i: &str) -> IResult<&str, T> {

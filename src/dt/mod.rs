@@ -13,3 +13,5 @@ pub mod datum;
 pub mod easy_enable;
 #[cfg(feature = "mt3339")]
 pub mod log;
+#[cfg(feature = "mt3339")]
+pub mod lox;

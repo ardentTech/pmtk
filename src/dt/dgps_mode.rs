@@ -21,12 +21,12 @@ impl Packet for DgpsModeDt {
 
 impl TryFrom<u8> for DgpsModeDt {
     type Error = PmtkError;
-    fn try_from(mode: u8) -> Result<Self, Self::Error> {
-        match mode {
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        match value {
             0 => Ok(DgpsModeDt::None),
             1 => Ok(DgpsModeDt::RTCM),
             2 => Ok(DgpsModeDt::WAAS),
-            _ => Err(PmtkError::OutOfRange(0x0, 0x2, mode as u32)),
+            _ => Err(PmtkError::OutOfRange(0x0, 0x2, value as u32)),
         }
     }
 }

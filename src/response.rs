@@ -5,6 +5,8 @@ use crate::dt::easy_enable::EasyEnableDt;
 use crate::dt::epo_info::EpoInfoDt;
 #[cfg(feature = "mt3339")]
 use crate::dt::log::LogDt;
+#[cfg(feature = "mt3339")]
+use crate::dt::lox::LoxDt;
 use crate::dt::nav_threshold::NavThresholdDt;
 use crate::dt::nmea_output::NmeaOutputDt;
 use crate::dt::release::ReleaseDt;
@@ -35,6 +37,8 @@ pub enum PmtkResponse {
     EasyEnable(EasyEnableDt),
     #[cfg(feature = "mt3339")]
     Log(LogDt),
+    #[cfg(feature = "mt3339")]
+    Lox(LoxDt),
 }
 
 impl TryFrom<&[u8]> for PmtkResponse {
@@ -60,6 +64,8 @@ impl TryFrom<&[u8]> for PmtkResponse {
                 EasyEnableDt::PKT_TYPE => Ok(Self::EasyEnable(EasyEnableDt::try_from(data_field)?)),
                 #[cfg(feature = "mt3339")]
                 LogDt::PKT_TYPE => Ok(Self::Log(LogDt::try_from(data_field)?)),
+                #[cfg(feature = "mt3339")]
+                LoxDt::PKT_TYPE => Ok(Self::Lox(LoxDt::try_from(data_field)?)),
                 _ => Err(Parsing)
             }
         } else {
