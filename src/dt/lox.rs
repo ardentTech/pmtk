@@ -2,7 +2,6 @@ use nom::bytes::complete::take;
 use nom::character::complete::char;
 use nom::combinator::{map_res, opt};
 use nom::Parser;
-use nom::multi::many0;
 use nom::sequence::preceded;
 use crate::error::PmtkError;
 use crate::packet::{DataField, PktType};
@@ -50,16 +49,28 @@ impl TryFrom<DataField> for LoxDt {
             return Ok(LoxDt { blocks: None, n, event: Event::Start });
         }
 
-        let (_, blocks_v) = many0(map_res(preceded(char(','), take(8usize)), parse::hex32)).parse(i)?;
-        let blocks = if blocks_v.len() > 0 {
-            let mut res: [u32; 24] = [0u32; 24];
-            for n in 0..blocks_v.len() {
-                res[n] = blocks_v[n];
+        let mut blocks = None;
+        let (i, block0) = opt(map_res(preceded(char(','), take(8usize)), parse::hex32)).parse(i)?;
+        if let Some(block) = block0 {
+            // at least one block so alloc entire array and write first block
+            let mut blocks_res = [0u32; 24];
+            blocks_res[0] = block;
+
+            // parse blocks until None or =23
+            let mut s = i;
+            let mut b: Option<u32> = None;
+
+            for i in 1..=23 {
+                (s, b) = opt(map_res(preceded(char(','), take(8usize)), parse::hex32)).parse(s)?;
+                if let Some(block) = b {
+                    blocks_res[i] = block;
+                } else {
+                    break
+                }
             }
-            Some(res)
-        } else {
-            None
-        };
+
+            blocks = Some(blocks_res)
+        }
         Ok(LoxDt { blocks, n, event: Event::Data })
     }
 }
@@ -81,10 +92,28 @@ mod tests {
     }
 
     #[test]
-    fn locus_data_try_from_data_field_ok() {
-        let data_field = DataField::from_str(",1,0,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF").unwrap();
+    fn locus_data_empty_try_from_data_field_ok() {
+        let data_field = DataField::from_str(",1,0,").unwrap();
         let lox = LoxDt::try_from(data_field).unwrap();
-        assert_eq!(lox.blocks, Some([4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295]));
+        assert_eq!(lox.blocks, None);
+        assert_eq!(lox.event, Event::Data);
+        assert_eq!(lox.n, Some(0));
+    }
+
+    #[test]
+    fn locus_data_one_try_from_data_field_ok() {
+        let data_field = DataField::from_str(",1,0,FFFFFFFF,").unwrap();
+        let lox = LoxDt::try_from(data_field).unwrap();
+        assert_eq!(lox.blocks, Some([4294967295, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]));
+        assert_eq!(lox.event, Event::Data);
+        assert_eq!(lox.n, Some(0));
+    }
+
+    #[test]
+    fn locus_data_many_try_from_data_field_ok() {
+        let data_field = DataField::from_str(",1,0,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,0").unwrap();
+        let lox = LoxDt::try_from(data_field).unwrap();
+        assert_eq!(lox.blocks, Some([4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 4294967295, 0]));
         assert_eq!(lox.event, Event::Data);
         assert_eq!(lox.n, Some(0));
     }

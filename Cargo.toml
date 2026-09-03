@@ -13,7 +13,7 @@ readme = "README.md"
 
 [dependencies]
 heapless = "0.9.3"
-nom = { version = "8.0.0", default-features = false, features = ["alloc"] }
+nom = { version = "8.0.0", default-features = false }
 defmt = { version = "1.1.1", optional = true }
 
 [features]

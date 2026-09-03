@@ -12,6 +12,8 @@ use crate::packet::{PktType, PmtkPacket};
 pub(crate) fn hex8(data: &str) -> Result<u8, &'static str> {
     u8::from_str_radix(data, 16).map_err(|_| "Failed to parse checksum as hex number")
 }
+
+#[cfg(feature = "mt3339")]
 pub(crate) fn hex32(data: &str) -> Result<u32, &'static str> {
     u32::from_str_radix(data, 16).map_err(|_| "Failed to parse checksum as hex number")
 }
