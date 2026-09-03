@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - combined `Cmd` and `Q` traits
 - `Packet.PKT_TYPE` from u16 to [u8; 3] to accommodate num (e.g. "314") and alpha (e.g. "LOG")
 - `AckDt.cmd` from u16 to [u8; 3]
+- `ReleaseDt.s` size from 16 bytes to 32 bytes
 
 ### Removed
 
