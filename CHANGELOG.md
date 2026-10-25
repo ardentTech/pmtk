@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Changed
 
 - removed `start` bool flag from `LocusStopLogger` cmd
+- mark `SetNmeaOutputCmd` values as `pub`
 
 ## [0.4.0] - 2026-09-14
 

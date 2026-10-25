@@ -4,19 +4,23 @@ use crate::packet::{PktType, PmtkPacket, SerializedPacket};
 use crate::traits::{CmdQ, Packet};
 use crate::util::encode_data_field;
 
+// Values are `pub` because only being able to instantiate via `new(...)` with that many positional
+// args of a single type is tough to keep straight at the app level. Also, there's no custom
+// validation that must be performed.
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Copy, Clone, Debug, Default)]
 pub struct SetNmeaOutputCmd {
-    gll: Frequency,
-    rmc: Frequency,
-    vtg: Frequency,
-    gga: Frequency,
-    gsa: Frequency,
-    gsv: Frequency,
-    mchn: Frequency,
+    pub gll: Frequency,
+    pub rmc: Frequency,
+    pub vtg: Frequency,
+    pub gga: Frequency,
+    pub gsa: Frequency,
+    pub gsv: Frequency,
+    pub mchn: Frequency,
 }
 
 impl SetNmeaOutputCmd {
+    // despite values being `pub` leaving this in place to keep the API consistent
     pub fn new(
         gll: Frequency,
         rmc: Frequency,
