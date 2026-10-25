@@ -33,3 +33,5 @@ pub mod locus_stop_logger;
 pub mod locus_erase_flash;
 #[cfg(feature = "mt3339")]
 pub mod locus_log_now;
+#[cfg(feature = "mt3339")]
+pub mod locus_start_logger;
